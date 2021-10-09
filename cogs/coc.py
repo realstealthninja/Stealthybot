@@ -13,7 +13,8 @@ from coc import utils
 
 
 load_dotenv(dotenv_path="secrets.env")
-
+print(os.getenv('cocemail'))
+print(os.getenv('cocpass'))
 coc_client = coc.login(
 
     email = os.getenv('cocemail'),

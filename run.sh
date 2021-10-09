@@ -1,1 +1,3 @@
-if [[ -d '.git' ]]; then git pull fi && pip install -r requirements.txt && python.main
+if [[ -d '.git' ]]; then
+    git pull && pip install -r requirements.txt && python main.py
+fi
