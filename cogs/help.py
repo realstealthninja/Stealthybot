@@ -17,7 +17,6 @@ class Help(commands.Cog):
     @commands.command(aliases=["h"])
     async def help(self, ctx, command = None):
       """this command will bring up help 
-
       Args:
           ctx ([ctx]): [the ctx that dpy provides]
           command ([string], optional): [command is optional cause the user can get the full list]. Defaults to None.
@@ -43,7 +42,6 @@ class Help(commands.Cog):
         
         await ctx.send(embed=embed)
       
-
       cog = self.bot.get_cog(command)
       if cog:
         
