@@ -30,7 +30,7 @@ class Help(commands.Cog):
         for k in self.bot.cogs:
           cog = self.bot.get_cog(k)
           cogs.append(cog.qualified_name)
-        embed = discord.Embed(title="**Main Help Menu **",description = " ```ini\n [ do ?help <group name> for more info on the group ] ``` ")
+        embed = discord.Embed(title="**Main Help Menu **",description = " ```ini\n \n [ do ?help <group name> for more info on the group ] ``` ")
         embed.set_thumbnail(url="https://i.postimg.cc/HxDCyhc8/New-Project.png")
         embed.set_author(name="frustra etiam in morte!", icon_url="https://cdn.discordapp.com/avatars/889922820317007928/9182f4cfa68a27628dc9927fd1459b93.webp?size=300")
         embed.set_footer(text=f"issued at : {datetime.datetime.now()} by {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
@@ -74,11 +74,24 @@ class Help(commands.Cog):
       # TODO:
       # do the command help
       #
-      #newcommand = bot.get_command(command)
-      #if not newcommand:
-       #  this means that the command they sent wasnt actually a command, so you need to             #reply saying 'that isnt a command!' 
-      #else:
-          #this means the command that they have sent is a command, so you send information           #about the command they sent (the command.description, command.name,       command.signature, etc) 
+      newcommand = self.bot.get_command(command)
+      if not newcommand:
+       #  this means that the command they sent wasnt actually a command, so you need to             
+       # #reply saying 'that isnt a command!'
+       embed = discord.Embed(title="Couldn't find Command/Catogory",description=" ```ini\n \n [ The command or catagory you specified doesnt exist! check the spelling ] ``` ")
+       embed.set_author(name="Error!", icon_url="https://img1.pnghut.com/21/4/5/NqXfU4QNEg/black-and-white-error-message-triangle-point.jpg")
+       embed.set_thumbnail(url="https://icon2.cleanpng.com/20180716/ufq/kisspng-computer-icons-symbol-error-error-icon-5b4c4c02302596.3605614915317268501972.jpg")
+       embed.set_footer(text=f"issued at : {datetime.datetime.now()} by {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
+        
+      else:
+        #this means the command that they have sent is a command, so you send information           
+        #about the command they sent (the command.description, command.name,command.signature, etc) 
+        embed = discord.Embed(title="⠀")
+        embed.add_field(name="⮚ Name ⮘", value=f"`{newcommand.qualified_name}`",inline=False )
+        embed.add_field(name-"⮚ Aliases ⮘", value=f"` {newcommand.aliases} `", inline=False)
+        embed.add_field(name="⮚ usage ⮘", value=f"`{newcommand.name + newcommand.signature}`", inline=False)
+        embed.add_field(name="⮚ Description ⮘", value=f"`{newcommand.description}`", inline=False)
+        
 
 
 def setup(bot):
