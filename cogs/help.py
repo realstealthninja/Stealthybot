@@ -82,7 +82,7 @@ class Help(commands.Cog):
         #this means the command that they have sent is a command, so you send information           
         #about the command they sent (the command.description, command.name,command.signature, etc) 
         embed = discord.Embed(title="when title is the issue?")
-        embed.add_field(name="⮚ Name ⮘", value=f"`{newcommand.qualified_name}`",inline=False )
+        #embed.add_field(name="⮚ Name ⮘", value=f"`{newcommand.qualified_name}`",inline=False )
         embed.add_field(name-"⮚ Aliases ⮘", value=f"` {newcommand.aliases} `", inline=False)
         #embed.add_field(name="⮚ usage ⮘", value=f"`?{newcommand.name + newcommand.signature}`" if newcommand.signature else f"`?{newcommand.name}`", inline=False)
         embed.add_field(name="⮚ Description ⮘", value=f"`{newcommand.description}`", inline=False)
