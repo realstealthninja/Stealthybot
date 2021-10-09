@@ -6,7 +6,7 @@ class Misc(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(aliases=["ewh"])
+    @commands.command(aliases=["ewh"], description="shows 10 ways to help stop world hunger")
     async def endworldhunger(self, ctx):
         embed=discord.Embed(title="How to end world hunger", description="What are the ways to stop world hunger? Work tirelessly for an international organization? [Donate](https://borgenproject.org/donate/) old clothes and toys to our local Salvation Army? Or is it even possible? There are hundreds of theories on how we can end world hunger and activists debate many of them. Some have been effective and others not. One thing is certain, and that is that we must do something. Discussed below are 10 effective world hunger solutions.", color=0xff0000)
         embed.add_field(name="1. Sustainable Food", value="> Heifer International is an organization that helps transform agriculture. They fund projects so people can provide food for themselves in a sustainable way. This is very powerful, because ultimately we would like to see many impoverished areas not reliant on aid from foreign countries (which often causes debt) and able to create their own, steady, supply of food.", inline=False)

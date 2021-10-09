@@ -14,7 +14,7 @@ class Help(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(aliases=["h"])
+    @commands.command(aliases=["h"],  description=" shows the help menu ")
     async def help(self, ctx, command = None):
       """this command will bring up help 
       Args:
@@ -79,15 +79,18 @@ class Help(commands.Cog):
        await ctx.send(embed=embed)
         
       else:
+        #alx = []
         #this means the command that they have sent is a command, so you send information           
         #about the command they sent (the command.description, command.name,command.signature, etc) 
-        embed = discord.Embed(title="⠀")
-        alieses = newcommand.aliases
-        betteralieses = "⠀"
-        for k in alieses:
-          betteralieses += f", k"
+        embed = discord.Embed()
+        #alias = newcommand.aliases
+        #if alias:
+        #  for al in newcommand.aliases:
+        #    alx.append(f"`{al}`")
+        bot_av = self.bot.get_user(889922820317007928)
+        embed.set_author(name="Help", icon_url=bot_av.avatar_url)
         embed.add_field(name="⮚ Name ⮘", value=f"`{newcommand.qualified_name}`",inline=False )
-        embed.add_field(name-"⮚ Aliases ⮘", value=f"` {betteralieses} `", inline=False)
+        #embed.add_field(name-"⮚ Aliases ⮘", value=f"`{', '.join(alx)} " if alias else f"`none`", inline=False)
         embed.add_field(name="⮚ usage ⮘", value=f"`?{newcommand.name + newcommand.signature}`" if newcommand.signature else f"`?{newcommand.name}`", inline=False)
         embed.add_field(name="⮚ Description ⮘", value=f"`{newcommand.description}`", inline=False)
         embed.set_footer(text="<> = needed │ [] = not needed")

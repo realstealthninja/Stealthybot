@@ -7,7 +7,7 @@ class Git(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
     
-    @commands.command(hidden=True)
+    @commands.command(hidden=True, description="pulls the repo")
     async def pull(self, ctx):
         """this command will pull the code from github and put it in the hoster(my mobile)
 

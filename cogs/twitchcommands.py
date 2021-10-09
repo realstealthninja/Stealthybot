@@ -13,7 +13,7 @@ class Twitch(commands.Cog):
         self.bot = bot
 
     
-    @commands.command(aliases=["ac"])
+    @commands.command(aliases=["ac"], description="adds twitch chat to a specified channel")
     async def addchat(ctx, channelid=None):
             with open("Jsons/chatchannel.json", "r+") as f:
                 datakek = json.load(f)

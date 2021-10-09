@@ -34,8 +34,8 @@ class Coc(commands.Cog):
     
     
     logging.basicConfig(level=logging.ERROR)
-    @commands.command()
-    async def claninfo(self, ctx, clan_tag):
+    @commands.command(description="gets the clan detailed about the specified clan")
+    async def claninfo(self, ctx, clan_tag, ):
         ctx.trigger_typing
         if not utils.is_valid_tag(clan_tag):
 
