@@ -1,0 +1,22 @@
+{
+    "Coc": {
+        "betternames": "Clash of Clans Catagory",
+        "description": "**`A clash of clans themed catagory find your clan and your profile`**"
+    },
+    "Help": {
+        "betternames": "Help catagory",
+        "description": "**`the help command is in this catagory`**"
+    },
+    "Misc": {
+        "betternames": "Miscellaneous catagory",
+        "description": "**`a catagory of commands that i wasnt bothered to make a new catagory for`**"
+    },
+    "Twitchcommands": {
+        "betternames": "Twitch Catagory",
+        "description": "**`a catagory for the linking of the builtin twitch bot to your twitch channel and discord channels`**"
+    },
+    "Git": {
+        "betternames": "Git Catagory",
+        "description": "**`this catagory is for the owner which is stealthninja keep your dirty hands off my shit`**"
+    }
+}
