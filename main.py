@@ -98,7 +98,7 @@ class TwitchBot(tio.Bot):
     async def event_ready(self):
         print(f'Logged in as | {self.nick}')
         now = datetime.now()
-        SendMessage("bot starting......", f"Twitchio bot has been started | logged in as {self.nick}")
+        #SendMessage("bot starting......", f"Twitchio bot has been started | logged in as {self.nick}")
 
     async def event_message(self, message):
         if message.echo:
