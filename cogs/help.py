@@ -78,6 +78,7 @@ class Help(commands.Cog):
        embed.set_author(name="Error!", icon_url="https://img1.pnghut.com/21/4/5/NqXfU4QNEg/black-and-white-error-message-triangle-point.jpg")
        embed.set_thumbnail(url="https://icon2.cleanpng.com/20180716/ufq/kisspng-computer-icons-symbol-error-error-icon-5b4c4c02302596.3605614915317268501972.jpg")
        embed.set_footer(text=f"issued by {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
+       await ctx.send(embed=embed)
         
       else:
         #this means the command that they have sent is a command, so you send information           
