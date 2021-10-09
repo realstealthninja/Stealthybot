@@ -83,7 +83,7 @@
 
  ## can i self host?
 
- >its prefered that you dont copy the bot as it is aslong as you are not all the code and a make a direct copy of the bot i am ok with it :smile:
+ >its prefered that you dont copy the bot as it is. as aslong as you are not ripping all the code and a make a direct copy of the bot i am ok with it :smile:
 
  ## when are you going to add new features?
 
