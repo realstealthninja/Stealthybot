@@ -38,7 +38,6 @@ class Help(commands.Cog):
         betterstring =  f"  *** Catagories :*** \n \n"
         for string in cogs:
           betterstring = betterstring + f"> **{string}** \n"
-        print(betterstring)
         embed.add_field(name="⠀",value=betterstring, inline=False)
         
         
@@ -46,7 +45,6 @@ class Help(commands.Cog):
       
 
       cog = self.bot.get_cog(command)
-      print(cog)
       if cog:
         
         #this means they sent %help cog
@@ -71,9 +69,7 @@ class Help(commands.Cog):
         else:
           await ctx.send("better name was not found D:")
         
-      # TODO:
-      # do the command help
-      #
+     
       newcommand = self.bot.get_command(command)
       if not newcommand:
        #  this means that the command they sent wasnt actually a command, so you need to             
