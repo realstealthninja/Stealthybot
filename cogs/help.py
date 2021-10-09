@@ -89,7 +89,7 @@ class Help(commands.Cog):
         embed = discord.Embed(title="⠀")
         embed.add_field(name="⮚ Name ⮘", value=f"`{newcommand.qualified_name}`",inline=False )
         embed.add_field(name-"⮚ Aliases ⮘", value=f"` {newcommand.aliases} `", inline=False)
-        embed.add_field(name="⮚ usage ⮘", value=f"`{newcommand.name + newcommand.signature}`", inline=False)
+        embed.add_field(name="⮚ usage ⮘", value=f"`{newcommand.name} {newcommand.signature}`", inline=False)
         embed.add_field(name="⮚ Description ⮘", value=f"`{newcommand.description}`", inline=False)
         await ctx.send(embed=embed)
 
