@@ -69,7 +69,7 @@ class Help(commands.Cog):
         
      
       newcommand = self.bot.get_command(command)
-      if not newcommand:
+      if not newcommand and not cog:
        #  this means that the command they sent wasnt actually a command, so you need to             
        # #reply saying 'that isnt a command!'
        embed = discord.Embed(title="Couldn't find Command/Catogory",description=" ```ini\n[ The command or catagory you specified doesnt exist! check the spelling ] ``` ",timestamp=ctx.message.created_at)
