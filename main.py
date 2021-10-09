@@ -29,7 +29,7 @@ for filename in os.listdir("./cogs/"):
 
 @bot.check
 async def precheck(ctx):
-    if ctx.command.hidden and not await bot.is_owner(ctx.author.id):
+    if ctx.command.hidden and not await bot.is_owner(ctx.author):
         return False
     return True
 

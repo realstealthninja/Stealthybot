@@ -109,7 +109,7 @@ class Coc(commands.Cog):
         )
         e2= ""
         async for player in clan.get_detailed_members():
-            e2="".join(f",{player.name}")
+            e2.join(f",{player.name}")
         
         await ctx.send(embed=e)
         y = Paginator(ctx)
