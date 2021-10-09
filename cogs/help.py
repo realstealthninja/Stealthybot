@@ -30,7 +30,7 @@ class Help(commands.Cog):
         for k in self.bot.cogs:
           cog = self.bot.get_cog(k)
           cogs.append(cog.qualified_name)
-        embed = discord.Embed(title="**Main Help Menu **",description = " ```asciidoc\n \n = do ?help <group name> for more info on the group = ```")
+        embed = discord.Embed(title="**Main Help Menu **",description = " ```ini\n [ do ?help <group name> for more info on the group ] ``` ")
         embed.set_thumbnail(url="https://i.postimg.cc/HxDCyhc8/New-Project.png")
         embed.set_author(name="frustra etiam in morte!", icon_url="https://cdn.discordapp.com/avatars/889922820317007928/9182f4cfa68a27628dc9927fd1459b93.webp?size=300")
         embed.set_footer(text=f"issued at : {datetime.datetime.now()} by {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
