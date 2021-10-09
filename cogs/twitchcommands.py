@@ -8,7 +8,7 @@ def Json(file1, data1):
          file1.write(json.dumps(data1, indent=4))
 
 
-class Twitchcommands(commands.Cog):
+class Twitch(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -33,4 +33,4 @@ class Twitchcommands(commands.Cog):
     
 
 def setup(bot):
-    bot.add_cog(Twitchcommands(bot))
+    bot.add_cog(Twitch(bot))
