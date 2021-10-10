@@ -20,7 +20,7 @@ def Json(file1, data1):
     file1.write(json.dumps(data1, indent=4))
 
 bot = dio.Bot(['?'], intents=discord.Intents.all())
-bot.remove_command("help")
+
 
 for filename in os.listdir("./cogs/"):
     if filename.endswith('.py'):

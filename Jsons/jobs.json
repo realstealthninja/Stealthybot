@@ -1,0 +1,9 @@
+{
+    "Test_job":{
+        "name": "test job",
+        "id": 1,
+        "Base_pay": 100,
+        "lvl_req": 0,
+        "pay_increaseable": true
+    }
+}

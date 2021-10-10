@@ -3,6 +3,7 @@
         "./utils"
     ],
     
-    "vscode-mysql.enableTelemetry": false
+    "vscode-mysql.enableTelemetry": false,
+    "sqltools.connections": []
     
 }
