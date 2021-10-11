@@ -1,0 +1,7 @@
+{
+    "1":{
+        "name": "test job",
+        "Base_pay": 20000000000,
+        "pay_increaseable": true
+    }
+}

@@ -1,94 +1,52 @@
 import json
-import re
-from aiosqlite import cursor
-from aiosqlite.context import Result
 import discord
-import aiosqlite
-from discord import message
-
 from discord.ext import commands
-from discord.ext.commands.core import cooldown
-
-from main import Json
 
 
+
+def Json(file1, data1):
+    file1.truncate(0)
+    file1.seek(0)
+    file1.write(json.dumps(data1, indent=4))
     
 class Economy(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.db = None
-        self.bot.loop.create_task(self.connect())        
-        
-        
-    #a function to connect to the database
-    async def connect(self):
-        self.db = await aiosqlite.connect("dbs/economy.db")
+        self.profiles = "Jsons/economy/profiles.json"
+        self.jobs = "Jsons/economy/jobs.json"
     
-    #A find or make function for conveince
-    async def Find_account_or_Make_account(self, User_Id: discord.Member.id):
-        accountmade = None
-        cursor = await self.db.cursor()
-        await cursor.execute('select * from Balance where UserId = ? ', (User_Id,))
-        result = await cursor.fetchone()
-        await cursor.execute('select * from Profiles where userid = ? ', (User_Id))
-        profileresult = await cursor.fetchone
-        accountmade = False
-        if result is None and profileresult is None:
-            profileresult = (0,0, User_Id)
-            result= (User_Id, 100)
-            await cursor.execute('insert into Balance values(?,?)', (result))
-            await cursor.execute('insert into Profiles values(?,?,?)', (profileresult))
-            await self.db.commit()
-            accountmade = True
-            return result, accountmade , profileresult
-        else:
-            return result, accountmade , profileresult
     
-    async def add_cash(self, amount:int, userid: discord.Member.id):
-        cursor = await self.db.cursor()
-        await cursor.execute('Update Balance set Cash =? where UserId=?', (amount ,userid) )
-        await self.db.commit()
-
-    async def update_job(self, jobid:int, userid: discord.Member.id):
-        cursor = await self.db.cursor()
-        await cursor.execute('updare Profiles set job_id =? where userid=?', (jobid, userid))
-        await self.db.commit()
-    
-    @commands.command(aliases=["start adventure"])
-    async def start(self, ctx):
-        account = await  self.Find_account_or_Make_account(ctx.author.id)
-        if account[1] == True:
-            await ctx.send("account was made")
-        else:   
-            await ctx.send("account already exists")    
-    
-    @commands.command(aliases=["bal"])
-    async def balance(self, ctx, member: discord.member=None):
-        member = member or ctx.author
-        user = await self.Find_account_or_Make_account(member.id)
-        cash = user[0][1]
-        await ctx.send(cash)
-    @commands.command()
-    async def work(self, ctx):
-        user = await self.Find_account_or_Make_account(ctx.author.id)
-        oldcash = user[0][1]
-        print(user[2][0])
-        if user[2][0] == 0:
-            await ctx.send("you dont have a job!")
-        else:
-            await self.add_cash(oldcash+100,ctx.author.id)
-            await ctx.send("you earned 100")
-    @commands.command()
-    async def job(self, ctx):
-        with open("Jsons/jobs.json", "r+") as f:
+    async def add_or_find_account(self, userid:int, money:int = 100):
+        with open (self.profiles, "r+") as f:
             datakek = json.load(f)
+            if str(userid) in datakek:
+                return None, datakek[userid]
+            else:
+                datakek[str(userid)] = {
+                    "balance": 100,
+                    "job_id": "0",
+                    "inventory": []
+                }   
+                Json(f, datakek)
+                return True
+            
+    
+    @commands.command()
+    async def start(self, ctx):
         
-        embed = discord.Embed(title="Job list")
-        betterstring =  f"  ** Jobs :** \n \n"
-        for job in datakek:
-            pay = datakek[job]["Base_pay"]
-            betterstring = betterstring + f"> **{job} || pay : {pay} ** \n"
-        embed.add_field(name="⠀", value=betterstring)
-        await ctx.send(embed=embed)
+        acc = await self.add_or_find_account(ctx.author.id)
+        if acc == True:
+            embed=discord.Embed(title="Account made!", description="`you have been registered to stealthy economy, have fun!`",timestamp = ctx.message.created_at)
+            embed.set_author(name=ctx.author.name,icon_url=ctx.author.avatar_url)
+            embed.add_field(name="Balance", value="> 100", inline=False)
+            embed.set_footer(text=f" issued by {ctx.author.name}")
+            await ctx.send(embed=embed)
+        else:
+            embed=discord.Embed(timestamp = ctx.message.created_at)
+            embed.add_field(name="You already have a acccount!", value="bal: in progress", inline=False)
+            await ctx.send(embed=embed)       
+
+
+   
 def setup(bot):
     bot.add_cog(Economy(bot))
