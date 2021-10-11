@@ -29,10 +29,10 @@ class Misc(commands.Cog):
 
         await ctx.send(embed=embed)
     
-    @commands.command(aliases=[""], description=" sends the ping of the bot")
+    @commands.command(description=" sends the ping of the bot")
     async def ping(self, ctx):
         embed = discord.Embed(title="Pong!", timestamp=ctx.message.created_at)
-        embed.add_field(name="⮚ current ping", value=f"> ` {round(self.bot.latency *1000)} `")
+        embed.add_field(name="⮚ current ping", value=f"> ` {round(self.bot.latency*1000,1)} `")
         embed.set_footer(text=f"issued by {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
         await ctx.send(embed=embed)
         

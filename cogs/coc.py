@@ -13,9 +13,15 @@ from coc import utils
 
 
 load_dotenv(dotenv_path="secrets.env")
-print(os.getenv('cocemail'))
-print(os.getenv('cocpass'))
-coc_client = coc.login(
+
+class Coc(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+        
+    # TODO: add more commands and figure out pagination
+    
+    
+    coc_client = coc.login(
 
     email = os.getenv('cocemail'),
 
@@ -25,13 +31,7 @@ coc_client = coc.login(
 
     client=coc.EventsClient,
 
-)
-class Coc(commands.Cog):
-    def __init__(self, bot):
-        self.bot = bot
-        
-    # TODO: add more commands and figure out pagination
-    
+    )
     
     logging.basicConfig(level=logging.ERROR)
     @commands.command(description="gets the clan detailed about the specified clan")
@@ -45,7 +45,7 @@ class Coc(commands.Cog):
 
         try:
 
-            clan = await coc_client.get_clan(clan_tag)
+            clan = await self.coc_client.get_clan(clan_tag)
 
         except coc.NotFound:
 
@@ -64,57 +64,38 @@ class Coc(commands.Cog):
             log = "Public"
 
 
-        e = discord.Embed(title="Clan details",colour=discord.Colour.green())
+        e = discord.Embed(title="Clan details")
 
         e.set_thumbnail(url=clan.badge.url)
         
         e.add_field(name="Clan Name", value=f"{clan.name}({clan.tag})\n[Open in game]({clan.share_link})", inline=False)
-
-        e.add_field(name="Clan Level", value=clan.level, inline=False)
-
         e.add_field(name="Description", value=clan.description, inline=False)
-
-        e.add_field(name="Leader", value=clan.get_member_by(role=coc.Role.leader), inline=False)
-
-        e.add_field(name="Clan Type", value=clan.type, inline=False)
-
-        e.add_field(name="Location", value=clan.location, inline=False)
-
-        e.add_field(name="Total Clan Trophies", value=clan.points, inline=False)
-
-        e.add_field(name="Total Clan Versus Trophies", value=clan.versus_points, inline=False)
-
-        e.add_field(name="WarLog Type", value=log, inline=False)
-
-        e.add_field(name="Required Trophies", value=clan.required_trophies, inline=False)
-
+        e.add_field(name="Leader", value=clan.get_member_by(role=coc.Role.leader))
+        e.add_field(name="Clan Type", value=clan.type)
+        e.add_field(name="Location", value=clan.location)
+        e.add_field(name="Total Clan Trophies", value=f"{clan.points} <:Trophy:896983724686737439>")
+        e.add_field(name="Total Clan Versus Trophies", value=f"{clan.versus_points}  <:Icon_Versus_Trophy:896979379094184016>")
+        e.add_field(name="Required Trophies", value=f" {clan.required_trophies} <:Trophy:896983724686737439>" , inline=False)
         e.add_field(name="War Win Streak", value=clan.war_win_streak, inline=False)
-
         e.add_field(name="War Frequency", value=clan.war_frequency, inline=False)
-
         e.add_field(name="Clan War League Rank", value=clan.war_league, inline=False)
-
-        e.add_field(name="Clan Labels", value="\n".join(label.name for label in clan.labels), inline=False)
-
+        e.add_field(name="Clan Labels", value="\n".join(f"> {label.name}" for label in clan.labels), inline=False)
         e.add_field(name="Member Count", value=f"> {clan.member_count}/50", inline=False)
-
         e.add_field(
 
             name="Clan Record",
 
-            value=f"Won - {clan.war_wins}\nLost - {clan.war_losses}\n Draw - {clan.war_ties}",
+            value=f"> Won - {clan.war_wins}\n> Lost - {clan.war_losses}\n> Draw - {clan.war_ties}",
 
             inline=False
 
         )
         e2= ""
         async for player in clan.get_detailed_members():
-            e2.join(f",{player.name}")
-        
+            e2 += f"> {player.name} \n"
+        e.add_field(name="Members", value=e2)
         await ctx.send(embed=e)
-        y = Paginator(ctx)
-        
-        await y.paginate(content=f"{e2}")
+      
     #commands.command()
     #async def player_heroes(ctx, player_tag):
     #   if not utils.is_valid_tag(player_tag):

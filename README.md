@@ -61,8 +61,11 @@
 
 - a fully fuctioning twitch bot
 - a clash of clans themed cog
-- a fully functioning discord bot(TODO)
-  
+- a fully functioning discord bot
+- a music cog included
+- in development economy!
+
+
 
 <u>
 

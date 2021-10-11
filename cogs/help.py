@@ -8,8 +8,8 @@ class MyHelp(commands.HelpCommand):
         cogs = []
         for cog , command in mapping.items():
         
-          cogs.append(getattr(cog, "qualified_name", "No catagory"))
-        embed = discord.Embed(title="**Main Help Menu **",description = " ```ini\n[ do ?help <group name> for more info on the group ] ``` ", timestamp=self.context.message.created_at)
+          cogs.append(getattr(cog, "qualified_name", "⠀"))
+        embed = discord.Embed(title="**Main Help Menu **",description = " ```ini\n[ do s?help <group name> for more info on the group ] ``` ", timestamp=self.context.message.created_at)
         embed.set_thumbnail(url="https://i.postimg.cc/HxDCyhc8/New-Project.png")
         embed.set_author(name="frustra etiam in morte!", icon_url="https://cdn.discordapp.com/avatars/889922820317007928/9182f4cfa68a27628dc9927fd1459b93.webp?size=300")
         embed.set_footer(text=f"issued by {self.context.author.display_name}", icon_url=self.context.author.avatar_url)
@@ -26,13 +26,13 @@ class MyHelp(commands.HelpCommand):
         newcommand = command
         embed = discord.Embed()
         embed.set_author(name="Help", icon_url=self.context.author.avatar_url)
-        embed.add_field(name="⮚ Name ⮘", value=f"`{newcommand.qualified_name}`",inline=False )
+        embed.add_field(name="⦑ Name ⦒", value=f"`{newcommand.qualified_name}`",inline=False )
         alias = command.aliases
         if alias:
             alias2 = ', '.join(alias)
-            embed.add_field(name="⮚ Aliases ⮘", value=f"`{alias2}`", inline=False)
-        embed.add_field(name="⮚ usage ⮘", value=f"`?{newcommand.name + newcommand.signature}`" if newcommand.signature else f"`?{newcommand.name}`", inline=False)
-        embed.add_field(name="⮚ Description ⮘", value=f"`{newcommand.description}`", inline=False)
+            embed.add_field(name="⦑ Aliases ⦒", value=f"`{alias2}`", inline=False)
+        embed.add_field(name="⦑ usage ⦒", value=f"`?{newcommand.name + newcommand.signature}`" if newcommand.signature else f"`?{newcommand.name}`", inline=False)
+        embed.add_field(name="⦑ Description ⦒", value=f"`{newcommand.description}`", inline=False)
         embed.set_footer(text="<> = needed │ [] = not needed")
         await self.context.send(embed = embed)
         
