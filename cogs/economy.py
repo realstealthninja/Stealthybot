@@ -1,5 +1,7 @@
 import json
 import discord
+from discord import emoji
+from discord.errors import DiscordServerError
 from discord.ext import commands
 
 
@@ -14,6 +16,7 @@ class Economy(commands.Cog):
         self.bot = bot
         self.profiles = "Jsons/economy/profiles.json"
         self.jobs = "Jsons/economy/jobs.json"
+        self.items = "Jsons/economy/items.json" 
     
     
     async def add_or_find_account(self, userid:int, money:int = 100):
@@ -24,6 +27,7 @@ class Economy(commands.Cog):
             else:
                 datakek[str(userid)] = {
                     "balance": 100,
+                    "bank": 0,
                     "job_id": "0",
                     "inventory": []
                 }   
@@ -46,7 +50,119 @@ class Economy(commands.Cog):
             embed.add_field(name="You already have a acccount!", value="bal: in progress", inline=False)
             await ctx.send(embed=embed)       
 
+    
+    @commands.command()
+    async def profile(self, ctx, member:discord.Member=""):
+        with open (self.profiles, "r+") as f:
+            datakek = json.load(f)
+            if member=="":
 
-   
+                if str(ctx.author.id) in datakek:
+                    embed = discord.Embed(title=ctx.author.name)
+                    embed.set_thumbnail(url= ctx.author.avatar_url)
+                    bal = datakek[str(ctx.author.id)]["balance"]
+                    bank = datakek[str(ctx.author.id)]["bank"]
+                    embed.add_field(name="Balance and bank",value=f"> {bal} || {bank}", inline=False)
+                    with open(self.jobs, "r+") as jobjson:
+                        jobkek = json.load(jobjson)
+                    jobid = datakek[str(ctx.author.id)]["job_id"]
+                    if jobid != "0":
+                        jobname = jobkek[jobid]["name"]
+                        embed.add_field(name="job", value=f"> {jobname}", inline=False)
+                    else:
+                        embed.add_field(name="Job",value="> this user has no job", inline=False)
+                    listofitems = datakek[str(ctx.author.id)]["inventory"]
+                    if bool(listofitems):
+                        with open(self.items, "r+") as k:
+                                itemkek = json.load(k)
+                        betterstring=""
+                        for item in listofitems:
+                            itemname = itemkek[item]["name"]
+                            emojiname = itemkek[item]["emoji"]
+                            betterstring+= f"> {itemname} :: {emojiname}\n"
+                        embed.add_field(name="Inventory", value=betterstring,inline=False)
+                    else:
+                        embed.add_field(name="Inventory", value="> No items in inventory")    
+                    
+                    await ctx.send(embed=embed)
+                    
+                else:
+                    embed= discord.Embed(name="account not found!",description="you dont have an account!")
+                    await ctx.send(embed=embed)
+            else:
+                if str(member.id) in datakek:
+                    embed = discord.Embed(title=member.name)
+                    embed.set_thumbnail(url= member.avatar_url)
+                    bal = datakek[str(member.id)]["balance"]
+                    bank = datakek[str(member.id)]["bank"]
+                    embed.add_field(name="Balance and bank",value=f"> {bal} || {bank}", inline=False)
+                    with open(self.jobs, "r+") as jobjson:
+                        jobkek = json.load(jobjson)
+                    jobid = datakek[str(member.id)]["job_id"]
+                    if jobid != "0":
+                        jobname = jobkek[jobid]["name"]
+                        embed.add_field(name="job", value=f"> {jobname}", inline=False)
+                        
+                    else:
+                        embed.add_field(name="Job",value="> this user has no job", inline=False)
+                    listofitems = datakek[str(ctx.author.id)]["inventory"]
+                    listofitems = datakek[str(member.id)]["inventory"]
+                    if bool(listofitems):
+                        with open(self.items, "r+") as k:
+                                itemkek = json.load(k)
+                        betterstring=""
+                        for item in listofitems:
+                            itemname = itemkek[item]["name"]
+                            emojiname = itemkek[item]["emoji"]
+                            betterstring+= f"> {itemname} :: {emojiname}\n"
+                        embed.add_field(name="Inventory", value=betterstring,inline=False)
+                    else:
+                        embed.add_field(name="Inventory", value="> No items in inventory")
+                    await ctx.send(embed=embed)
+                else:
+                    embed= discord.Embed(name="account not found!",description="the peron who you mentioned dont have an account!")
+                    await ctx.send(embed=embed)
+            
+    @commands.command()
+    async def iteminfo(self, ctx, *,item = None):
+        print(item)
+        with open(self.items, "r+") as f:
+            datakek = json.load(f)
+        if item ==None:
+            embed = discord.Embed(title="Itemlist",timestamp=ctx.message.created_at)
+            betterstring = "**Items currently in the bot**:\n"
+            for k in datakek:
+                itemname = datakek[k]["name"]
+                betterstring += f"> {itemname}\n"
+            embed.add_field(name="⠀",value=betterstring)
+            await ctx.send(embed=embed)
+        else:
+            
+
+            for k in datakek:
+                if item == datakek[k]["name"]:
+                    embed = discord.Embed(title="Item info")
+                    
+                    embed.add_field(name=datakek[k]["name"],value=datakek[k]["item_desc"], inline=True)
+                    image = datakek[k]["thumbnail"]
+                    embed.set_thumbnail(url=image)
+                    if datakek[k]["item_type"] == 1:
+                        embed.add_field(name="⠀", value="> type: amour",inline=False)
+                        defence = datakek[k]["stats"]["defence"]
+                        sharpres = datakek[k]["stats"]["s_res"]
+                        bluntres = datakek[k]["stats"]["b_res"]
+                        health_increasse = datakek[k]["stats"]["health_inc"]
+                        stats = f"> defence = {defence},\n > sharp resistance ={sharpres},\n > blunt resistance = {bluntres},\n > health increase = {health_increasse} "
+                        embed.add_field(name="stats", value=stats,inline=False)
+                    if datakek[k]["item_type"] == 2:
+                        embed.add_field(name="⠀", value="> type: weapon",inline=False)
+                        attack = datakek[k]["stats"]["attack"]
+                        sharpdam = datakek[k]["stats"]["s_dam"]
+                        bluntdam = datakek[k]["stats"]["b_dam"]
+                        stats = f"> defence = {attack},\n > sharp damage ={sharpdam},\n > blunt damage = {bluntdam}"
+                        embed.add_field(name="stats", value=stats)
+                    await ctx.send(embed=embed)
+                
+
 def setup(bot):
     bot.add_cog(Economy(bot))

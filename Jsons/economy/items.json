@@ -4,21 +4,25 @@
         "value": 20000000000,
         "item_desc": "the ultimate armour",
         "item_type": 1,
+        "thumbnail": "https://imgur.com/WlqLoF4z",
+        "emoji": "<:yankeewithnobrim:897132168730542160>",
         "stats": {
             "defence": 200,
-            "p_res": 200,
+            "s_res": 200,
             "b_res": 200,
             "health_inc": 100
         }
     },
     "0002": {
-        "name": "katana of truth",
-        "value": 20000000000,
+        "name": "dev knife",
+        "value": 20000000000,   
         "item_desc": "the ultimate weapon",
         "item_type": 2,
+        "thumbnail": "https://imgur.com/qOJvhsq ",
+        "emoji": "<:devknife:897131167449481298>",
         "stats": {
             "attack": 200,
-            "p_dam": 200,
+            "s_dam": 200,
             "b_dam": 200
         }
     }
