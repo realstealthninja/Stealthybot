@@ -1,6 +1,5 @@
-import datetime
+from datetime import datetime
 import discord
-from discord import embeds
 from discord.ext import commands
 
 
