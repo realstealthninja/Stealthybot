@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, time
 import discord
 from discord.ext import commands
 
@@ -7,6 +7,13 @@ class Misc(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    @commands.Cog.listener()
+    async def on_ready(self):
+        print(f'{self} has been loaded') 
+        global launch_time 
+        launch_time = time.time()
+    
+    
     @commands.command(aliases=["ewh"], description="shows 10 ways to help stop world hunger")
     async def endworldhunger(self, ctx):
         embed=discord.Embed(title="How to end world hunger", description="What are the ways to stop world hunger? Work tirelessly for an international organization? [Donate](https://borgenproject.org/donate/) old clothes and toys to our local Salvation Army? Or is it even possible? There are hundreds of theories on how we can end world hunger and activists debate many of them. Some have been effective and others not. One thing is certain, and that is that we must do something. Discussed below are 10 effective world hunger solutions.", color=0xff0000)
