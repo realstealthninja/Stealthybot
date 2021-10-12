@@ -83,6 +83,8 @@ async def elmayo(message:str, channel:int, name:str ):
 @bot.event
 async def on_ready():
     print(f"We have logged in as {bot.user}")
+
+    
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name =f"{bot.command_prefix}help"))
     print(discord.__version__)
 
@@ -96,9 +98,8 @@ class TwitchBot(tio.Bot):
         super().__init__(token=os.getenv('TwitchToken'), prefix='?', initial_channels=['asgytreal'])
 
     async def event_ready(self):
-        self.launch_time = datetime.datetime.utcnow()
         print(f'Logged in as | {self.nick}')
-        now = datetime.now()
+        
         #
         # SendMessage("bot starting......", f"Twitchio bot has been started | logged in as {self.nick}")
 
