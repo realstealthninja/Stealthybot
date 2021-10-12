@@ -19,17 +19,6 @@ class Coc(commands.Cog):
     # TODO: add more commands 
     
     
-    coc_client = coc.login(
-
-    email = os.getenv('cocemail'),
-
-    password =os.getenv('cocpass'),
-
-    key_names="test",
-
-    client=coc.EventsClient,
-
-    )
     
     logging.basicConfig(level=logging.ERROR)
     @commands.command(description="gets the clan detailed about the specified clan")
