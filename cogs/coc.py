@@ -16,7 +16,7 @@ class Coc(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         
-    # TODO: add more commands and figure out pagination
+    # TODO: add more commands 
     
     
     coc_client = coc.login(
