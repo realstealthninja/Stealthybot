@@ -18,19 +18,6 @@ class Coc(commands.Cog):
         
     # TODO: add more commands 
     
-    
-    coc_client = coc.login(
-
-    email = os.getenv('cocemail'),
-
-    password =os.getenv('cocpass'),
-
-    key_names="test",
-
-    client=coc.EventsClient,
-
-    )
-    
     logging.basicConfig(level=logging.ERROR)
     @commands.command(description="gets the clan detailed about the specified clan")
     async def claninfo(self, ctx, clan_tag, ):
@@ -94,21 +81,21 @@ class Coc(commands.Cog):
         e.add_field(name="Members", value=e2)
         await ctx.send(embed=e)
       
-    #commands.command()
-    #async def player_heroes(ctx, player_tag):
-    #   if not utils.is_valid_tag(player_tag):
-    #       await ctx.send("You didn't give me a proper tag!")
-    #       return
-    #   try:
-    #       player = await coc_client.get_player(player_tag)
-    #   except coc.NotFound:
-    #       await ctx.send("This player doesn't exist!")
-    #       return
-    #
-    #   to_send = ""
-    #   for hero in player.heroes:
-    #    to_send += "{}: Lv{}/{}\n".format(str(hero), hero.level, hero.max_level)
-    #   await ctx.send(to_send)
+    @commands.command()
+    async def playerheroes(self,ctx, player_tag):
+       if not utils.is_valid_tag(player_tag):
+           await ctx.send("You didn't give me a proper tag!")
+           return
+       try:
+           player = await self.bot.coc_client.get_player(player_tag)
+       except coc.NotFound:
+           await ctx.send("This player doesn't exist!")
+           return
+    
+       to_send = ""
+       for hero in player.heroes:
+        to_send += "{}: Lv{}/{}\n".format(str(hero), hero.level, hero.max_level)
+       await ctx.send(to_send)
        
 def setup(bot):
     bot.add_cog(Coc(bot))
