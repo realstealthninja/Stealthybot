@@ -7,12 +7,7 @@ class Misc(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.Cog.listener()
-    async def on_ready(self):
-        print(f'{self} has been loaded') 
-        global launch_time 
-        launch_time = time.time()
-    
+
     
     @commands.command(aliases=["ewh"], description="shows 10 ways to help stop world hunger")
     async def endworldhunger(self, ctx):
@@ -44,17 +39,6 @@ class Misc(commands.Cog):
             y += len(m.members)
         embed.set_footer(text=f"Servers in: {len(self.bot.guilds)} │ Overall users: {y}")
         await ctx.send(embed=embed)
-    
-    @commands.command()
-    async def uptime(self, ctx):
 
-        delta_uptime = datetime.datetime.utcnow() - launch_time
-        hours, remainder = divmod(int(delta_uptime.total_seconds()), 3600)
-        minutes, seconds = divmod(remainder, 60)
-        days, hours = divmod(hours, 24)
-        
-        embed= discord.Embed(title="",description = f"I've been Up since **{days}** Days, **{hours}** Hours, **{minutes}** Minutes, and **{seconds}** Seconds!")
-        await ctx.send(embed=embed)
-        
 def setup(bot):
     bot.add_cog(Misc(bot))
