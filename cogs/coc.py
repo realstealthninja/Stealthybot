@@ -18,6 +18,8 @@ class Coc(commands.Cog):
         
     # TODO: add more commands 
     
+    
+    
     logging.basicConfig(level=logging.ERROR)
     @commands.command(description="gets the clan detailed about the specified clan")
     async def claninfo(self, ctx, clan_tag, ):

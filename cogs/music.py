@@ -79,7 +79,7 @@ class Music(commands.Cog):
                                                      port=2333,
                                                      rest_uri='http://127.0.0.1:2333',
                                                      password='stealthypass',
-                                                     identifier='Music Cog',
+                                                     identifier='Stealthy Music Cog',
                                                      region='us_central')
 
         # Set our node hook callback
