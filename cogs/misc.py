@@ -1,4 +1,4 @@
-from datetime import *
+import datetime, time
 import discord
 from discord.ext import commands
 
