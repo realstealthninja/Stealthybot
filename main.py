@@ -56,7 +56,7 @@ class Stealthybot(dio.Bot):
 
 
 
-    async def elmayo(message:str, channel:int, name:str ):
+    async def elmayo(self,message:str, channel:int, name:str ):
         """this sends a message to a specified channel
 
         Args:
