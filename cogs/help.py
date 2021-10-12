@@ -13,7 +13,7 @@ class MyHelp(commands.HelpCommand):
         embed.set_thumbnail(url="https://i.postimg.cc/HxDCyhc8/New-Project.png")
         embed.set_author(name="frustra etiam in morte!", icon_url="https://cdn.discordapp.com/avatars/889922820317007928/9182f4cfa68a27628dc9927fd1459b93.webp?size=300")
         embed.set_footer(text=f"issued by {self.context.author.display_name}", icon_url=self.context.author.avatar_url)
-        embed.add_field(name="**links**:", value="<:github:896250023313043477> [github](https://github.com/realstealthninja/Stealthybot) | [offical server(includes moonfight)](https://discord.gg/HAbStFeVAj) | ")
+        embed.add_field(name="**links**:", value="<:github:896250023313043477> [github](https://github.com/realstealthninja/Stealthybot) | [offical server](https://discord.gg/HAbStFeVAj) | [invite me!](https://discord.bots.gg/bots/889922820317007928) ")
         betterstring =  f"  *** Catagories :*** \n \n"
         for string in cogs:
           betterstring = betterstring + f"> **{string}** \n"

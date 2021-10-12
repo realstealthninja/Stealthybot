@@ -33,7 +33,10 @@ class Misc(commands.Cog):
     async def ping(self, ctx):
         embed = discord.Embed(title="Pong!", timestamp=ctx.message.created_at)
         embed.add_field(name="⮚ current ping", value=f"> ` {round(self.bot.latency*1000,1)} `")
-        embed.set_footer(text=f"issued by {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
+        y = 0
+        for m in self.bot.guilds:
+            y += len(m.members)
+        embed.set_footer(text=f"Servers in: {len(self.bot.guilds)} │ Overall users: {y}")
         await ctx.send(embed=embed)
         
 def setup(bot):

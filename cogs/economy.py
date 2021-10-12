@@ -57,6 +57,7 @@ class Economy(commands.Cog):
 
                 if str(ctx.author.id) in datakek:
                     embed = discord.Embed(title=ctx.author.name)
+                    embed.set_author(name="frustra etiam in morte!", icon_url="https://cdn.discordapp.com/avatars/889922820317007928/9182f4cfa68a27628dc9927fd1459b93.webp?size=300")
                     embed.set_thumbnail(url= ctx.author.avatar_url)
                     bal = datakek[str(ctx.author.id)]["balance"]
                     bank = datakek[str(ctx.author.id)]["bank"]
@@ -90,6 +91,7 @@ class Economy(commands.Cog):
             else:
                 if str(member.id) in datakek:
                     embed = discord.Embed(title=member.name)
+                    embed.set_author(name="frustra etiam in morte!", icon_url="https://cdn.discordapp.com/avatars/889922820317007928/9182f4cfa68a27628dc9927fd1459b93.webp?size=300")
                     embed.set_thumbnail(url= member.avatar_url)
                     bal = datakek[str(member.id)]["balance"]
                     bank = datakek[str(member.id)]["bank"]
@@ -128,6 +130,7 @@ class Economy(commands.Cog):
             datakek = json.load(f)
         if item ==None:
             embed = discord.Embed(title="Itemlist",timestamp=ctx.message.created_at)
+            embed.set_author(name="frustra etiam in morte!", icon_url="https://cdn.discordapp.com/avatars/889922820317007928/9182f4cfa68a27628dc9927fd1459b93.webp?size=300")
             betterstring = "**Items currently in the bot**:\n"
             for k in datakek:
                 itemname = datakek[k]["name"]
@@ -140,6 +143,7 @@ class Economy(commands.Cog):
             for k in datakek:
                 if item == datakek[k]["name"]:
                     embed = discord.Embed(title="Item info",timestamp=ctx.message.created_at)
+                    embed.set_author(name="frustra etiam in morte!", icon_url="https://cdn.discordapp.com/avatars/889922820317007928/9182f4cfa68a27628dc9927fd1459b93.webp?size=300")
                     embed.set_footer(text=f"command issued by: {ctx.author.name}",icon_url=ctx.author.avatar_url)
                     embed.add_field(name=datakek[k]["name"],value=datakek[k]["item_desc"], inline=True)
                     value=datakek[k]["value"]
