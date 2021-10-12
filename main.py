@@ -96,6 +96,7 @@ class TwitchBot(tio.Bot):
         super().__init__(token=os.getenv('TwitchToken'), prefix='?', initial_channels=['asgytreal'])
 
     async def event_ready(self):
+        self.launch_time = datetime.datetime.utcnow()
         print(f'Logged in as | {self.nick}')
         now = datetime.now()
         #
