@@ -1,7 +1,5 @@
 import json
 import discord
-from discord import emoji
-from discord.errors import DiscordServerError
 from discord.ext import commands
 
 
@@ -95,7 +93,7 @@ class Economy(commands.Cog):
                     embed.set_thumbnail(url= member.avatar_url)
                     bal = datakek[str(member.id)]["balance"]
                     bank = datakek[str(member.id)]["bank"]
-                    embed.add_field(name="Balance and bank",value=f"> {bal} || {bank}", inline=False)
+                    embed.add_field(name="Balance and bank",value=f"> <:stealthycoin:897331306013286440>  {bal} || <:stealthycoin:897331306013286440>  {bank}", inline=False)
                     with open(self.jobs, "r+") as jobjson:
                         jobkek = json.load(jobjson)
                     jobid = datakek[str(member.id)]["job_id"]
@@ -138,16 +136,18 @@ class Economy(commands.Cog):
             await ctx.send(embed=embed)
         else:
             
-
+            #https://ibb.co/9c6r496
             for k in datakek:
                 if item == datakek[k]["name"]:
-                    embed = discord.Embed(title="Item info")
-                    
+                    embed = discord.Embed(title="Item info",timestamp=ctx.message.created_at)
+                    embed.set_footer(text=f"command issued by: {ctx.author.name}",icon_url=ctx.author.avatar_url)
                     embed.add_field(name=datakek[k]["name"],value=datakek[k]["item_desc"], inline=True)
+                    value=datakek[k]["value"]
+                    embed.add_field(name="value:", value=f"<:stealthycoin:897331306013286440> {value}")
                     image = datakek[k]["thumbnail"]
                     embed.set_thumbnail(url=image)
                     if datakek[k]["item_type"] == 1:
-                        embed.add_field(name="⠀", value="> type: amour",inline=False)
+                        embed.add_field(name="type:", value="> amour <:armour:897329092444192768>",inline=False)
                         defence = datakek[k]["stats"]["defence"]
                         sharpres = datakek[k]["stats"]["s_res"]
                         bluntres = datakek[k]["stats"]["b_res"]
@@ -155,13 +155,14 @@ class Economy(commands.Cog):
                         stats = f"> defence = {defence},\n > sharp resistance ={sharpres},\n > blunt resistance = {bluntres},\n > health increase = {health_increasse} "
                         embed.add_field(name="stats", value=stats,inline=False)
                     if datakek[k]["item_type"] == 2:
-                        embed.add_field(name="⠀", value="> type: weapon",inline=False)
+                        embed.add_field(name="type:", value="> weapon <:attack:897321966640439296>",inline=False)
                         attack = datakek[k]["stats"]["attack"]
                         sharpdam = datakek[k]["stats"]["s_dam"]
                         bluntdam = datakek[k]["stats"]["b_dam"]
                         stats = f"> defence = {attack},\n > sharp damage ={sharpdam},\n > blunt damage = {bluntdam}"
                         embed.add_field(name="stats", value=stats)
                     await ctx.send(embed=embed)
+                    break
                 
 
 def setup(bot):

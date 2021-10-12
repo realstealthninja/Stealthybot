@@ -1,8 +1,6 @@
 import logging
 import os
 from dotenv.main import load_dotenv
-
-from utils.pagination import *
 import discord
 from discord.ext import commands
 
