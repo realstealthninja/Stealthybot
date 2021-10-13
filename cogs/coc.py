@@ -1,13 +1,11 @@
 import logging
-import os
-from dotenv.main import load_dotenv
 import discord
+from dotenv.main import load_dotenv
 from discord.ext import commands
-
-
+from utilities.images import *
+import os
 import coc
 from coc import utils
-
 
 
 load_dotenv(dotenv_path="secrets.env")
@@ -85,19 +83,35 @@ class Coc(commands.Cog):
       
     @commands.command()
     async def playerheroes(self,ctx, player_tag):
-       if not utils.is_valid_tag(player_tag):
+        if not utils.is_valid_tag(player_tag):
            await ctx.send("You didn't give me a proper tag!")
            return
-       try:
+        try:
            player = await self.bot.coc_client.get_player(player_tag)
-       except coc.NotFound:
+        except coc.NotFound:
            await ctx.send("This player doesn't exist!")
            return
     
-       to_send = ""
-       for hero in player.heroes:
-        to_send += "{}: Lv{}/{}\n".format(str(hero), hero.level, hero.max_level)
-       await ctx.send(to_send)
+        to_send = ""
+        listofimages =[]
+        if len(player.heroes) == 1:
+           embed = discord.Embed(title="Player heros")
+           embed.set_image(url=f"attachment://assets/heros/{player.heroes[0]}.png")
+           embed.add_field(name=str(player.heroes[0]), value="Lv{}/{}".format(player.heroes[0].level,player.heroes[0].max_level))
+           await ctx.send(embed=embed)
+        
+        else:
+            for hero in player.heroes:
+                listofimages.append(f"assets/heros/{str(hero)}.png")
+                to_send += "{}: Lv{}/{}   ".format(str(hero), hero.level, hero.max_level)
+            imgpath = stichimgs(listofimages,"herostiched")
+            embed = discord.Embed(title="Player Heroes")
+            embed.set_image(url=f"attachment://{imgpath}")
+            embed.add_field(name=to_send,value="⠀")
+            
+            file = discord.File("assets/stichedimages/herostiched.png")
+            await ctx.send(file=file,embed=embed)
+            os.remove(imgpath)
        
 def setup(bot):
     bot.add_cog(Coc(bot))
