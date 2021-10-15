@@ -67,6 +67,7 @@ class Stealthybot(dio.Bot):
         embed = discord.Embed(title=message, description="")
         embed.set_author(name=name,icon_url="https://cdn.slangit.com/img/sc/twitch/smile.png")
         await self.get_channel(channel).send(embed = embed)
+ 
 
 
     #on ready
