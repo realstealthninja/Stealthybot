@@ -1,15 +1,12 @@
-#!/bin/bash
-
-
 if [ -d storage/Stealthybot ];
 then
 
     cd storage/Stealthybot
 
-    python main.py
+    java -jar Lavalink.jar
 
     echo "ran python main.py"
 else
-    python main.py;
+    java -jar Lavalink.jar;
     
 fi
