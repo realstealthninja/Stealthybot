@@ -1,10 +1,13 @@
 #!/bin/bash
 
 
-cd storage/Stealthybot
-
-python main.py
-
-echo "ran python main.py"
+if -d storage/Stealthybot
+then
 
 
+    python main.py
+
+    echo "ran python main.py"
+else
+    python main.py;
+fi
