@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-if -d storage/Stealthybot
+if [ -d storage/Stealthybot];
 then
 
 
