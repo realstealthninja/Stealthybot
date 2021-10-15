@@ -46,7 +46,7 @@
 
 **welcome to the repository of stealthy bot.**
 
-*** free forever and always ***
+** free forever and always **
  
  stealthy bot is a fully maintained bot with alot of features that i havent implemented yet. if you decide to use the code id prefer if you dont make an exact copy
 
