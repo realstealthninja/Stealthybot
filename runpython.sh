@@ -1,9 +1,10 @@
 #!/bin/bash
 
 
-if [ -d storage/Stealthybot];
+if [ -d storage/Stealthybot ];
 then
 
+    cd storage/Stealthybot
 
     python main.py
 
