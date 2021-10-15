@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/data/data/com.termux/files/usr/bin/bash
 
 
 if [ -d storage/Stealthybot ];
@@ -11,5 +11,5 @@ then
     echo "ran python main.py"
 else
     python main.py;
-    
+
 fi
