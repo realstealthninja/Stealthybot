@@ -1,3 +1,14 @@
-if [[ -d '.git' ]]; then
-    git pull && pip install -r requirements.txt && python main.py
-fi
+#!/bin/bash
+
+runstealthybotpy() {
+    cd storage/Stealthybot
+
+    python main.py
+}
+
+runlavalink(){
+    cd storage/Stealthybot
+
+    java -jar Lavalink.jar
+}
+
