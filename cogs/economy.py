@@ -83,7 +83,7 @@ class Economy(commands.Cog):
                     embed.set_thumbnail(url= ctx.author.avatar_url)
                     bal = datakek[str(ctx.author.id)]["balance"]
                     bank = datakek[str(ctx.author.id)]["bank"]
-                    embed.add_field(name="Balance and bank",value=f"> :stealthycoin:897331306013286440> {bal} || <:stealthycoin:897331306013286440> {bank}", inline=False)
+                    embed.add_field(name="Balance and bank",value=f"> <:stealthycoin:897331306013286440> {bal} || <:stealthycoin:897331306013286440> {bank}", inline=False)
                     with open(self.jobs, "r+") as jobjson:
                         jobkek = json.load(jobjson)
                     jobid = datakek[str(ctx.author.id)]["job_id"]
