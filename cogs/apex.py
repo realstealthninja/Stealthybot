@@ -24,8 +24,8 @@ class Apex(commands.Cog):
     
     @commands.command(description="gets info about a player using their username accepted platforms are: psn, xbl, orgin")
     async def getplayer(self, ctx, username, platform= "psn" or "xbl" or "orgin"):
+        ctx.trigger_typing
         r= requests.get(f"https://public-api.tracker.gg/v2/apex/standard/profile/{platform}/{username}", headers={"TRN-Api-Key": f"{apitoken}", "Accept": "application/json", "Accept-Encoding":"gzip"})
-        
         respcode = r.status_code
         if respcode != 200:
             await ctx.reply("a error occured try checking your spelling or wait a while and try again")
@@ -57,7 +57,30 @@ class Apex(commands.Cog):
             embed.add_field(name="meta data", value=metatext)
             
             emby = discord.Embed(title ="Over View")
-            
+            killspermatch = ""
+            winningkills =""
+            killsaskillleader =""
+            totaldamage = ""
+            revives = ""
+            sniperkills = ""
+            if "killsPerMatch" in data["segments"][0]["stats"]:
+                killspermatch = data["segments"][0]["stats"]["killsPerMatch"]["displayValue"]
+            else: killspermatch = "no data"
+            if "winningKills" in data["segments"][0]["stats"]:
+                winningkills = data["segments"][0]["stats"]["winningKills"]["displayValue"]
+            else: winningkills ="no data"
+            if "killsAsKillLeader" in data["segments"][0]["stats"]:
+                killsaskillleader = data["segments"][0]["stats"]["killsAsKillLeader"]["displayValue"]
+            else: killsaskillleader = "none"
+            if "damage" in data["segments"][0]["stats"]:
+                totaldamage = data["segments"][0]["stats"]["damage"]["displayValue"]
+            else: totaldamage = "0"
+            if "revives" in data["segments"][0]["stats"]:
+                revives =  data["segments"][0]["stats"]["revives"]["displayValue"]
+            else: revives = "0"
+            if "sniperKills" in data["segments"][0]["stats"]:
+                sniperkills = data["segments"][0]["stats"]["sniperKills"]["displayValue"]
+            else: sniperkills = "0"
             overview = f"""
             NAME: `{data["segments"][0]["metadata"]["name"]}`
             
@@ -66,19 +89,19 @@ class Apex(commands.Cog):
             
             > Kills: `{data["segments"][0]["stats"]["kills"]["displayValue"]}`
             
-            > kills per match: `{data["segments"][0]["stats"]["killsPerMatch"]["displayValue"]}`
+            > kills per match: `{killspermatch}`
             
-            > Winning Kills: `{data["segments"][0]["stats"]["winningKills"]["displayValue"]}`
+            > Winning Kills: `{winningkills}`
             
-            > Kills As Kill Leader: `{data["segments"][0]["stats"]["killsAsKillLeader"]["displayValue"]}`
+            > Kills As Kill Leader: `{killsaskillleader}`
             
-            > total damage done: `{data["segments"][0]["stats"]["damage"]["displayValue"]}`
+            > total damage done: `{totaldamage}`
             
             > matches played: `{data["segments"][0]["stats"]["matchesPlayed"]["displayValue"]}`
             
-            > revives: `{data["segments"][0]["stats"]["revives"]["displayValue"]}`
+            > revives: `{revives}`
             
-            > sniper kills: `{data["segments"][0]["stats"]["sniperKills"]["displayValue"]}`
+            > sniper kills: `{sniperkills}`
             
             
             """
