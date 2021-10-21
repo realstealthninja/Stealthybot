@@ -271,7 +271,7 @@ class Economy(commands.Cog):
                             datakek[str(ctx.author.id)]['balance'] += amount * 2
                             Json(b, datakek) 
                         else:
-                            embed = discord.Embed(description=f" you need to win back the money now now because you lost **{amount * 2 }** ")
+                            embed = discord.Embed(description=f" you need to win back the money now now because you lost **{amount}** ")
                             embed.set_author(icon_url=ctx.author.avatar_url, name="You Lost nub git gud!")
                             datakek[str(ctx.author.id)]['balance'] -= amount
                             Json(b, datakek)
