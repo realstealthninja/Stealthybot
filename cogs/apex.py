@@ -20,7 +20,6 @@ def get_socials(list):
 class Apex(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.platslug = ["psn","xbl","orgin"]
     
     @commands.command(description="gets info about a player using their username accepted platforms are: psn, xbl, orgin")
     async def getplayer(self, ctx, username, platform= "psn" or "xbl" or "orgin"):

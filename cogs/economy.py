@@ -1,5 +1,6 @@
 import json
 import discord
+import random
 from discord.ext import commands
 from discord.ext.commands.cooldowns import BucketType
 from discord.ext.commands.core import cooldown
@@ -250,7 +251,35 @@ class Economy(commands.Cog):
                         else:
                             embed = discord.Embed(title="the level requirement is too high for you D:")
                             await ctx.send(embed=embed)
- 
+    @commands.command()
+    async def gamble(self, ctx, amount):
+        if amount <= 20:
+            await ctx.send("you need atleast 21 coins to gamble why? idk just have it")
+        else:
+            with open(self.profiles, "r+") as b:
+                datakek = json.load(b)
+                
+                
+                if str(ctx.author.id) in datakek:
+                    
+                    
+                    if amount <= datakek[str(ctx.author.id)]['balance']:
+                        x = random.randint(1, 3)
+                        if x == 1:
+                            embed = discord.Embed(description=f" you have a gambling addiction now because you won **{amount * 2 }** ")
+                            embed.set_author(icon_url=ctx.author.avatar_url, name="You won!")
+                            datakek[str(ctx.author.id)]['balance'] += amount * 2
+                            Json(b, datakek) 
+                        else:
+                            embed = discord.Embed(description=f" you need to win back the money now now because you lost **{amount * 2 }** ")
+                            embed.set_author(icon_url=ctx.author.avatar_url, name="You Lost nub git gud!")
+                            datakek[str(ctx.author.id)]['balance'] -= amount * 2
+                            Json(b, datakek)
+                    else:
+                        embed = discord.Embed(description=" uho not enough money for gambling get more money do s?profile to see your money")
+                    
+                    await ctx.send(embed=embed)          
+
 
 def setup(bot):
     bot.add_cog(Economy(bot))
