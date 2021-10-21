@@ -252,7 +252,7 @@ class Economy(commands.Cog):
                             embed = discord.Embed(title="the level requirement is too high for you D:")
                             await ctx.send(embed=embed)
     @commands.command()
-    async def gamble(self, ctx, amount):
+    async def gamble(self, ctx, amount:int):
         if amount <= 20:
             await ctx.send("you need atleast 21 coins to gamble why? idk just have it")
         else:
