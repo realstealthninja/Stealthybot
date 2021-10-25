@@ -30,5 +30,9 @@
     "Apex": {
         "betternames": "Apex legends",
         "description": "**` this catagory is for apex legends commands `**"
+    },
+    "Fun": {
+        "betternames": "Fun commands",
+        "description": "**` alot of fun commands `**"
     }
 }

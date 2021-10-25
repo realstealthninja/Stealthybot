@@ -1,9 +1,0 @@
-{
-    "python.analysis.extraPaths": [
-        "./utils"
-    ],
-    
-    "vscode-mysql.enableTelemetry": false,
-    "sqltools.connections": []
-    
-}

@@ -12,17 +12,17 @@ from SendWebHookMessage import *
 
 load_dotenv(dotenv_path="secrets.env")
 token = os.getenv('Token')
-coc_client = coc.login(
-
-    email = os.getenv('cocemail'),
-
-    password =os.getenv('cocpass'),
-
-    key_names="test",
-
-    client=coc.EventsClient,
-
-)
+#coc_client = coc.login(
+#
+#    email = os.getenv('cocemail'),
+#
+#    password =os.getenv('cocpass'),
+#
+#    key_names="test",
+#
+#    client=coc.EventsClient,
+#
+#)
   
 def Json(file1, data1):
     file1.truncate(0)
@@ -39,7 +39,7 @@ class Stealthybot(dio.Bot):
             owner_id=[521226389559443461]
             
         )
-        self.coc_client = coc_client
+        #self.coc_client = coc_client
   
 
         for filename in os.listdir("./cogs/"):
