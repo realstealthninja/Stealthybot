@@ -10,7 +10,7 @@ from twitchio.ext.commands import bot
 
 from SendWebHookMessage import *
 
-load_dotenv(dotenv_path="secrets.env")
+load_dotenv(dotenv_path=".env")
 token = os.getenv('Token')
 coc_client = coc.login(
 
