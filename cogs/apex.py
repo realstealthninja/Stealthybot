@@ -4,7 +4,7 @@ import requests
 from dotenv import load_dotenv
 from discord.ext import commands
 from utilities.pagination import *
-load_dotenv(dotenv_path="secrets.env")
+load_dotenv(dotenv_path=".env")
 apitoken=os.getenv('apextoken')
 def get_socials(list):
     bettasstring = " "
