@@ -12,3 +12,4 @@ asyncio
 aiosqlite
 matplotlib
 numpy
+buttons
