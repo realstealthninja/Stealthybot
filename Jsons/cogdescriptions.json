@@ -1,0 +1,42 @@
+{
+    "Coc": {
+        "betternames": "Clash of Clans Catagory",
+        "description": "**`A clash of clans themed catagory find your clan and your profile`**"
+    },
+    "Help": {
+        "betternames": "Help catagory",
+        "description": "**`the help command is in this catagory`**"
+    },
+    "Misc": {
+        "betternames": "Miscellaneous catagory",
+        "description": "**`a catagory of commands that i wasnt bothered to make a new catagory for`**"
+    },
+    "Twitch": {
+        "betternames": "Twitch Catagory",
+        "description": "**`a catagory for the linking of the builtin twitch bot to your twitch channel and discord channels`**"
+    },
+    "Staff": {
+        "betternames": "Staf Catagory",
+        "description": "**`this catagory is for the owner which is stealthninja keep your dirty hands off my shit`**"
+    },
+    "Economy": {
+        "betternames": "Stealthy Economy",
+        "description": "**`this catagory is full of economy commands`**"
+    },
+    "Music": {
+        "betternames": "Stealthy Music",
+        "description": "**` this is a music catagory which is gonna get cease and desisted by youtube `**"
+    },
+    "Apex": {
+        "betternames": "Apex legends",
+        "description": "**` this catagory is for apex legends commands `**"
+    },
+    "Fun": {
+        "betternames": "Fun commands",
+        "description": "**` alot of fun commands `**"
+    },
+    "Activity": {
+        "betternames": "activity leaderboards",
+        "description": "**` rather than levels you are ranked on your activity on the server. activity is measured in activity points which have the max of 100 per day`**"
+    }
+}

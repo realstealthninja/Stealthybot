@@ -1,0 +1,10 @@
+{
+    "1":{
+        "name": "test job",
+        "Base_pay": 20000000000,
+        "min_pay": 20000000000,
+        "pay_increaseable": true,
+        "timeframe": 2,
+        "level_req": 0
+    }
+}

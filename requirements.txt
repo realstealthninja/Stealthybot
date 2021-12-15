@@ -1,0 +1,14 @@
+discord.py[voice]
+requests
+twitchio
+python-dotenv
+coc.py
+numpy
+Pillow
+humanize
+wavelink
+pyttsx3
+asyncio
+aiosqlite
+matplotlib
+numpy
