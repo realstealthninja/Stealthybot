@@ -1,9 +1,18 @@
-import asyncio
+import asyncio, io, contextlib
+from traceback import format_exception
+import textwrap
 from logging import exception
 import aiosqlite
 import discord
 from discord.ext import commands
 from discord.ext import buttons
+
+def clean_code(content:str) -> str:
+    if content.startswith("```py"):
+        content = content[5:-3]
+    content = content.strip("`")
+    content = content.replace("‘", "'").replace('“', '"').replace("”", "\"").replace("’", "'")
+    return content
 
 class Staff(commands.Cog):
     def __init__(self, bot):
