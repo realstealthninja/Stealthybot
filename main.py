@@ -1,6 +1,7 @@
 import asyncio, os
 from dotenv import load_dotenv
-from stealthybot import *
+from stealthybot import TwitchBot
+from stealthybot import Stealthybot
 
 load_dotenv("secrets.env")
 token = os.getenv('Token')

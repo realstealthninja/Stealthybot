@@ -14,7 +14,7 @@ class Economy(commands.Cog):
         self.defaultstrings = ["frustra etiam in morte!","https://cdn.discordapp.com/avatars/889922820317007928/9182f4cfa68a27628dc9927fd1459b93.webp?size=300"]
     async def citnara(self, num1, num2):
         """this returns if num 1 is greater than or equals to num2
-
+            useless
         Args:
             num1 (int): firstnumber
             num2 (int): secondnumber
@@ -49,20 +49,7 @@ class Economy(commands.Cog):
                 datakek[str(userid)]["balance"] = money
                 Json(f, datakek)
     
-    @commands.command()
-    async def start(self, ctx):
-        
-        acc = await self.add_or_find_account(ctx.author.id)
-        if acc == True:
-            embed=discord.Embed(title="Account made!", description="`you have been registered to stealthy economy, have fun!`",timestamp = ctx.message.created_at)
-            embed.set_author(name=ctx.author.name,icon_url=ctx.author.avatar_url)
-            embed.add_field(name="Balance", value="> 100", inline=False)
-            embed.set_footer(text=f" issued by {ctx.author.name}")
-            await ctx.send(embed=embed)
-        else:
-            embed=discord.Embed(timestamp = ctx.message.created_at)
-            embed.add_field(name="You already have a acccount!", value="bal: in progress", inline=False)
-            await ctx.send(embed=embed)       
+    
 
     
     @commands.command()
@@ -102,7 +89,8 @@ class Economy(commands.Cog):
                     await ctx.send(embed=embed)
                     
                 else:
-                    embed= discord.Embed(name="account not found!",description="you dont have an account!")
+                    await self.add_or_find_account(ctx.author.id)
+                    embed = discord.Embed(title="welcome to stealthy economy user", description="do the command again to look at your new profile")
                     await ctx.send(embed=embed)
             else:
                 if str(member.id) in datakek:
@@ -192,8 +180,10 @@ class Economy(commands.Cog):
             await self.addorremovemoney(ctx.author.id, currentbal + jobmaxpay )
             
             await ctx.send(f"added <:stealthycoin:897331306013286440> {jobmaxpay} to your balance!")
-        else:
-            await ctx.send("You dont have a job or you didnt make an account!")
+        elif str(ctx.author.id) not in profilekek:
+            await self.add_or_find_account(ctx.author.id)
+            embed = discord.Embed(title="welcome to stealthy economy user", description="do the command again")
+            await ctx.send(embed=embed)
     @commands.command()
     async def job(self, ctx,*, job =""):
         with open (self.jobs, "r+") as f:
@@ -231,7 +221,7 @@ class Economy(commands.Cog):
                         canworkjob = await self.citnara(userlvl, levelreqe)
                         if canworkjob == True:
                             datakek[str(ctx.author.id)]["job_id"] = str(jobid)
-                            embed = discord.Embed(title="You are hired!")
+                            embed = discord.Embed(title="You are hired!", description="you need to work every 1 hour unless you get fired")
                             Json(b,datakek)
 
                             await ctx.send(embed=embed)
@@ -266,7 +256,10 @@ class Economy(commands.Cog):
                         embed = discord.Embed(description=" uho not enough money for gambling get more money do s?profile to see your money")
                     
                     await ctx.send(embed=embed)          
-
+                else:
+                    await self.add_or_find_account(ctx.author.id)
+                    embed = discord.Embed(title="welcome to stealthy economy user", description="do the command again")
+                    await ctx.send(embed=embed)
 
 def setup(bot):
     bot.add_cog(Economy(bot))
