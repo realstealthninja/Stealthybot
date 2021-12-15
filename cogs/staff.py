@@ -112,7 +112,10 @@ class Staff(commands.Cog):
             await ctx.send(embed=embed)   
 
     @commands.command(aliases=['e'], hidden=True)
-    async def eval(self, ctx, *, code:str) -> None:
+    async def eval(self, ctx, *, code:str=None) -> None:
+        if not code:
+            return await ctx.send('...')
+            
         local_variables = {
             "discord": discord,
             "commands": commands, 
