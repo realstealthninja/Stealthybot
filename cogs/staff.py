@@ -18,33 +18,7 @@ class Staff(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.db = None
-        self.bot.loop.create_task(self.connecttodb())
         
-    async def connecttodb(self):
-        self.db = await aiosqlite.connect("./database/activity.db")    
-    
-    
-    @commands.command(hidden=True)
-    async def sqlcommand(self, ctx ,*, sqlcode,data=None, ):
-        emebed = discord.Embed(title="Sql injector")
-        try:
-            cursor = await self.db.cursor()
-            if data:
-                await cursor.execute(sqlcode, (int(data),))
-            await cursor.execute(sqlcode)
-            result = None
-            if "select" in sqlcode:
-                result = await cursor.fetchone()
-            await self.db.commit()
-            bettastring = ""
-            for thingy in result:
-                bettastring += f"{thingy} | "
-            emebed.add_field(name="result", value=f"{bettastring}")
-        except Exception as ex:
-            emebed.add_field(name="error occured", value=f"{ex}")
-        await ctx.send(embed = emebed)
-        
-    
     
     @commands.command(hidden=True, description="pulls the repo")
     async def pull(self, ctx):
@@ -82,6 +56,7 @@ class Staff(commands.Cog):
             self.bot.load_extension(f'cogs.{extension}')
             embed.add_field(name="Load Extension", value=f"Loaded cog: ``{extension}`` successfully")
             await ctx.send(embed=embed)
+
 
     @commands.command(hidden=True)
     async def unload(self, ctx, extension):
