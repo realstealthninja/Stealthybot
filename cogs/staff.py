@@ -1,8 +1,18 @@
-import asyncio
+import asyncio, io, contextlib
+from traceback import format_exception
+import textwrap
 from logging import exception
 import aiosqlite
 import discord
 from discord.ext import commands
+from discord.ext import buttons
+
+def clean_code(content:str) -> str:
+    if content.startswith("```py"):
+        content = content[5:-3]
+    content = content.strip("`")
+    content = content.replace("‘", "'").replace('“', '"').replace("”", "\"").replace("’", "'")
+    return content
 
 class Staff(commands.Cog):
     def __init__(self, bot):
@@ -99,8 +109,61 @@ class Staff(commands.Cog):
             self.bot.reload_extension(f'cogs.{extension}')
             embed = discord.Embed()
             embed.add_field(name="Reload Extension", value=f"Reloaded cog: ``{extension}`` successfully")
-            await ctx.send(embed=embed)    
-        
+            await ctx.send(embed=embed)   
+
+    @commands.command(aliases=['e'], hidden=True)
+    async def eval(self, ctx, *, code:str=None) -> None:
+        if not code:
+            return await ctx.send('...')
+            
+        local_variables = {
+            "discord": discord,
+            "commands": commands, 
+            "bot": ctx.bot, 
+            "client": ctx.bot,
+            "ctx": ctx, 
+            "channel": ctx.channel, 
+            "author": ctx.author,
+            "guild": ctx.guild,
+            "message": ctx.message
+        }
+
+        code = clean_code(code)
+        stdout = io.StringIO()
+
+        pref = await ctx.bot.get_prefix(ctx.message)
+        message = clean_code(ctx.message.content[len(pref) -1:])
+            
+        try:
+            with contextlib.redirect_stdout(stdout):
+                exec(
+                    f"async def func():\n{textwrap.indent(code, '    ')}",  local_variables, 
+                )
+                obj = await local_variables["func"]()
+            
+                result = f"{stdout.getvalue()}{obj}\n"
+        except Exception as e:
+            result = "".join(format_exception(e, e, e.__traceback__))
+            pass
+    
+        result = result.replace('`', '')
+        message = message.replace('`', '')
+        if result.replace('\n', '').endswith('None') and result != "None":
+            result = result[:-5]
+            
+        if len(result) < 2000:
+            return await ctx.send(f"```py\nIn[0]: {message}\nOut[0]: {result}\n```")
+
+        pager = buttons.Paginator(
+            timeout=100,
+            entries=[result[i: i + 2000] for i in range(0, len(result), 2000)],
+            length=1,
+            prefix="```py\n",
+            suffix="```"
+        )
+        await pager.start(ctx)
+
+
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
         if isinstance(error, commands.CheckFailure):
