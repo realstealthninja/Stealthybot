@@ -89,24 +89,9 @@ class Activity(commands.Cog):
     async def activity(self, ctx, member:discord.Member = None):
         if member is None:
             member = ctx.author
-        maximum = 100
-        plt.style.use('_mpl-gallery-nogrid')
         cursor = await self.db.cursor()
         await cursor.execute("select * from activity where guildid =? and userid=?",(member.guild.id,member.id))
         result = await cursor.fetchone()
-        #setting data and colour
-        data = [result[0],maximum]
-        color = plt.get_cmap('Blues')(np.linspace(0.2,0.7,len(data)))
-        
-        #plot
-        fig, ax = plt.subplots()
-        ax.pie(data, colors = color, radius = 3, center=(4,4))
-        ax.set(xlim=(0, 8), xticks=np.arange(1, 8),ylim=(0, 8), yticks=np.arange(1, 8))
-        fig.set_facecolor('none')
-        fig.set_alpha(0)
-        ax.set_alpha(0)
-        ax.set_facecolor('none')
-        plt.savefig("assets/plots/figplot.png", transparent= True)
         bytese = await self.make_rank_image(member, result[1], result[5])
         file = discord.File(bytese, 'rank.png')
         await ctx.send(file=file)
