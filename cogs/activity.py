@@ -19,13 +19,9 @@ class Activity(commands.Cog):
     async def connecttodb(self):
         self.db = await aiosqlite.connect("./database/activity.db")
         
-    @tasks.loop(seconds=86400.0)
+    @tasks.loop(seconds=400.0)
     async def periodicsacrifice(self):
-        cursor = await self.db.cursor()   
-        await cursor.execute("select userid, total activity where activitypoints = 100")
-        result = cursor.fetchall()
-        for userids in result:
-            await cursor.execute("UPDATE acivity SET total = ? where userid = ?",(userids[1]+1, userids[0]))
+        cursor = await self.db.cursor()
         await cursor.execute("UPDATE activity SET activitypoints = 0")
         await cursor.execute("UPDATE activity SET cando = 1")
         await self.db.commit()
@@ -65,11 +61,14 @@ class Activity(commands.Cog):
         userid, activitypoints, guildid, maximum, cando, total = result
         cursor = await self.db.cursor()
         if cando == 1 and activitypoints != 100:
+            total += 1
             activitypoints += 1
             cando = 0
-            await cursor.execute("update activity set activitypoints=?, cando=? where userid=? and guildid=?",(activitypoints, cando, userid,guildid))
+            await cursor.execute("update activity set activitypoints=?, cando=?, total = ?  where userid=? and guildid=?",(activitypoints, cando, total, userid,guildid))
             await self.db.commit()
             await self.timeoutuser(userid,guildid)
+            
+    
     @commands.command()
     async def leaderboard(self, ctx):
         emeby = discord.Embed()
