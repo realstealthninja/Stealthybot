@@ -19,7 +19,7 @@ class Activity(commands.Cog):
     async def connecttodb(self):
         self.db = await aiosqlite.connect("./database/activity.db")
         
-    @tasks.loop(seconds=400.0)
+    @tasks.loop(seconds=86400.0)
     async def periodicsacrifice(self):
         cursor = await self.db.cursor()
         await cursor.execute("UPDATE activity SET activitypoints = 0")
