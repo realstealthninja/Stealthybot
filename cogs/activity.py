@@ -79,7 +79,7 @@ class Activity(commands.Cog):
           try:
             desc += f"\n**{k}.** {self.bot.get_user(people[0]).display_name}:  activity points:- **{people[1]}**"
           except AttributeError:
-              cursor.execute("del from activity where userid=? and guildid=?",(people[0], ctx.guild.id))
+              cursor.execute("delete from activity where userid=? and guildid=?",(people[0], ctx.guild.id))
               await self.db.commit()
               continue
           if k == 10:
