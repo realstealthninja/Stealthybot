@@ -18,7 +18,7 @@ class Fun(commands.Cog):
                 await ctx.send(chosen[1])
         elif type == "d":
             with open("assets/datasets/dare.csv") as f:
-                ereader = csv.reader(f, delimiter=";")
+                ereader = csv.reader(f, delimiter=";") 
                 chosen = random.choice(list(ereader))
                 await ctx.send(chosen[1])
         else: 

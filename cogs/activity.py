@@ -1,8 +1,6 @@
 import discord
 import aiosqlite
 import asyncio
-import matplotlib.pyplot as plt
-import numpy as np
 import aiohttp
 import io
 from PIL import Image, ImageDraw, ImageFont
@@ -78,8 +76,12 @@ class Activity(commands.Cog):
         result = await cursor.fetchall()
         desc = ""
         for k, people in enumerate(result[::-1], start = 1):
-          desc += f"\n**{k}.** {self.bot.get_user(people[0]).display_name}:  activity points:- **{people[1]}**"
-          #now we put this because we know that user exists
+          try:
+            desc += f"\n**{k}.** {self.bot.get_user(people[0]).display_name}:  activity points:- **{people[1]}**"
+          except TypeError:
+              cursor.execute("del from activity where userid=? and guildid=?",(people[0], ctx.guild.id))
+              await self.db.commit()
+              continue
           if k == 10:
               break
         emeby.description = desc
