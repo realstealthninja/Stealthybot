@@ -78,7 +78,7 @@ class Activity(commands.Cog):
         for k, people in enumerate(result[::-1], start = 1):
           try:
             desc += f"\n**{k}.** {self.bot.get_user(people[0]).display_name}:  activity points:- **{people[1]}**"
-          except TypeError:
+          except AttributeError:
               cursor.execute("del from activity where userid=? and guildid=?",(people[0], ctx.guild.id))
               await self.db.commit()
               continue
