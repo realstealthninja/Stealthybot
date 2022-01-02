@@ -76,13 +76,12 @@ class Activity(commands.Cog):
         result = await cursor.fetchall()
         desc = ""
         for k, people in enumerate(result[::-1], start = 1):
-          try:
+            if self.bot.get_user(people[0]) == None:
+               cursor.execute("delete from activity where userid=? and guildid=?",(people[0], ctx.guild.id))
+               await self.db.commit()
+               continue
             desc += f"\n**{k}.** {self.bot.get_user(people[0]).display_name}:  activity points:- **{people[1]}**"
-          except AttributeError:
-              cursor.execute("delete from activity where userid=? and guildid=?",(people[0], ctx.guild.id))
-              await self.db.commit()
-              continue
-          if k == 10:
+            if k == 10:
               break
         emeby.description = desc
         await ctx.send(embed = emeby)    
