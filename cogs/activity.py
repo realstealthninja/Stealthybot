@@ -16,7 +16,7 @@ class Activity(commands.Cog):
         
     async def connecttodb(self):
         self.db = await aiosqlite.connect("./database/activity.db")
-        
+      
     @tasks.loop(seconds=86400.0)
     async def periodicsacrifice(self):
         cursor = await self.db.cursor()
@@ -27,12 +27,11 @@ class Activity(commands.Cog):
     @periodicsacrifice.before_loop
     async def beforesacrifice(self):
         await self.bot.wait_until_ready()
-        if self.db != None:
+        if self.db != None and self.db.cursor() != None:
             return
         else:
-            asyncio.sleep(1)
+            await asyncio.sleep(1)
             
-
     async def timeoutuser(self,userid,guildid):
         await asyncio.sleep(120)
         cursor = await self.db.cursor()
@@ -53,8 +52,6 @@ class Activity(commands.Cog):
     async def on_message(self, message:discord.Message):
         if message.author.bot is True or message.guild is None:
             return
-        
-        
         result = await self.findorinsert(message.author)
         userid, activitypoints, guildid, maximum, cando, total = result
         cursor = await self.db.cursor()
@@ -66,7 +63,6 @@ class Activity(commands.Cog):
             await self.db.commit()
             await self.timeoutuser(userid,guildid)
             
-    
     @commands.command()
     async def leaderboard(self, ctx):
         emeby = discord.Embed()
@@ -77,7 +73,7 @@ class Activity(commands.Cog):
         desc = ""
         for k, people in enumerate(result[::-1], start = 1):
             if self.bot.get_user(people[0]) == None:
-               cursor.execute("delete from activity where userid=? and guildid=?",(people[0], ctx.guild.id))
+               await cursor.execute("delete from activity where userid=? and guildid=?",(people[0], ctx.guild.id))
                await self.db.commit()
                continue
             desc += f"\n**{k}.** {self.bot.get_user(people[0]).display_name}:  activity points:- **{people[1]}**"
@@ -98,74 +94,36 @@ class Activity(commands.Cog):
         await ctx.send(file=file)
         
         
-    #hippty hoppity your code is now my property @caeden
+
     async def make_rank_image(self, member: discord.Member, activitypoints, total):
         user_avatar_image = str(member.avatar_url_as(format='png', size=512))
         async with aiohttp.ClientSession() as session:
             async with session.get(user_avatar_image) as resp:
                 avatar_bytes = io.BytesIO(await resp.read())
 
-        img = Image.new('RGB', (1366, 768))
-        background = Image.open("assets/backgrounds/neon-sunset-4k-eh-1366x768.jpg")
-        logo = Image.open(avatar_bytes).resize((300, 300))
+        img = Image.new('RGB', (800, 240))
+        logo = Image.open(avatar_bytes).resize((200, 200))
+        background = Image.open("assets/backgrounds/death.png")
         img.paste(background)
-        
-        
-        
-        # Stack overflow helps :)
-        bigsize = (logo.size[0] * 3, logo.size[1] * 3)
-        mask = Image.new('L', bigsize, 0)
-        draw = ImageDraw.Draw(mask) 
-        draw.ellipse((0, 0) + bigsize, fill=255)
-        mask = mask.resize(logo.size, Image.ANTIALIAS)
-        logo.putalpha(mask)
-        ##############################
         img.paste(logo, (20, 20), mask=logo)
-
-
         
-        # Black Circle
         draw = ImageDraw.Draw(img, 'RGB')
-        draw.ellipse((200, 200, 300, 300), fill='#000')
 
-        # Placing offline or Online Status
-        # Discord Colors (Online: '#43B581')
-        draw.ellipse((200, 200, 300, 300), fill='#43B581')
-        ##################################
 
-        # Working with fonts
+        # preloading fonts
         font = 'assets/fonts/Exo-Regular.otf'
-        big_font = ImageFont.FreeTypeFont(font, 60)
         medium_font = ImageFont.FreeTypeFont(font, 40)
         small_font = ImageFont.FreeTypeFont(font, 30)
+    
+        # drawing text    
+        draw.text((250, 50), f"{member.name}#{member.discriminator}", font=medium_font, fill="#fff")
+        draw.text((250, 100), f"Act: {activitypoints} /100   Total: {total}", font=small_font, fill="#fff")
         
-        
-        draw.text((605, 350), f"{activitypoints} /100", font=big_font, fill="#11ebf2")
-        draw.text((610, 300), "Activity Points:", font=medium_font, fill="#11ebf2")
-        
-        draw.text((235, 350), f"{total}", font=big_font, fill="#11ebf2")
-        draw.text((210, 300), "Total Activity Points:", font=medium_font, fill="#11ebf2")
-        
-        
-        
-        # Placing User Name
-        text = member.display_name
-        text_size = draw.textsize(text, font=medium_font)
-        text_offset_x = text_size[0] + 100
-        text_offset_y = text_size[1] - 10
-        draw.text((text_offset_x, text_offset_y), text, font=medium_font, fill="#fff")
-
-        # Placing Discriminator
-        text = f'#{member.discriminator}'
-        text_offset_x += text_size[0] + 10
-        text_size = draw.textsize(text, font=small_font)
-        text_offset_y = text_size[1] - 5
-        draw.text((text_offset_x, text_offset_y), text, font=small_font, fill="#727175")
-
+        #drawing rectangle
+        draw.rectangle([248,148,652,182], outline="white")
+        draw.rectangle([250,150, 250 + ( 400 * activitypoints / 100 ),180], fill="white")
         
         # Drawing total
-        
-        
         bytese = io.BytesIO()
         img.save(bytese, 'PNG')
         bytese.seek(0)
