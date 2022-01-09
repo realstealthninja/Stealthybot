@@ -3,9 +3,11 @@ import discord
 from dotenv import load_dotenv
 import requests
 from discord.ext import commands
-import utilities.pagination as pagnation
+from utils.dutils import paginate
+
 load_dotenv("secrets.env")
 apitoken=os.getenv('apextoken')
+
 def get_socials(list):
     bettasstring = " "
     for item in list:
@@ -97,7 +99,7 @@ class Apex(commands.Cog):
             em.set_image(url=data["segments"][1]["metadata"]["bgImageUrl"])
             listofem = [embed, emby,em]
             
-            await pagnation.paginate(ctx=ctx,embeds=listofem)
+            await paginate(ctx=ctx,embeds=listofem)
             
 
 def setup(bot):

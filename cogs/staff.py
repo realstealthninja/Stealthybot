@@ -1,8 +1,6 @@
 import asyncio, io, contextlib
 from traceback import format_exception
 import textwrap
-from logging import exception
-import aiosqlite
 import discord
 from discord.ext import commands
 from discord.ext import buttons

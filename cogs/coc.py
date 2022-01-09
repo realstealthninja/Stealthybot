@@ -2,7 +2,7 @@ import logging
 import discord
 from dotenv.main import load_dotenv
 from discord.ext import commands
-import utilities.images as images
+import stealthybot.utils.images as images
 import os
 import coc
 from coc import utils

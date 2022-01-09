@@ -1,7 +1,5 @@
 import asyncio
-import datetime
 import discord
-import humanize
 import itertools
 import re
 import sys

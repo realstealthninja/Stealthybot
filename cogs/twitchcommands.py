@@ -1,11 +1,7 @@
 import discord
 import json
 from discord.ext import commands
-def Json(file1, data1):
-         file1.truncate(0)
-         file1.seek(0)
-         file1.write(json.dumps(data1, indent=4))
-
+from utils.dutils import jsonwriter as Json
 
 class Twitch(commands.Cog):
     def __init__(self, bot):
@@ -29,7 +25,14 @@ class Twitch(commands.Cog):
                     }
                     Json(f, datakek)
                     await ctx.send("channel added")
-    
-
+                    
+    @commands.command(aliases=["achannel"], description="adds your channel to the the twitch bot ")
+    async def addchannel(self, ctx, channelname:str):
+        with open("Jsons/Twitchchannels.json", "r+") as f:
+            datakek = json.load(f)
+            datakek[str(channelname)]
+            Json(f, datakek)
+            await ctx.send("channel added to the bot")
+ 
 def setup(bot):
     bot.add_cog(Twitch(bot))

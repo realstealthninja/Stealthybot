@@ -1,8 +1,5 @@
-from typing import Counter
-import discord
 import random
 import csv
-import asyncio
 from discord.ext import commands
 
 class Fun(commands.Cog):

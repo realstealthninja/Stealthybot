@@ -15,7 +15,7 @@ class Stealthybot(commands.Bot):
 
     def __init__(self):
         super().__init__(
-            command_prefix= "s?",
+            command_prefix= "s?test",
             description="worst bot ever lol",
             intents = discord.Intents.all(),
             case_insensitive= True,
