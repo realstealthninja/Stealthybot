@@ -27,7 +27,7 @@ class Activity(commands.Cog):
     @periodicsacrifice.before_loop
     async def beforesacrifice(self):
         await self.bot.wait_until_ready()
-        if self.db != None and self.db.cursor() != None:
+        if self.db != None and await self.db.cursor() != None:
             return
         else:
             await asyncio.sleep(1)
@@ -76,7 +76,7 @@ class Activity(commands.Cog):
                await cursor.execute("delete from activity where userid=? and guildid=?",(people[0], ctx.guild.id))
                await self.db.commit()
                continue
-            desc += f"\n**{k}.** {self.bot.get_user(people[0]).display_name}:  activity points:- **{people[1]}**"
+            desc += f"\n**{k}.** {self.bot.get_user(people[0]).display_name} || **{people[1]}**"
             if k == 10:
               break
         emeby.description = desc
