@@ -13,7 +13,7 @@ load_dotenv(dotenv_path="secrets.env")
 class Coc(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        
+        self.coc_client = bot.coc_client
     # TODO: add more commands 
     
     
@@ -49,7 +49,7 @@ class Coc(commands.Cog):
             log = "Public"
 
 
-        e = discord.Embed(title="Clan details")
+        e = disnake.Embed(title="Clan details")
 
         e.set_thumbnail(url=clan.badge.url)
         
@@ -95,7 +95,7 @@ class Coc(commands.Cog):
         to_send = ""
         listofimages =[]
         if len(player.heroes) == 1:
-           embed = discord.Embed(title="Player heros")
+           embed = disnake.Embed(title="Player heros")
            embed.set_image(url=f"attachment://assets/heros/{player.heroes[0]}.png")
            embed.add_field(name=str(player.heroes[0]), value="Lv{}/{}".format(player.heroes[0].level,player.heroes[0].max_level))
            await ctx.send(embed=embed)
@@ -105,11 +105,11 @@ class Coc(commands.Cog):
                 listofimages.append(f"assets/heros/{str(hero)}.png")
                 to_send += "{}: Lv{}/{}   ".format(str(hero), hero.level, hero.max_level)
             imgpath = images.stichimgs(listofimages,"herostiched")
-            embed = discord.Embed(title="Player Heroes")
+            embed = disnake.Embed(title="Player Heroes")
             embed.set_image(url=f"attachment://{imgpath}")
             embed.add_field(name=to_send,value="⠀")
             
-            file = discord.File("assets/stichedimages/herostiched.png")
+            file = disnake.File("assets/stichedimages/herostiched.png")
             await ctx.send(file=file,embed=embed)
             os.remove(imgpath)
        
