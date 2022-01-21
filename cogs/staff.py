@@ -3,7 +3,7 @@ from traceback import format_exception
 import textwrap
 import disnake
 from disnake.ext import commands
-from utils.dutils import buttons
+from utils.dutils import Paginator
 
 def clean_code(content:str) -> str:
     if content.startswith("```py"):
@@ -127,7 +127,7 @@ class Staff(commands.Cog):
         if len(result) < 2000:
             return await ctx.send(f"```py\nIn[0]: {message}\nOut[0]: {result}\n```")
 
-        pager = buttons.Paginator(
+        pager = Paginator(
             timeout=100,
             entries=[result[i: i + 2000] for i in range(0, len(result), 2000)],
             length=1,
