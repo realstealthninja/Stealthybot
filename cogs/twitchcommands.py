@@ -1,6 +1,6 @@
-import discord
+import disnake
 import json
-from discord.ext import commands
+from disnake.ext import commands
 from utils.dutils import jsonwriter as Json
 
 class Twitch(commands.Cog):
