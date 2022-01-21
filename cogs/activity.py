@@ -1,10 +1,10 @@
-import discord
+import disnake
 import aiosqlite
 import asyncio
 import aiohttp
 import io
 from PIL import Image, ImageDraw, ImageFont
-from discord.ext import tasks,commands
+from disnake.ext import tasks,commands
 
 
 class Activity(commands.Cog):
@@ -38,7 +38,7 @@ class Activity(commands.Cog):
         await cursor.execute("update activity set cando=? where userid=? and guildid=?",( 1, userid, guildid))
         await self.db.commit()
 
-    async def findorinsert(self, member: discord.member):
+    async def findorinsert(self, member: disnake.member):
         cursor = await self.db.cursor()
         await cursor.execute("Select * from activity where userid = ? and guildid =?", (member.id, member.guild.id))
         result = await cursor.fetchone()
@@ -49,7 +49,7 @@ class Activity(commands.Cog):
         return result    
 
     @commands.Cog.listener()
-    async def on_message(self, message:discord.Message):
+    async def on_message(self, message:disnake.Message):
         if message.author.bot is True or message.guild is None:
             return
         result = await self.findorinsert(message.author)
@@ -65,7 +65,7 @@ class Activity(commands.Cog):
             
     @commands.command()
     async def leaderboard(self, ctx):
-        emeby = discord.Embed()
+        emeby = disnake.Embed()
         emeby.set_author(name="the most active people of the day", icon_url= ctx.author.avatar_url)
         cursor = await self.db.cursor()
         await cursor.execute("Select userid, activitypoints from activity where guildid = ? ORDER BY activitypoints ASC",(ctx.guild.id,))
@@ -83,19 +83,19 @@ class Activity(commands.Cog):
         await ctx.send(embed = emeby)    
     
     @commands.command()
-    async def activity(self, ctx, member:discord.Member = None):
+    async def activity(self, ctx, member:disnake.Member = None):
         if member is None:
             member = ctx.author
         cursor = await self.db.cursor()
         await cursor.execute("select * from activity where guildid =? and userid=?",(member.guild.id,member.id))
         result = await cursor.fetchone()
         bytese = await self.make_rank_image(member, result[1], result[5])
-        file = discord.File(bytese, 'rank.png')
+        file = disnake.File(bytese, 'rank.png')
         await ctx.send(file=file)
         
         
 
-    async def make_rank_image(self, member: discord.Member, activitypoints, total):
+    async def make_rank_image(self, member: disnake.Member, activitypoints, total):
         user_avatar_image = str(member.avatar_url_as(format='png', size=512))
         async with aiohttp.ClientSession() as session:
             async with session.get(user_avatar_image) as resp:

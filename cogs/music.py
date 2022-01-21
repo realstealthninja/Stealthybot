@@ -1,11 +1,11 @@
 import asyncio
-import discord
+import disnake
 import itertools
 import re
 import sys
 import traceback
 import wavelink
-from discord.ext import commands
+from disnake.ext import commands
 from typing import Union
 
 
@@ -71,7 +71,7 @@ class Music(commands.Cog):
         await self.bot.wait_until_ready()
 
         # Initiate our nodes. For this example we will use one server.
-        # Region should be a discord.py guild.region e.g sydney or us_central (Though this is not technically required)
+        # Region should be a disnake.py guild.region e.g sydney or us_central (Though this is not technically required)
         node = await self.bot.wavelink.initiate_node(host='lava.link',
                                                      port=80,
                                                      rest_uri='http://lava.link:80',
@@ -113,21 +113,21 @@ class Music(commands.Cog):
         if isinstance(error, commands.NoPrivateMessage):
             try:
                 return await ctx.send('This command can not be used in Private Messages.')
-            except discord.HTTPException:
+            except disnake.HTTPException:
                 pass
 
         print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
         traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
 
     @commands.command(name='connect')
-    async def connect_(self, ctx, *, channel: discord.VoiceChannel=None):
+    async def connect_(self, ctx, *, channel: disnake.VoiceChannel=None):
         """Connect to a valid voice channel."""
         if not channel:
             try:
                 channel = ctx.author.voice.channel
             except AttributeError:
                 
-                em = discord.Embed(title="You are not in a music channel or a channel hasnt been specified")
+                em = disnake.Embed(title="You are not in a music channel or a channel hasnt been specified")
                 await ctx.send(embed=em)
                 
 
@@ -227,7 +227,7 @@ class Music(commands.Cog):
         upcoming = list(itertools.islice(controller.queue._queue, 0, 5))
 
         fmt = '\n'.join(f'**`{str(song)}`**' for song in upcoming)
-        embed = discord.Embed(title=f'Upcoming - Next {len(upcoming)}', description=fmt)
+        embed = disnake.Embed(title=f'Upcoming - Next {len(upcoming)}', description=fmt)
 
         await ctx.send(embed=embed)
 

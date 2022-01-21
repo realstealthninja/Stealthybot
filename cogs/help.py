@@ -1,5 +1,5 @@
-import discord
-from discord.ext import commands
+import disnake
+from disnake.ext import commands
 import json
 
 class MyHelp(commands.HelpCommand):
@@ -9,7 +9,7 @@ class MyHelp(commands.HelpCommand):
         for cog , command in mapping.items():
         
           cogs.append(getattr(cog, "qualified_name", "⠀"))
-        embed = discord.Embed(title="**Main Help Menu **",description = " ```ini\n[ do s?help <group name> for more info on the group ] ``` ", timestamp=self.context.message.created_at)
+        embed = disnake.Embed(title="**Main Help Menu **",description = " ```ini\n[ do s?help <group name> for more info on the group ] ``` ", timestamp=self.context.message.created_at)
         embed.set_thumbnail(url="https://i.postimg.cc/HxDCyhc8/New-Project.png")
         embed.set_author(name="frustra etiam in morte!", icon_url="https://cdn.discordapp.com/avatars/889922820317007928/9182f4cfa68a27628dc9927fd1459b93.webp?size=300")
         embed.set_footer(text=f"issued by {self.context.author.display_name}", icon_url=self.context.author.avatar_url)
@@ -24,7 +24,7 @@ class MyHelp(commands.HelpCommand):
       # ?help <command>
       async def send_command_help(self, command):
         newcommand = command
-        embed = discord.Embed()
+        embed = disnake.Embed()
         embed.set_author(name="Help", icon_url=self.context.author.avatar_url)
         embed.add_field(name="⦑ Name ⦒", value=f"`{newcommand.qualified_name}`",inline=False )
         alias = command.aliases
@@ -51,7 +51,7 @@ class MyHelp(commands.HelpCommand):
         if cog.qualified_name in datakek:
           bettername = datakek[cog.qualified_name]["betternames"]
           description = datakek[cog.qualified_name]["description"]
-          embed = discord.Embed(title=bettername,description=description,timestamp=self.context.message.created_at)
+          embed = disnake.Embed(title=bettername,description=description,timestamp=self.context.message.created_at)
           embed.set_author(name="frustra etiam in morte!", icon_url="https://cdn.discordapp.com/avatars/889922820317007928/9182f4cfa68a27628dc9927fd1459b93.webp?size=300")
           embed.set_footer(text=f"issued by {self.context.author.display_name}", icon_url=self.context.author.avatar_url)
           embed.add_field(name="**links**:", value="<:github:896250023313043477> [github](https://github.com/realstealthninja/Stealthybot) | [offical server(includes moonfight)](https://discord.gg/HAbStFeVAj) | ")

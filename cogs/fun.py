@@ -1,6 +1,6 @@
 import random
 import csv
-from discord.ext import commands
+from disnake.ext import commands
 
 class Fun(commands.Cog):
     def __init__(self, bot):

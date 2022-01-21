@@ -1,7 +1,7 @@
 import logging
-import discord
+import disnake
 from dotenv.main import load_dotenv
-from discord.ext import commands
+from disnake.ext import commands
 import utils.images as images
 import os
 import coc

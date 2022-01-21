@@ -1,9 +1,9 @@
 import asyncio, io, contextlib
 from traceback import format_exception
 import textwrap
-import discord
-from discord.ext import commands
-from discord.ext import buttons
+import disnake
+from disnake.ext import commands
+from utils.dutils import buttons
 
 def clean_code(content:str) -> str:
     if content.startswith("```py"):
@@ -28,7 +28,7 @@ class Staff(commands.Cog):
         Returns:
             null: it doesnt return shit?
         """
-        embed = discord.Embed(title="Git pull.", description="")
+        embed = disnake.Embed(title="Git pull.", description="")
         git_commands = [
             ["git", "stash"],
             ["git", "pull", "--ff-only"]
@@ -50,7 +50,7 @@ class Staff(commands.Cog):
 
     @commands.command(hidden=True)
     async def load(self, ctx, extension):
-            embed = discord.Embed()
+            embed = disnake.Embed()
             self.bot.load_extension(f'cogs.{extension}')
             embed.add_field(name="Load Extension", value=f"Loaded cog: ``{extension}`` successfully")
             await ctx.send(embed=embed)
@@ -59,7 +59,7 @@ class Staff(commands.Cog):
     @commands.command(hidden=True)
     async def unload(self, ctx, extension):
         self.bot.unload_extension(f'cogs.{extension}')
-        embed = discord.Embed()
+        embed = disnake.Embed()
         embed.add_field(name="Unload Extension", value=f"Unloaded cog: ``{extension}`` successfully")
         await ctx.send(embed=embed)
 
@@ -74,13 +74,13 @@ class Staff(commands.Cog):
             for cog in tuple(self.bot.extensions):
     
                 self.bot.reload_extension(cog)
-            embed = discord.Embed()
+            embed = disnake.Embed()
             embed.add_field(name="Reload Extension", value=f"Reloaded cogs successfully")
             await ctx.send(embed=embed)
         else:
 
             self.bot.reload_extension(f'cogs.{extension}')
-            embed = discord.Embed()
+            embed = disnake.Embed()
             embed.add_field(name="Reload Extension", value=f"Reloaded cog: ``{extension}`` successfully")
             await ctx.send(embed=embed)   
 
@@ -90,7 +90,7 @@ class Staff(commands.Cog):
             return await ctx.send('...')
             
         local_variables = {
-            "discord": discord,
+            "disnake": disnake,
             "commands": commands, 
             "bot": ctx.bot, 
             "client": ctx.bot,

@@ -1,8 +1,8 @@
 import os
-import discord
+import disnake
 from dotenv import load_dotenv
 import requests
-from discord.ext import commands
+from disnake.ext import commands
 from utils.dutils import paginate
 
 load_dotenv("secrets.env")
@@ -34,7 +34,7 @@ class Apex(commands.Cog):
             data = r.json()["data"]
             
             social = get_socials(data["userInfo"]["socialAccounts"])            
-            embed = discord.Embed(title=data["platformInfo"]["platformUserId"], description=f"{social}")
+            embed = disnake.Embed(title=data["platformInfo"]["platformUserId"], description=f"{social}")
             embed.set_thumbnail(url=data["platformInfo"]["avatarUrl"])
 
             hugetext = f"""
@@ -56,7 +56,7 @@ class Apex(commands.Cog):
             """
             embed.add_field(name="meta data", value=metatext)
             
-            emby = discord.Embed(title ="Over View")
+            emby = disnake.Embed(title ="Over View")
             revives,sniperkills,totaldamage,killsaskillleader,winningkills,killspermatch = "0"
             try:
                 killspermatch = data["segments"][0]["stats"]["killsPerMatch"]["displayValue"]
@@ -93,7 +93,7 @@ class Apex(commands.Cog):
             
             """
             emby.add_field(name=data["segments"][0]["metadata"]["name"], value=overview)
-            em = discord.Embed(title=data["segments"][1]["metadata"]["name"], description="hey there i make this bot for free! you can check out its code in s?help ")
+            em = disnake.Embed(title=data["segments"][1]["metadata"]["name"], description="hey there i make this bot for free! you can check out its code in s?help ")
             em.set_thumbnail(url=data["segments"][1]["metadata"]["imageUrl"])
             em.add_field(name="active legend", value=data["segments"][1]["metadata"]["isActive"])
             em.set_image(url=data["segments"][1]["metadata"]["bgImageUrl"])
