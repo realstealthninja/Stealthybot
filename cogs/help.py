@@ -12,7 +12,7 @@ class MyHelp(commands.HelpCommand):
         embed = disnake.Embed(title="**Main Help Menu **",description = " ```ini\n[ do s?help <group name> for more info on the group ] ``` ", timestamp=self.context.message.created_at)
         embed.set_thumbnail(url="https://i.postimg.cc/HxDCyhc8/New-Project.png")
         embed.set_author(name="frustra etiam in morte!", icon_url="https://cdn.discordapp.com/avatars/889922820317007928/9182f4cfa68a27628dc9927fd1459b93.webp?size=300")
-        embed.set_footer(text=f"issued by {self.context.author.display_name}", icon_url=self.context.author.avatar_url)
+        embed.set_footer(text=f"issued by {self.context.author.display_name}", icon_url=self.context.author.avatar)
         embed.add_field(name="**links**:", value="<:github:896250023313043477> [github](https://github.com/realstealthninja/Stealthybot) | [offical server](https://discord.gg/HAbStFeVAj) | [invite me!](https://discord.com/api/oauth2/authorize?client_id=889922820317007928&permissions=534659984470&scope=bot) ")
         betterstring =  f"  *** Catagories :*** \n \n"
         for string in cogs:
@@ -25,7 +25,7 @@ class MyHelp(commands.HelpCommand):
       async def send_command_help(self, command):
         newcommand = command
         embed = disnake.Embed()
-        embed.set_author(name="Help", icon_url=self.context.author.avatar_url)
+        embed.set_author(name="Help", icon_url=self.context.author.avatar)
         embed.add_field(name="⦑ Name ⦒", value=f"`{newcommand.qualified_name}`",inline=False )
         alias = command.aliases
         if alias:
@@ -53,7 +53,7 @@ class MyHelp(commands.HelpCommand):
           description = datakek[cog.qualified_name]["description"]
           embed = disnake.Embed(title=bettername,description=description,timestamp=self.context.message.created_at)
           embed.set_author(name="frustra etiam in morte!", icon_url="https://cdn.discordapp.com/avatars/889922820317007928/9182f4cfa68a27628dc9927fd1459b93.webp?size=300")
-          embed.set_footer(text=f"issued by {self.context.author.display_name}", icon_url=self.context.author.avatar_url)
+          embed.set_footer(text=f"issued by {self.context.author.display_name}", icon_url=self.context.author.avatar)
           embed.add_field(name="**links**:", value="<:github:896250023313043477> [github](https://github.com/realstealthninja/Stealthybot) | [offical server(includes moonfight)](https://discord.gg/HAbStFeVAj) | ")
           commands = cog.get_commands()
           betteastring = "*** Commands: *** \n \n"

@@ -66,7 +66,7 @@ class Activity(commands.Cog):
     @commands.command()
     async def leaderboard(self, ctx):
         emeby = disnake.Embed()
-        emeby.set_author(name="the most active people of the day", icon_url= ctx.author.avatar_url)
+        emeby.set_author(name="the most active people of the day", icon_url= ctx.author.avatar)
         cursor = await self.db.cursor()
         await cursor.execute("Select userid, activitypoints from activity where guildid = ? ORDER BY activitypoints ASC",(ctx.guild.id,))
         result = await cursor.fetchall()
@@ -76,7 +76,7 @@ class Activity(commands.Cog):
                await cursor.execute("delete from activity where userid=? and guildid=?",(people[0], ctx.guild.id))
                await self.db.commit()
                continue
-            desc += f"\n**{k}.** {self.bot.get_user(people[0]).display_name} || **{people[1]}**"
+            desc += f"\n**{k}.** {self.bot.get_user(people[0]).display_name} | **{people[1]}**"
             if k == 10:
               break
         emeby.description = desc
@@ -96,7 +96,7 @@ class Activity(commands.Cog):
         
 
     async def make_rank_image(self, member: disnake.Member, activitypoints, total):
-        user_avatar_image = str(member.avatar_url_as(format='png', size=512))
+        user_avatar_image = str(member.avatar.with_size(512))
         async with aiohttp.ClientSession() as session:
             async with session.get(user_avatar_image) as resp:
                 avatar_bytes = io.BytesIO(await resp.read())
@@ -105,7 +105,7 @@ class Activity(commands.Cog):
         logo = Image.open(avatar_bytes).resize((200, 200))
         background = Image.open("assets/backgrounds/death.png")
         img.paste(background)
-        img.paste(logo, (20, 20), mask=logo)
+        img.paste(logo, (20, 20))
         
         draw = ImageDraw.Draw(img, 'RGB')
 
