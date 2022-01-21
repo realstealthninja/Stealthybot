@@ -1,4 +1,4 @@
-discord.py[voice]
+disnake[voice]
 requests
 twitchio
 python-dotenv
