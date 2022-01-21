@@ -29,7 +29,7 @@ class Economy(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.db = None
-        self.bot.create_task(self.connectdb())
+        self.bot.loop.create_task(self.connectdb())
     
     
     async def connectdb(self):
