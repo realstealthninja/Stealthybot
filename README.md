@@ -69,19 +69,6 @@
 
 <u>
 
-# requirements
-
-</u>
-
-| libraries     | version |
-| :------------ | :-----: |
-| discordpy     |  1.7.0  |
-| requests      |  2.7.0  |
-| cocpy         |  1.3.0  |
-| python-dotenv |  1.4.0  |
-
-<u>
-
 # FAQ
 
 </u>
