@@ -29,7 +29,12 @@ class Stealthybot(commands.Bot):
     async def on_ready(self):
         print(f"We have logged in as {self.user}")
 
-        await self.change_presence(activity=disnake.Activity(type=disnake.ActivityType.watching, name =f"{self.command_prefix}help"))
+        await self.change_presence(
+            activity=disnake.Activity(
+                type=disnake.ActivityType.watching,
+                name =f"{self.command_prefix}help on {len(self.guilds)} servers"
+                )
+        )
         print(disnake.__version__)
 
 

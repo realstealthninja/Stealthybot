@@ -1,4 +1,5 @@
-import asyncio, os
+import asyncio
+import os
 from dotenv import load_dotenv
 from stealthybot import TwitchBot
 from stealthybot import Stealthybot
@@ -23,5 +24,3 @@ async def precheck(ctx):
 
 if __name__ == "__main__":
     stelbot.run(token)
-    
-
