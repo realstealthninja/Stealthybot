@@ -32,16 +32,18 @@ class Gaming(commands.Cog):
             description="remember its about skills not about kills"
         )
         legend_names = '\n'.join(f'> {legend.name}' for legend in self.player.legends)
+        totalstatsstring= ""
+        for stat in self.player.stats:
+            for key in stat.keys():
+                avoidable = ["specific", "Specific1", "Specific2", "specific3", "rank"]
+                if key in avoidable:
+                    continue
+                totalstatsstring += f"> **{key}**: `{stat[key]}` \n"
         main_embed.add_field(
             name="Details",
             value=f"""
             ***__stats__***
-            > Level: `{self.player.stats[0]['Level']}`
-            > Kills: `{self.player.stats[1]['Kills']}`
-            > Total damage: `{self.player.stats[2]['Damage']}`
-            > Total Head shots: `{self.player.stats[3]['Headshots']}`
-            > Rank score: `{self.player.stats[4]['RankScore']}`
-            > Arena score: `{self.player.stats[5]['ArenaRankScore']}`
+            {totalstatsstring}
             ***__legends__***
             {legend_names}
             """
