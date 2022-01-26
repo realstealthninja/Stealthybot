@@ -59,11 +59,11 @@
 
 </u>
 
-- a fully fuctioning twitch bot
-- a clash of clans themed cog
-- a fully functioning discord bot
-- a music cog included
+- Twitch chat(needs rework)
+- Activity points
+- Gaming catagory
 - in development economy!
+- Truth or dare
 
 
 
