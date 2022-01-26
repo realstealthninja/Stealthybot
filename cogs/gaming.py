@@ -2,114 +2,70 @@ import os
 import coc
 import logging
 import disnake
-import requests
 
 from coc import utils
+from apexpy import ApexApi
 from dotenv import load_dotenv
 from disnake.ext import commands
 
 from utils.dutils import paginate
 
-
-
-
-
 load_dotenv("secrets.env")
 apitoken=os.getenv('apextoken')
-
-def get_socials(list):
-    bettasstring = " "
-    for item in list:
-        if item ["platformSlug"] == "twitter":
-            userid = item["platformUserHandle"]
-            bettasstring += f" <:twitter:898880366725709864> @{userid} "
-        elif item["platformSlug"] =="twitch":
-            userid = item["platformUserHandle"]
-            bettasstring += f" <:twitch:898882021647077386>  {userid} "
-            
-    return bettasstring
 
 class Gaming(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        
+        self.player = ApexApi(key=apitoken)
+    
     @commands.command(description="gets info about a player using their username accepted platforms are: psn, xbl, orgin")
-    async def apexprofile(self, ctx, username, platform="orgin"):
-        ctx.trigger_typing
-        r= requests.get(f"https://public-api.tracker.gg/v2/apex/standard/profile/{platform}/{username}", headers={"TRN-Api-Key": f"{apitoken}", "Accept": "application/json", "Accept-Encoding":"gzip"})
-        respcode = r.status_code
-        if respcode != 200:
-            await ctx.reply("a error occured try checking your spelling or wait a while and try again")
-        else:
-            data = r.json()["data"]
-            
-            social = get_socials(data["userInfo"]["socialAccounts"])            
-            embed = disnake.Embed(title=data["platformInfo"]["platformUserId"], description=f"{social}")
-            embed.set_thumbnail(url=data["platformInfo"]["avatarUrl"])
-
-            hugetext = f"""
-            Country code: {data["userInfo"]["countryCode"]}
-            total page views: {str(data["userInfo"]["pageviews"])}
-            
+    async def apexprofile(self, ctx, username, platform="pc"):
+        await self.player.search(username, platform)
+        main_embed = disnake.Embed(
+            title=f"***{username}***",
+            description="remember its about skills not about kills"
+        )
+        legend_names = '\n'.join(f'> {legend.name}' for legend in self.player.legends)
+        main_embed.add_field(
+            name="Details",
+            value=f"""
+            ***__stats__***
+            > Level: `{self.player.stats[0]['Level']}`
+            > Kills: `{self.player.stats[1]['Kills']}`
+            > Total damage: `{self.player.stats[2]['Damage']}`
+            > Total Head shots: `{self.player.stats[3]['Headshots']}`
+            > Rank score: `{self.player.stats[4]['RankScore']}`
+            > Arena score: `{self.player.stats[5]['ArenaRankScore']}`
+            ***__legends__***
+            {legend_names}
             """
-            embed.add_field(name="Info", value=hugetext)
-            activestats = ""
-            if data["metadata"]["activeLegendStats"] != None:
+        )
+        
+        embedlist= [main_embed]
+        for legend in self.player.legends:
+            emby = disnake.Embed(
+                title=f"{legend.name}"
+            )
+            emby.set_thumbnail(url=legend.icon)
+            emby.set_image(url=legend.bgimage)
+            totalstatsstring= ""
+            for stat in legend.stats:
+                for key in stat.keys():
+                    avoidable = ["specific", "Specific1", "Specific2", "specific3", "rank"]
+                    if key in avoidable:
+                        continue
+                    totalstatsstring += f"> **{key}** : `{stat[key]}` \n"
             
-                for stats in data["metadata"]["activeLegendStats"]:
-                    activestats += stats
-            
-            metatext = f"""
-            current half: {data["metadata"]["currentSeason"]}
-            Active legend: {data["metadata"]["activeLegendName"]}
-            Active legend stats: {activestats}
-            """
-            embed.add_field(name="meta data", value=metatext)
-            
-            emby = disnake.Embed(title ="Over View")
-            revives,sniperkills,totaldamage,killsaskillleader,winningkills,killspermatch = "0"
-            try:
-                killspermatch = data["segments"][0]["stats"]["killsPerMatch"]["displayValue"]
-                winningkills = data["segments"][0]["stats"]["winningKills"]["displayValue"]
-                killsaskillleader = data["segments"][0]["stats"]["killsAsKillLeader"]["displayValue"]
-                totaldamage = data["segments"][0]["stats"]["damage"]["displayValue"]
-                revives =  data["segments"][0]["stats"]["revives"]["displayValue"]
-                sniperkills = data["segments"][0]["stats"]["sniperKills"]["displayValue"]
-                
-            except KeyError:
-                pass
-            overview = f"""
-            NAME: `{data["segments"][0]["metadata"]["name"]}`
-            
-            
-            > rank Score : `{data["segments"][0]["stats"]["rankScore"]["displayValue"]}`
-            
-            > Kills: `{data["segments"][0]["stats"]["kills"]["displayValue"]}`
-            
-            > kills per match: `{killspermatch}`
-            
-            > Winning Kills: `{winningkills}`
-            
-            > Kills As Kill Leader: `{killsaskillleader}`
-            
-            > total damage done: `{totaldamage}`
-            
-            > matches played: `{data["segments"][0]["stats"]["matchesPlayed"]["displayValue"]}`
-            
-            > revives: `{revives}`
-            
-            > sniper kills: `{sniperkills}`
-            
-            
-            """
-            emby.add_field(name=data["segments"][0]["metadata"]["name"], value=overview)
-            em = disnake.Embed(title=data["segments"][1]["metadata"]["name"], description="hey there i make this bot for free! you can check out its code in s?help ")
-            em.set_thumbnail(url=data["segments"][1]["metadata"]["imageUrl"])
-            em.add_field(name="active legend", value=data["segments"][1]["metadata"]["isActive"])
-            em.set_image(url=data["segments"][1]["metadata"]["bgImageUrl"])
-            listofem = [embed, emby,em]
-            
-            await paginate(ctx=ctx,embeds=listofem)
+            emby.add_field(
+                name="Stats",
+                value=f"""
+                {totalstatsstring}
+                """
+            )
+            embedlist.append(emby)
+        await paginate(ctx,embedlist)
+        
+        
         
     logging.basicConfig(level=logging.ERROR)
     @commands.command(description="gets the clan detailed about the specified clan")
@@ -118,10 +74,9 @@ class Gaming(commands.Cog):
         if not utils.is_valid_tag(clan_tag):
             await ctx.send("You didn't give me a proper tag!")
             return
-    
+        
         try:
             clan = await self.bot.coc_client.get_clan(clan_tag)
-        
         except coc.NotFound:
             await ctx.send("This clan doesn't exist!")
             return
@@ -152,21 +107,14 @@ class Gaming(commands.Cog):
             
             > **Win Streak**: `{clan.war_win_streak}`
             > **League war rank**: `{clan.war_league}` 
-
             """
         )
         e.add_field(
-
             name="Clan Record",
-
             value=f"> Wins - `{clan.war_wins}`\n> Losses - `{clan.war_losses}`\n> Draws - `{clan.war_ties}`",
-
             inline=False
         )
-        e2= ""
-        async for player in clan.get_detailed_members():
-            e2 += f"> {player.name} \n"
-        e.add_field(name="Members", value=e2)
+        e.add_field(name="Members", value="\n".join(f"> {player.name}" async for player in clan.get_detailed_members()))
         await ctx.send(embed=e)
       
 def setup(bot):

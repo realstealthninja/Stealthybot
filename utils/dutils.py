@@ -33,8 +33,15 @@ async def paginate(ctx, embeds:list):
         
         
         await msg.remove_reaction(member=ctx.author, emoji=e.emoji)
-        await msg.edit(embed=embeds[current])
-        
+        try:
+            await msg.edit(embed=embeds[current])
+        except IndexError:
+            if current == -1:
+                current = len(embeds)
+                await msg.edit(embed=embeds[current])
+            else:
+                current = 0
+                await msg.edit(embed=embeds[current])
         e, u = await ctx.bot.wait_for('reaction_add', check=check)
     else:
         return await msg.clear_reactions()
