@@ -25,7 +25,7 @@ class MyHelp(commands.HelpCommand):
         )
         embed.add_field(
           name="**links**:",
-          value="<:github:896250023313043477> [github](https://github.com/realstealthninja/Stealthybot) | [offical server](https://discord.gg/HAbStFeVAj) | [invite me!](https://discord.com/api/oauth2/authorize?client_id=889922820317007928&permissions=534659984470&scope=bot) "
+          value="<:github:896250023313043477> [github](https://github.com/realstealthninja/Stealthybot) | [offical server](https://discord.gg/HAbStFeVAj) | [invite me!](https://discord.com/api/oauth2/authorize?client_id=889922820317007928&permissions=440972733504&scope=bot) "
         )
         betterstring =  f"  *** Catagories :*** \n \n"
         for string in cogs:
