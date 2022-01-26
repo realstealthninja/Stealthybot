@@ -26,7 +26,7 @@ class Gaming(commands.Cog):
             await self.player.search(username, platform)
         except PlayerNotFoundError:
             await ctx.send(f"player `{username}` not found in database. check the spelling and try again")
-        
+            return
         main_embed = disnake.Embed(
             title=f"***{username}***",
             description="remember its about skills not about kills"
