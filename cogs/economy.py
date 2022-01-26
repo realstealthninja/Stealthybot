@@ -2,11 +2,11 @@ import aiosqlite
 from disnake.ext import commands
 
 class Player():
-    def __init__(self, bank, wallet, items, user_id):
+    def __init__(self, bank, wallet, items, userid):
         self.bank = bank
         self.wallet = wallet
         self.items = items
-        self.user_id = user_id
+        self.userid = userid
 
 class Item():
     def __init__(self, name, type):
@@ -35,17 +35,17 @@ class Economy(commands.Cog):
     async def connectdb(self):
         self.db = await aiosqlite.connect("database\economy.db")
     
-    async def register_status(self, user_Id):
+    async def register_status(self, userId):
         cur = await self.db.cursor()
-        query = await cur.execute("select * from profile where id = ?", (user_Id,))
+        query = await cur.execute("select * from profile where id = ?", (userid,))
         query = await query.fetchone()
         
         if not query:
-            await cur.execute(f"insert into profile values(?, 0,0, 'None')", (user_Id,))
+            await cur.execute(f"insert into profile values(?, 0,0, 'None')", (userid,))
             await self.db.commit()
-    async def get_user (self, user_id):
+    async def get_user (self, userid):
         cur = await self.db.cursor()
-        result = await cur.execute("select * from profile where id = ?", (user_id,))
+        result = await cur.execute("select * from profile where id = ?", (userid,))
         result.fetchone()
         return Player(result[1], result[2], result[3])
     
@@ -67,7 +67,7 @@ class Economy(commands.Cog):
         
     async def add_item(self, id, item:Item):
         cur = await self.db.cursor()
-        acc = await cur.execute(f"select items from profile where id= ?",(id,))
+        await cur.execute(f"select items from profile where id= ?",(id,))
         
         await self.db.commit()
     

@@ -1,4 +1,5 @@
 import asyncio, io, contextlib
+import os
 from traceback import format_exception
 import textwrap
 import disnake
@@ -117,7 +118,6 @@ class Staff(commands.Cog):
                 result = f"{stdout.getvalue()}{obj}\n"
         except Exception as e:
             result = "".join(format_exception(e, e, e.__traceback__))
-            pass
     
         result = result.replace('`', '')
         message = message.replace('`', '')
@@ -146,5 +146,10 @@ class Staff(commands.Cog):
         else:
             await ctx.send(error)
 
+    @commands.command(hidden=True)
+    async def reboot(self, ctx):
+        await ctx.send(embed =  disnake.Embed(title= "rebooting"))
+        await self.bot.close()
+        os.system('python3 main.py')
 def setup(bot):
     bot.add_cog(Staff(bot))
