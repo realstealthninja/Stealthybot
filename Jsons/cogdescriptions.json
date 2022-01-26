@@ -1,8 +1,4 @@
 {
-    "Coc": {
-        "betternames": "Clash of Clans Catagory",
-        "description": "**`A clash of clans themed catagory find your clan and your profile`**"
-    },
     "Help": {
         "betternames": "Help catagory",
         "description": "**`the help command is in this catagory`**"
@@ -16,16 +12,16 @@
         "description": "**`a catagory for the linking of the builtin twitch bot to your twitch channel and discord channels`**"
     },
     "Staff": {
-        "betternames": "Staf Catagory",
+        "betternames": "Staff Catagory",
         "description": "**`this catagory is for the owner which is stealthninja keep your dirty hands off my shit`**"
     },
     "Economy": {
         "betternames": "Stealthy Economy",
         "description": "**`this catagory is full of economy commands`**"
     },
-    "Apex": {
-        "betternames": "Apex legends",
-        "description": "**` this catagory is for apex legends commands `**"
+    "Gaming": {
+        "betternames": "Gaming Catagory",
+        "description": "**` this catagory is for gaming commands `**"
     },
     "Fun": {
         "betternames": "Fun commands",
