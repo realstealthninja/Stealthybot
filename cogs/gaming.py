@@ -35,7 +35,7 @@ class Gaming(commands.Cog):
         totalstatsstring= ""
         for stat in self.player.stats:
             for key in stat.keys():
-                avoidable = ["specific", "Specific1", "Specific2", "specific3", "rank"]
+                avoidable = ["specific", "Specific1", "Specific2", "Specific3", "rank"]
                 if key in avoidable:
                     continue
                 totalstatsstring += f"> **{key}**: `{stat[key]}` \n"
