@@ -1,4 +1,5 @@
 import os
+import apexpy
 import coc
 import logging
 import disnake
@@ -9,6 +10,7 @@ from dotenv import load_dotenv
 from disnake.ext import commands
 
 from utils.dutils import paginate
+from apexpy.exceptions import PlayerNotFoundError
 
 load_dotenv("secrets.env")
 apitoken=os.getenv('apextoken')
@@ -18,9 +20,13 @@ class Gaming(commands.Cog):
         self.bot = bot
         self.player = ApexApi(key=apitoken)
     
-    @commands.command(description="gets info about a player using their username accepted platforms are: psn, xbl, orgin")
-    async def apexprofile(self, ctx, username, platform="pc"):
-        await self.player.search(username, platform)
+    @commands.command(description="gets info about a player using their username accepted platforms are: psn, xbl, pc")
+    async def apexprofile(self, ctx, username, platform="pc") -> None:
+        try:
+            await self.player.search(username, platform)
+        except PlayerNotFoundError:
+            await ctx.send(f"player `{username}` not found in database. check the spelling and try again")
+        
         main_embed = disnake.Embed(
             title=f"***{username}***",
             description="remember its about skills not about kills"
