@@ -15,15 +15,26 @@ from apexpy.exceptions import PlayerNotFoundError
 load_dotenv("secrets.env")
 apitoken = os.getenv('apextoken')
 
+async def looper(stats):
+    totalstring = ""
+    avoidable = ["specific", "Specific1", "Specific2", "specific3", "rank"]
+    for stat in stats:
+        for key in stat.keys():
+            if key in avoidable:
+                    continue
+            totalstring += f"> **{key}**: `{stat[key]}` \n"
+    return totalstring
+    
+
 
 class Gaming(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.player = ApexApi(key=apitoken)
 
-    # TODO: figure out a way to reduce the repeating for loop
     @commands.command(description="gets info about a player using their username accepted platforms are: psn, xbl, pc")
-    async def apexprofile(self, ctx, username, platform="pc") -> None:
+    async def apexprofile(self, ctx, platform="pc",*,username,) -> None:
+        await ctx.trigger_typing()
         try:
             await self.player.search(username, platform)
         except PlayerNotFoundError:
@@ -37,14 +48,7 @@ class Gaming(commands.Cog):
 
         legend_names = '\n'.join(
             f'> {legend.name}' for legend in self.player.legends)
-        totalstatsstring = ""
-        for stat in self.player.stats:
-            for key in stat.keys():
-                avoidable = ["specific", "Specific1",
-                             "Specific2", "Specific3", "rank"]
-                if key in avoidable:
-                    continue
-                totalstatsstring += f"> **{key}**: `{stat[key]}` \n"
+        totalstatsstring = await looper(self.player.stats)
 
         main_embed.add_field(
             name="Details",
@@ -55,7 +59,6 @@ class Gaming(commands.Cog):
             {legend_names}
             """
         )
-
         embedlist = [main_embed]
         for legend in self.player.legends:
             emby = disnake.Embed(
@@ -63,15 +66,7 @@ class Gaming(commands.Cog):
             )
             emby.set_thumbnail(url=legend.icon)
             emby.set_image(url=legend.bgimage)
-            totalstatsstring = ""
-            for stat in legend.stats:
-                for key in stat.keys():
-                    avoidable = ["specific", "Specific1",
-                                 "Specific2", "specific3", "rank"]
-                    if key in avoidable:
-                        continue
-                    totalstatsstring += f"> **{key}** : `{stat[key]}` \n"
-
+            totalstatsstring = await looper(legend.stats)
             emby.add_field(
                 name="Stats",
                 value=f"""
