@@ -1,10 +1,10 @@
-import asyncio
 import io
-import contextlib
-import os
-from traceback import format_exception
-import textwrap
+import asyncio
 import disnake
+import textwrap
+import traceback
+import contextlib
+
 from disnake.ext import commands
 from utils.dutils import Paginator
 
@@ -122,7 +122,7 @@ class Staff(commands.Cog):
 
                 result = f"{stdout.getvalue()}{obj}\n"
         except Exception as e:
-            result = "".join(format_exception(e, e, e.__traceback__))
+            result = "".join(traceback.format_exception(e, e, e.__traceback__))
 
         result = result.replace('`', '')
         message = message.replace('`', '')
@@ -148,13 +148,7 @@ class Staff(commands.Cog):
         elif isinstance(error, commands.CommandNotFound):
             return
         else:
-            await ctx.send(error)
-
-    @commands.command(hidden=True)
-    async def reboot(self, ctx):
-        await ctx.send(embed=disnake.Embed(title="rebooting"))
-        await self.bot.close()
-        os.system('python3 main.py')
+            await ctx.send(e = "".join(traceback.format_exception(error, error, error.__traceback__)))
 
 
 def setup(bot):
