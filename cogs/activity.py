@@ -53,7 +53,7 @@ class Activity(commands.Cog):
         await cursor.execute("SELECT * FROM activity WHERE userid = ? AND guildid =?", (member.id, member.guild.id))
         result = await cursor.fetchone()
         if result is None:
-            result = (member.id, 1, member.guild.id, 100, 1, 0)
+            result = (member.id, 0, member.guild.id, 100, 1, 0)
             await cursor.execute("INSERT INTO activity values(?,?,?,?,?,?)", result)
             await self.db.commit()
         return result
@@ -76,6 +76,7 @@ class Activity(commands.Cog):
         """
     )
     @commands.has_permissions(manage_channels=True)
+    @commands.bot_has_permissions(manage_roles=True)
     async def setupact(self, ctx: commands.Context, channel: disnake.TextChannel = None, role: disnake.Role = None, *, message):
         cur = await self.conf.cursor()
         await cur.execute("select * from servers WHERE id = ?", (ctx.guild.id,))
