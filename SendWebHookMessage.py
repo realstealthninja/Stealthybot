@@ -1,7 +1,5 @@
 import os
 import requests
-import json
-from datetime import date, datetime
 from dotenv import load_dotenv
 
 
@@ -27,4 +25,4 @@ def SendMessage(title:str,description:str, username:str = "StealthyBotAlerts",ur
             "title" : title
         }
     ]
-    result = requests.post(url, json= data)
+    requests.post(url, json= data)
