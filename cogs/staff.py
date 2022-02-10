@@ -21,7 +21,6 @@ def clean_code(content: str) -> str:
 class Staff(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.db = None
 
     @commands.command(hidden=True, description="pulls the repo")
     async def pull(self, ctx):
@@ -144,12 +143,14 @@ class Staff(commands.Cog):
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
         if isinstance(error, commands.CheckFailure):
-            return await ctx.send('It looks like you tried to run a command that you dont have enough permissions to run!')
+            return await ctx.send('It looks like you tried to run a command that you dont have enough permissions/access to run!')
         elif isinstance(error, commands.CommandNotFound):
             return
         elif isinstance(error, commands.errors.MissingRequiredArgument):
             return await ctx.send(f"missing argument `{error.param.name}`")
         else:
+            await ctx.send(error)
+            
             result = "".join(traceback.format_exception(error, error, error.__traceback__))
 
             result = result.replace('`', '')
