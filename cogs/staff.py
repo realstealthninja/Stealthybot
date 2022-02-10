@@ -144,11 +144,29 @@ class Staff(commands.Cog):
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
         if isinstance(error, commands.CheckFailure):
-            return await ctx.send('You are not a bot staff')
+            return await ctx.send('It looks like you tried to run a command that you dont have enough permissions to run!')
         elif isinstance(error, commands.CommandNotFound):
             return
+        elif isinstance(error, commands.errors.MissingRequiredArgument):
+            return await ctx.send(f"missing argument `{error.param.name}`")
         else:
-            await ctx.send(e = "".join(traceback.format_exception(error, error, error.__traceback__)))
+            result = "".join(traceback.format_exception(error, error, error.__traceback__))
+
+            result = result.replace('`', '')
+            if result.replace('\n', '').endswith('None') and result != "None":
+                result = result[:-5]
+
+            if len(result) < 2000:
+                return await ctx.send(f"```py\nOut[0]: {result}\n```")
+
+            pager = Paginator(
+                timeout=100,
+                entries=[result[i: i + 2000] for i in range(0, len(result), 2000)],
+                length=1,
+                prefix="```py\n",
+                suffix="```"
+            )
+            await pager.start(ctx)
 
 
 def setup(bot):
