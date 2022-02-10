@@ -33,6 +33,31 @@ class Activity(commands.Cog):
                 await self.removeactrole(member, row[2])
             except AttributeError:
                 pass
+        cur = await self.conf.cursor()
+        await cur.execute("SELECT * FROM servers")
+        embed = disnake.Embed(
+            title="🎉 Activty point reset 🎉",
+            description=
+            """
+            Your activty points have been `reset` it has been `24 hours`
+            Congrats to the people who have reached the goal of `100 points` 🥳
+            
+            Thank you for being active!
+             - Server Owner
+            """
+        )
+        async for row in cur:
+            if row[4]:
+                await self.bot.get_guild(row[0]).get_channel(row[4]).send(embed = embed)
+            else:
+                for channel in self.bot.get_guild(row[0]).channels:
+                    try: 
+                        await channel.send(embed= embed)
+                        break
+                    except AttributeError: 
+                        continue
+        
+                    
 
     @periodicsacrifice.before_loop
     async def beforesacrifice(self):
