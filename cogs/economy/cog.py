@@ -198,7 +198,7 @@ class Economy(commands.Cog):
             name="Inventory",
             value= 
             f"""
-            `{differitems}` diffrent items | total(`{totalitems}`)
+            `{differitems}` different items | total(`{totalitems}`)
             """ 
         )
         playerinv = await self.dirinv(player)
