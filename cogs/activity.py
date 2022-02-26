@@ -160,8 +160,7 @@ class Activity(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message: disnake.Message):
-        if message.author.bot is True or message.guild is None:
-            return
+        if message.author.bot is True or message.guild is None: return
         result = await self.findorinsert(message.author)
         userid, activitypoints, guildid, maximum, cando, total = result
         cursor = await self.db.cursor()
@@ -200,6 +199,8 @@ class Activity(commands.Cog):
 
     @commands.command()
     async def activity(self, ctx, member: disnake.Member = None):
+        if member is not None and member.bot:
+            return await ctx.send("hey a bot's activity is not counted!")
         if member is None:
             member = ctx.author
         cursor = await self.db.cursor()
