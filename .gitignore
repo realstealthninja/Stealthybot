@@ -119,3 +119,6 @@ venv.bak/
 #vsc stuff
 .vscode/launch.json
 .vscode
+
+# Data base
+*.db-journal
