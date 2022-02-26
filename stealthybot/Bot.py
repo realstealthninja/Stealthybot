@@ -27,9 +27,12 @@ class Stealthybot(commands.Bot):
         self.loop.create_task(self.connect_ecobase())
         
         for filename in os.listdir("./cogs/"):
-            if filename.endswith('.py') and not filename.startswith('dutils'):
-                    self.load_extension(f'cogs.{filename[:-3]}')
-    
+            if filename.endswith('.py'):
+                self.load_extension(f'cogs.{filename[:-3]}')
+            else:
+                if filename.startswith("_"):
+                    continue
+                self.load_extension(f"cogs.{filename}")
     
     #connecting the db
     async def connect_ecobase(self):
