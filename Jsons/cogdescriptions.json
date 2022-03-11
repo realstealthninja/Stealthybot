@@ -5,11 +5,7 @@
     },
     "Misc": {
         "betternames": "Miscellaneous catagory",
-        "description": "**`a catagory of commands that i wasnt bothered to make a new catagory for`**"
-    },
-    "Twitch": {
-        "betternames": "Twitch Catagory",
-        "description": "**`a catagory for the linking of the builtin twitch bot to your twitch channel and discord channels`**"
+        "description": "**`a catagory of miscellaneous`**"
     },
     "Staff": {
         "betternames": "Staff Catagory",

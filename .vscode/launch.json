@@ -15,7 +15,7 @@
             "name": "Python: run main.py File",
             "type": "python",
             "request": "launch",
-            "program": "${main.py}",
+            "program": "main.py",
             "console": "integratedTerminal"
         }
     ]

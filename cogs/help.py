@@ -5,10 +5,6 @@ import json
 class MyHelp(commands.HelpCommand):
       # ?help
       async def send_bot_help(self, mapping):
-        cogs = []
-        for cog , command in mapping.items():
-          cogs.append(getattr(cog, "qualified_name", "⠀"))
-        
         embed = disnake.Embed(
           title="**Main Help Menu **",
           description = " ```ini\n[ do s?help <group name> for more info on the group ] ``` ",
@@ -27,12 +23,17 @@ class MyHelp(commands.HelpCommand):
           name="**links**:",
           value="<:github:940532132399444011> [github](https://github.com/realstealthninja/Stealthybot) | [offical server](https://discord.gg/HAbStFeVAj) | [invite me!](https://discord.com/api/oauth2/authorize?client_id=889922820317007928&permissions=440972733504&scope=bot) "
         )
-        betterstring =  f"  *** Catagories :*** \n \n"
-        for string in cogs:
-          betterstring = betterstring + f"> **{string}** \n"
-        embed.add_field(name="⠀",value=betterstring, inline=False)
-        await self.context.send(embed=embed)
+        main_string = """
+        ***Catagories: ***
         
+        > **Economy**
+        > **Misc**
+        > **Fun**
+        > **Help**
+        > **Gaming**
+        """
+        embed.add_field(name="⠀",value=main_string, inline=False)
+        await self.context.send(embed=embed)
 
       # ?help <command>
       async def send_command_help(self, command):
@@ -104,6 +105,8 @@ class MyHelp(commands.HelpCommand):
           commands = cog.get_commands()
           betteastring = "*** Commands: *** \n \n"
           for c in commands:
+            if c.hidden:
+              continue
             betteastring += f"> **{c.name}** \n"
           embed.add_field(name=f"⠀", value=betteastring, inline=False)
           await self.context.send(embed=embed)

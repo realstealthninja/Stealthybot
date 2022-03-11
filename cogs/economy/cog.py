@@ -142,7 +142,7 @@ class Economy(commands.Cog):
         await server.gen_lootpool(items, number)
         await ctx.send("loot pool generated")
     
-    @commands.command(hidden=True)
+    
     async def dirlootpool(self, ctx )-> None:
         server = await self.create_or_fetch_server(ctx.guild.id)
         await ctx.send(await server.fetch_lootpool())

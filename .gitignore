@@ -3,9 +3,6 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# notepad++ extentions
-*.bak
-
 #envs
 *.env
 secrets.env
@@ -117,8 +114,7 @@ env.bak/
 venv.bak/
 
 #vsc stuff
-.vscode/launch.json
-.vscode
+/.vscode
 
 # Data base
 *.db-journal
