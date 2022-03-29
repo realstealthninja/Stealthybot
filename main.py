@@ -5,13 +5,13 @@ from stealthybot import TwitchBot
 from stealthybot import Stealthybot
 
 load_dotenv("secrets.env")
-token = os.getenv('Token')
+token = os.getenv("Token")
 
 
 twitchbot = TwitchBot()
 stelbot = Stealthybot()
 
-loop = asyncio.get_event_loop()
+loop = asyncio.get_event_loop_policy().get_event_loop()
 loop.create_task(twitchbot.connect())
 
 
