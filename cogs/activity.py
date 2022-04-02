@@ -37,27 +37,24 @@ class Activity(commands.Cog):
         await cur.execute("SELECT * FROM servers")
         embed = disnake.Embed(
             title="🎉 Activty point reset 🎉",
-            description=
-            """
+            description="""
             Your activty points have been `reset` it has been `24 hours`
             Congrats to the people who have reached the goal of `100 points` 🥳
             
             Thank you for being active!
              - Server Owner
-            """
+            """,
         )
         async for row in cur:
             if row[4]:
-                await self.bot.get_guild(row[0]).get_channel(row[4]).send(embed = embed)
+                await self.bot.get_guild(row[0]).get_channel(row[4]).send(embed=embed)
             else:
                 for channel in self.bot.get_guild(row[0]).channels:
-                    try: 
-                        await channel.send(embed= embed)
+                    try:
+                        await channel.send(embed=embed)
                         break
-                    except AttributeError: 
+                    except AttributeError:
                         continue
-        
-                    
 
     @periodicsacrifice.before_loop
     async def beforesacrifice(self):
@@ -70,12 +67,18 @@ class Activity(commands.Cog):
     async def timeoutuser(self, userid, guildid):
         await asyncio.sleep(120)
         cursor = await self.db.cursor()
-        await cursor.execute("UPDATE activity SET cando=? WHERE userid=? AND guildid=?", (1, userid, guildid))
+        await cursor.execute(
+            "UPDATE activity SET cando=? WHERE userid=? AND guildid=?",
+            (1, userid, guildid),
+        )
         await self.db.commit()
 
     async def findorinsert(self, member: disnake.member):
         cursor = await self.db.cursor()
-        await cursor.execute("SELECT * FROM activity WHERE userid = ? AND guildid =?", (member.id, member.guild.id))
+        await cursor.execute(
+            "SELECT * FROM activity WHERE userid = ? AND guildid =?",
+            (member.id, member.guild.id),
+        )
         result = await cursor.fetchone()
         if result is None:
             result = (member.id, 0, member.guild.id, 100, 1, 0)
@@ -102,7 +105,14 @@ class Activity(commands.Cog):
     )
     @commands.has_permissions(manage_channels=True)
     @commands.bot_has_permissions(manage_roles=True)
-    async def setupact(self, ctx: commands.Context, channel: disnake.TextChannel = None, role: disnake.Role = None, *, message):
+    async def setupact(
+        self,
+        ctx: commands.Context,
+        channel: disnake.TextChannel = None,
+        role: disnake.Role = None,
+        *,
+        message,
+    ):
         cur = await self.conf.cursor()
         await cur.execute("select * from servers WHERE id = ?", (ctx.guild.id,))
         result = await cur.fetchone()
@@ -122,14 +132,21 @@ class Activity(commands.Cog):
             await cur.execute("INSERT INTO servers values(?,?,?,?,?)", result)
             await self.conf.commit()
         else:
-            await cur.execute("UPDATE SET roleid = ?, message = ? WHERE id = ?", (roleid, message, ctx.guild.id))
+            await cur.execute(
+                "UPDATE SET roleid = ?, message = ? WHERE id = ?",
+                (roleid, message, ctx.guild.id),
+            )
             await self.conf.commit()
 
     async def actdone(self, guildid, message) -> None:
         cur = await self.conf.cursor()
-        await cur.execute("SELECT message, roleid, channelid FROM servers WHERE id = ?", (guildid,))
+        await cur.execute(
+            "SELECT message, roleid, channelid FROM servers WHERE id = ?", (guildid,)
+        )
         result = await cur.fetchone()
-        mes = f"{message.author.mention} reached 100 points! thank you for being active!"
+        mes = (
+            f"{message.author.mention} reached 100 points! thank you for being active!"
+        )
         if result:
             mes = result[0]
             try:
@@ -139,16 +156,22 @@ class Activity(commands.Cog):
                 pass
 
             try:
-                return await message.guild.get_channel(result[2]).send(mes.replace("USERMENTION", f"{message.author.mention}"))
+                return await message.guild.get_channel(result[2]).send(
+                    mes.replace("USERMENTION", f"{message.author.mention}")
+                )
             except AttributeError:
                 pass
             except disnake.errors.Forbidden:
-                await message.send("Hey i cannot send the message to the channel specified")
+                await message.send(
+                    "Hey i cannot send the message to the channel specified"
+                )
         await message.channel.send(mes)
 
     async def removeactrole(self, member: disnake.Member, guildid: int):
         cur = await self.conf.cursor()
-        await cur.execute("SELECT message, roleid FROM servers WHERE id = ?", (guildid,))
+        await cur.execute(
+            "SELECT message, roleid FROM servers WHERE id = ?", (guildid,)
+        )
         result = await cur.fetchone()
 
         if result and member.get_role(result[1]):
@@ -160,7 +183,8 @@ class Activity(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message: disnake.Message):
-        if message.author.bot is True or message.guild is None: return
+        if message.author.bot is True or message.guild is None:
+            return
         result = await self.findorinsert(message.author)
         userid, activitypoints, guildid, maximum, cando, total = result
         cursor = await self.db.cursor()
@@ -173,22 +197,32 @@ class Activity(commands.Cog):
             if activitypoints == 100:
                 await self.actdone(message.guild.id, message)
 
-            await cursor.execute("UPDATE activity SET activitypoints=?, cando=?, total = ?  WHERE userid=? and guildid=?", (activitypoints, cando, total, userid, guildid))
+            await cursor.execute(
+                "UPDATE activity SET activitypoints=?, cando=?, total = ?  WHERE userid=? and guildid=?",
+                (activitypoints, cando, total, userid, guildid),
+            )
             await self.db.commit()
             await self.timeoutuser(userid, guildid)
 
     @commands.command()
     async def leaderboard(self, ctx):
         emeby = disnake.Embed()
-        emeby.set_author(name="the most active people of the day",
-                         icon_url=ctx.author.avatar)
+        emeby.set_author(
+            name="the most active people of the day", icon_url=ctx.author.avatar
+        )
         cursor = await self.db.cursor()
-        await cursor.execute("SELECT userid, activitypoints FROM activity WHERE guildid = ? ORDER BY activitypoints ASC", (ctx.guild.id,))
+        await cursor.execute(
+            "SELECT userid, activitypoints FROM activity WHERE guildid = ? ORDER BY activitypoints ASC",
+            (ctx.guild.id,),
+        )
         result = await cursor.fetchall()
         desc = ""
         for k, people in enumerate(result[::-1], start=1):
             if self.bot.get_user(people[0]) == None:
-                await cursor.execute("DELETE FROM activity WHERE userid=? AND guildid=?", (people[0], ctx.guild.id))
+                await cursor.execute(
+                    "DELETE FROM activity WHERE userid=? AND guildid=?",
+                    (people[0], ctx.guild.id),
+                )
                 await self.db.commit()
                 continue
             desc += f"\n**{k}.** {self.bot.get_user(people[0]).display_name} | **{people[1]}**"
@@ -204,10 +238,13 @@ class Activity(commands.Cog):
         if member is None:
             member = ctx.author
         cursor = await self.db.cursor()
-        await cursor.execute("SELECT * FROM activity WHERE guildid = ? AND userid = ?", (member.guild.id, member.id))
+        await cursor.execute(
+            "SELECT * FROM activity WHERE guildid = ? AND userid = ?",
+            (member.guild.id, member.id),
+        )
         result = await cursor.fetchone()
         bytese = await self.make_rank_image(member, result[1], result[5])
-        file = disnake.File(bytese, 'rank.png')
+        file = disnake.File(bytese, "rank.png")
         await ctx.send(file=file)
 
     async def make_rank_image(self, member: disnake.Member, activitypoints, total):
@@ -216,33 +253,42 @@ class Activity(commands.Cog):
             async with session.get(user_avatar_image) as resp:
                 avatar_bytes = io.BytesIO(await resp.read())
 
-        img = Image.new('RGB', (800, 240))
+        img = Image.new("RGB", (800, 240))
         logo = Image.open(avatar_bytes).resize((200, 200))
         background = Image.open("assets/backgrounds/death.png")
         img.paste(background)
         img.paste(logo, (20, 20))
 
-        draw = ImageDraw.Draw(img, 'RGB')
+        draw = ImageDraw.Draw(img, "RGB")
 
         # preloading fonts
-        font = 'assets/fonts/Exo-Regular.otf'
+        font = "assets/fonts/Exo-Regular.otf"
         medium_font = ImageFont.FreeTypeFont(font, 40)
         small_font = ImageFont.FreeTypeFont(font, 30)
 
         # drawing text
         draw.text(
-            (250, 50), f"{member.name}#{member.discriminator}", font=medium_font, fill="#fff")
+            (250, 50),
+            f"{member.name}#{member.discriminator}",
+            font=medium_font,
+            fill="#fff",
+        )
         draw.text(
-            (250, 100), f"Act: {activitypoints} /100   Total: {total}", font=small_font, fill="#fff")
+            (250, 100),
+            f"Act: {activitypoints} /100   Total: {total}",
+            font=small_font,
+            fill="#fff",
+        )
 
         # drawing rectangle
         draw.rectangle([248, 148, 652, 182], outline="white")
         draw.rectangle(
-            [250, 150, 250 + (400 * activitypoints / 100), 180], fill="white")
+            [250, 150, 250 + (400 * activitypoints / 100), 180], fill="white"
+        )
 
         # Drawing total
         bytese = io.BytesIO()
-        img.save(bytese, 'PNG')
+        img.save(bytese, "PNG")
         bytese.seek(0)
         return bytese
 

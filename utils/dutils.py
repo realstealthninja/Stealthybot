@@ -1,15 +1,14 @@
 import asyncio
 import json
 
+
 def jsonwriter(file1, data1):
     file1.truncate(0)
     file1.seek(0)
     file1.write(json.dumps(data1, indent=4))
 
 
-
-
-async def paginate(ctx, embeds:list):
+async def paginate(ctx, embeds: list):
 
     current = 0
     msg = await ctx.send(embed=embeds[0])
@@ -17,21 +16,19 @@ async def paginate(ctx, embeds:list):
     await msg.add_reaction("<:right:898910929264214076>")
     await msg.add_reaction("<:stop:898911046918627379>")
 
-    
     def check(e, u):
-            return u == ctx.author and e.message == msg
-        
-    e, u = await ctx.bot.wait_for('reaction_add', check=check)
-    
+        return u == ctx.author and e.message == msg
+
+    e, u = await ctx.bot.wait_for("reaction_add", check=check)
+
     while str(e.emoji) != "<:stop:898911046918627379>":
         name = str(e.emoji)
         if name == "<:left:898911001158750229>":
-            current -=1
-            
+            current -= 1
+
         elif name == "<:right:898910929264214076>":
-            current +=1
-        
-        
+            current += 1
+
         await msg.remove_reaction(member=ctx.author, emoji=e.emoji)
         try:
             await msg.edit(embed=embeds[current])
@@ -42,12 +39,11 @@ async def paginate(ctx, embeds:list):
             else:
                 current = 0
                 await msg.edit(embed=embeds[current])
-        e, u = await ctx.bot.wait_for('reaction_add', check=check)
+        e, u = await ctx.bot.wait_for("reaction_add", check=check)
     else:
         return await msg.clear_reactions()
-    
-    
-    
+
+
 # button.py into disnake
 import asyncio
 import disnake
@@ -56,19 +52,24 @@ from disnake.ext import commands
 from functools import partial
 from typing import Union
 
-__all__ = ('Session', 'Paginator', 'button', 'inverse_button',)
+__all__ = (
+    "Session",
+    "Paginator",
+    "button",
+    "inverse_button",
+)
 
 
 class Button:
-    __slots__ = ('_callback', '_inverse_callback', 'emoji', 'position', 'try_remove')
+    __slots__ = ("_callback", "_inverse_callback", "emoji", "position", "try_remove")
 
     def __init__(self, **kwargs):
-        self._callback = kwargs.get('callback')
-        self._inverse_callback = kwargs.get('inverse_callback')
+        self._callback = kwargs.get("callback")
+        self._inverse_callback = kwargs.get("inverse_callback")
 
-        self.emoji = kwargs.get('emoji')
-        self.position = kwargs.get('position')
-        self.try_remove = kwargs.get('try_remove', True)
+        self.emoji = kwargs.get("emoji")
+        self.position = kwargs.get("position")
+        self.try_remove = kwargs.get("try_remove", True)
 
 
 class Session:
@@ -101,7 +102,7 @@ class Session:
 
     def _gather_buttons(self):
         for _, member in inspect.getmembers(self):
-            if hasattr(member, '__button__'):
+            if hasattr(member, "__button__"):
                 button = member.__button__
 
                 sorted_ = self.sort_buttons(buttons=self._buttons)
@@ -154,13 +155,19 @@ class Session:
 
     async def _session_loop(self, ctx):
         while True:
-            _add = asyncio.ensure_future(ctx.bot.wait_for('raw_reaction_add', check=lambda _: self.check(_)(ctx)))
-            _remove = asyncio.ensure_future(ctx.bot.wait_for('raw_reaction_remove', check=lambda _: self.check(_)(ctx)))
+            _add = asyncio.ensure_future(
+                ctx.bot.wait_for("raw_reaction_add", check=lambda _: self.check(_)(ctx))
+            )
+            _remove = asyncio.ensure_future(
+                ctx.bot.wait_for(
+                    "raw_reaction_remove", check=lambda _: self.check(_)(ctx)
+                )
+            )
 
             done, pending = await asyncio.wait(
                 (_add, _remove),
                 return_when=asyncio.FIRST_COMPLETED,
-                timeout=self.timeout
+                timeout=self.timeout,
             )
 
             for future in pending:
@@ -185,13 +192,19 @@ class Session:
 
             if self._try_remove and button.try_remove:
                 try:
-                    await self.page.remove_reaction(payload.emoji, ctx.guild.get_member(payload.user_id))
+                    await self.page.remove_reaction(
+                        payload.emoji, ctx.guild.get_member(payload.user_id)
+                    )
                 except disnake.HTTPException:
                     pass
 
             member = ctx.guild.get_member(payload.user_id)
 
-            if action and button in self._defaults.values() or button in self._default_stop.values():
+            if (
+                action
+                and button in self._defaults.values()
+                or button in self._default_stop.values()
+            ):
                 await button._callback(ctx, member)
             elif action and button._callback:
                 await button._callback(self, ctx, member)
@@ -232,7 +245,12 @@ class Session:
         emoji = self.get_emoji_as_string(payload.emoji)
 
         def inner(ctx):
-            if emoji not in self.buttons.keys() or payload.user_id == ctx.bot.user.id or payload.message_id != self.page.id or payload.user_id != ctx.author.id:
+            if (
+                emoji not in self.buttons.keys()
+                or payload.user_id == ctx.bot.user.id
+                or payload.message_id != self.page.id
+                or payload.user_id != ctx.author.id
+            ):
                 return False
             return True
 
@@ -271,18 +289,47 @@ class Paginator(Session):
         Only available when embed=True. The thumbnail URL to set for the embeded pages.
     """
 
-    def __init__(self, *, title: str = '', length: int = 10, entries: list = None,
-                 extra_pages: list = None, prefix: str = '', suffix: str = '', format: str = '',
-                 colour: Union[int, disnake.Colour] = disnake.Embed.Empty,
-                 color: Union[int, disnake.Colour] = disnake.Embed.Empty, use_defaults: bool = True, embed: bool = True,
-                 joiner: str = '\n', timeout: int = 180, thumbnail: str = None):
+    def __init__(
+        self,
+        *,
+        title: str = "",
+        length: int = 10,
+        entries: list = None,
+        extra_pages: list = None,
+        prefix: str = "",
+        suffix: str = "",
+        format: str = "",
+        colour: Union[int, disnake.Colour] = disnake.Embed.Empty,
+        color: Union[int, disnake.Colour] = disnake.Embed.Empty,
+        use_defaults: bool = True,
+        embed: bool = True,
+        joiner: str = "\n",
+        timeout: int = 180,
+        thumbnail: str = None,
+    ):
         super().__init__()
-        self._defaults = {(0, '⏮'): Button(emoji='⏮', position=0, callback=partial(self._default_indexer, 'start')),
-                          (1, '◀'): Button(emoji='◀', position=1, callback=partial(self._default_indexer, -1)),
-                          (2, '⏹'): Button(emoji='⏹', position=2, callback=partial(self._default_indexer, 'stop')),
-                          (3, '▶'): Button(emoji='▶', position=3, callback=partial(self._default_indexer, +1)),
-                          (4, '⏭'): Button(emoji='⏭', position=4, callback=partial(self._default_indexer, 'end'))}
-        self._default_stop = {(0, '⏹'): Button(emoji='⏹', position=0, callback=partial(self._default_indexer, 'stop'))}
+        self._defaults = {
+            (0, "⏮"): Button(
+                emoji="⏮", position=0, callback=partial(self._default_indexer, "start")
+            ),
+            (1, "◀"): Button(
+                emoji="◀", position=1, callback=partial(self._default_indexer, -1)
+            ),
+            (2, "⏹"): Button(
+                emoji="⏹", position=2, callback=partial(self._default_indexer, "stop")
+            ),
+            (3, "▶"): Button(
+                emoji="▶", position=3, callback=partial(self._default_indexer, +1)
+            ),
+            (4, "⏭"): Button(
+                emoji="⏭", position=4, callback=partial(self._default_indexer, "end")
+            ),
+        }
+        self._default_stop = {
+            (0, "⏹"): Button(
+                emoji="⏹", position=0, callback=partial(self._default_indexer, "stop")
+            )
+        }
 
         self.buttons = {}
 
@@ -310,22 +357,26 @@ class Paginator(Session):
     def chunker(self):
         """Create chunks of our entries for pagination."""
         for x in range(0, len(self.entries), self.length):
-            yield self.entries[x:x + self.length]
+            yield self.entries[x : x + self.length]
 
     def formatting(self, entry: str):
         """Format our entries, with the given options."""
-        return f'{self.prefix}{self.format}{entry}{self.format[::-1]}{self.suffix}'
+        return f"{self.prefix}{self.format}{entry}{self.format[::-1]}{self.suffix}"
 
     async def start(self, ctx: commands.Context, page=None):
         """Start our Paginator session."""
         if not self.use_defaults and not self._buttons:
-            raise AttributeError('Session has no buttons.')  # Raise a custom exception at some point.
+            raise AttributeError(
+                "Session has no buttons."
+            )  # Raise a custom exception at some point.
 
         await self._paginate(ctx)
 
     async def _paginate(self, ctx: commands.Context):
         if not self.entries and not self.extra_pages:
-            raise AttributeError('You must provide atleast one entry or page for pagination.')  # ^^
+            raise AttributeError(
+                "You must provide atleast one entry or page for pagination."
+            )  # ^^
 
         if self.entries:
             self.entries = [self.formatting(entry) for entry in self.entries]
@@ -337,7 +388,11 @@ class Paginator(Session):
             if not self.use_embed:
                 self._pages.append(self.joiner.join(chunk))
             else:
-                embed = disnake.Embed(title=self.title, description=self.joiner.join(chunk), colour=self.colour)
+                embed = disnake.Embed(
+                    title=self.title,
+                    description=self.joiner.join(chunk),
+                    colour=self.colour,
+                )
 
                 if self.thumbnail:
                     embed.set_thumbnail(url=self.thumbnail)
@@ -369,12 +424,12 @@ class Paginator(Session):
     async def _default_indexer(self, control, ctx, member):
         previous = self._index
 
-        if control == 'stop':
+        if control == "stop":
             return await self.cancel()
 
-        if control == 'end':
+        if control == "end":
             self._index = len(self._pages) - 1
-        elif control == 'start':
+        elif control == "start":
             self._index = 0
         else:
             self._index += control
@@ -410,15 +465,17 @@ def button(emoji: str, *, try_remove=True, position: int = 666):
 
     def deco(func):
         if not asyncio.iscoroutinefunction(func):
-            raise TypeError('Button callback must be a coroutine.')
+            raise TypeError("Button callback must be a coroutine.")
 
-        if hasattr(func, '__button__'):
+        if hasattr(func, "__button__"):
             button = func.__button__
             button._callback = func
 
             return func
 
-        func.__button__ = Button(emoji=emoji, callback=func, position=position, try_remove=try_remove)
+        func.__button__ = Button(
+            emoji=emoji, callback=func, position=position, try_remove=try_remove
+        )
         return func
 
     return deco
@@ -445,15 +502,17 @@ def inverse_button(emoji: str = None, *, try_remove=False, position: int = 666):
 
     def deco(func):
         if not asyncio.iscoroutinefunction(func):
-            raise TypeError('Button callback must be a coroutine.')
+            raise TypeError("Button callback must be a coroutine.")
 
-        if hasattr(func, '__button__'):
+        if hasattr(func, "__button__"):
             button = func.__button__
             button._inverse_callback = func
 
             return func
 
-        func.__button__ = Button(emoji=emoji, inverse_callback=func, position=position, try_remove=try_remove)
+        func.__button__ = Button(
+            emoji=emoji, inverse_callback=func, position=position, try_remove=try_remove
+        )
         return func
 
     return deco

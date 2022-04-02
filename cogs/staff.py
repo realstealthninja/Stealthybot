@@ -13,8 +13,9 @@ def clean_code(content: str) -> str:
     if content.startswith("```py"):
         content = content[5:-3]
     content = content.strip("`")
-    content = content.replace("‘", "'").replace(
-        '“', '"').replace("”", "\"").replace("’", "'")
+    content = (
+        content.replace("‘", "'").replace("“", '"').replace("”", '"').replace("’", "'")
+    )
     return content
 
 
@@ -33,10 +34,7 @@ class Staff(commands.Cog):
             null: it doesnt return shit?
         """
         embed = disnake.Embed(title="Git pull.", description="")
-        git_commands = [
-            ["git", "stash"],
-            ["git", "pull", "--ff-only"]
-        ]
+        git_commands = [["git", "stash"], ["git", "pull", "--ff-only"]]
         for git_command in git_commands:
             process = await asyncio.create_subprocess_exec(
                 git_command[0],
@@ -55,22 +53,24 @@ class Staff(commands.Cog):
     @commands.command(hidden=True)
     async def load(self, ctx, extension):
         embed = disnake.Embed()
-        self.bot.load_extension(f'cogs.{extension}')
-        embed.add_field(name="Load Extension",
-                        value=f"Loaded cog: ``{extension}`` successfully")
+        self.bot.load_extension(f"cogs.{extension}")
+        embed.add_field(
+            name="Load Extension", value=f"Loaded cog: ``{extension}`` successfully"
+        )
         await ctx.send(embed=embed)
 
     @commands.command(hidden=True)
     async def unload(self, ctx, extension):
-        self.bot.unload_extension(f'cogs.{extension}')
+        self.bot.unload_extension(f"cogs.{extension}")
         embed = disnake.Embed()
-        embed.add_field(name="Unload Extension",
-                        value=f"Unloaded cog: ``{extension}`` successfully")
+        embed.add_field(
+            name="Unload Extension", value=f"Unloaded cog: ``{extension}`` successfully"
+        )
         await ctx.send(embed=embed)
 
     # reload
 
-    @commands.command(aliases=['r'], hidden=True)
+    @commands.command(aliases=["r"], hidden=True)
     async def reload(self, ctx, extension=""):
         if not extension:
 
@@ -78,21 +78,24 @@ class Staff(commands.Cog):
 
                 self.bot.reload_extension(cog)
             embed = disnake.Embed()
-            embed.add_field(name="Reload Extension",
-                            value=f"Reloaded cogs successfully")
+            embed.add_field(
+                name="Reload Extension", value=f"Reloaded cogs successfully"
+            )
             await ctx.send(embed=embed)
         else:
 
-            self.bot.reload_extension(f'cogs.{extension}')
+            self.bot.reload_extension(f"cogs.{extension}")
             embed = disnake.Embed()
-            embed.add_field(name="Reload Extension",
-                            value=f"Reloaded cog: ``{extension}`` successfully")
+            embed.add_field(
+                name="Reload Extension",
+                value=f"Reloaded cog: ``{extension}`` successfully",
+            )
             await ctx.send(embed=embed)
 
-    @commands.command(aliases=['e'], hidden=True)
+    @commands.command(aliases=["e"], hidden=True)
     async def eval(self, ctx, *, code: str = None) -> None:
         if not code:
-            return await ctx.send('...')
+            return await ctx.send("...")
 
         local_variables = {
             "disnake": disnake,
@@ -103,19 +106,20 @@ class Staff(commands.Cog):
             "channel": ctx.channel,
             "author": ctx.author,
             "guild": ctx.guild,
-            "message": ctx.message
+            "message": ctx.message,
         }
 
         code = clean_code(code)
         stdout = io.StringIO()
 
         pref = await ctx.bot.get_prefix(ctx.message)
-        message = clean_code(ctx.message.content[len(pref) - 1:])
+        message = clean_code(ctx.message.content[len(pref) - 1 :])
 
         try:
             with contextlib.redirect_stdout(stdout):
                 exec(
-                    f"async def func():\n{textwrap.indent(code, '    ')}",  local_variables,
+                    f"async def func():\n{textwrap.indent(code, '    ')}",
+                    local_variables,
                 )
                 obj = await local_variables["func"]()
 
@@ -123,9 +127,9 @@ class Staff(commands.Cog):
         except Exception as e:
             result = "".join(traceback.format_exception(e, e, e.__traceback__))
 
-        result = result.replace('`', '')
-        message = message.replace('`', '')
-        if result.replace('\n', '').endswith('None') and result != "None":
+        result = result.replace("`", "")
+        message = message.replace("`", "")
+        if result.replace("\n", "").endswith("None") and result != "None":
             result = result[:-5]
 
         if len(result) < 2000:
@@ -133,28 +137,32 @@ class Staff(commands.Cog):
 
         pager = Paginator(
             timeout=100,
-            entries=[result[i: i + 2000] for i in range(0, len(result), 2000)],
+            entries=[result[i : i + 2000] for i in range(0, len(result), 2000)],
             length=1,
             prefix="```py\n",
-            suffix="```"
+            suffix="```",
         )
         await pager.start(ctx)
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
         if isinstance(error, commands.CheckFailure):
-            return await ctx.send('It looks like you tried to run a command that you dont have enough permissions/access to run!')
+            return await ctx.send(
+                "It looks like you tried to run a command that you dont have enough permissions/access to run!"
+            )
         elif isinstance(error, commands.CommandNotFound):
             return
         elif isinstance(error, commands.errors.MissingRequiredArgument):
             return await ctx.send(f"missing argument `{error.param.name}`")
         else:
             await ctx.send(error)
-            
-            result = "".join(traceback.format_exception(error, error, error.__traceback__))
 
-            result = result.replace('`', '')
-            if result.replace('\n', '').endswith('None') and result != "None":
+            result = "".join(
+                traceback.format_exception(error, error, error.__traceback__)
+            )
+
+            result = result.replace("`", "")
+            if result.replace("\n", "").endswith("None") and result != "None":
                 result = result[:-5]
 
             if len(result) < 2000:
@@ -162,10 +170,10 @@ class Staff(commands.Cog):
 
             pager = Paginator(
                 timeout=100,
-                entries=[result[i: i + 2000] for i in range(0, len(result), 2000)],
+                entries=[result[i : i + 2000] for i in range(0, len(result), 2000)],
                 length=1,
                 prefix="```py\n",
-                suffix="```"
+                suffix="```",
             )
             await pager.start(ctx)
 
