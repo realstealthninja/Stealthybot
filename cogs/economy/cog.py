@@ -300,7 +300,7 @@ class Economy(commands.Cog):
     async def share(
         self, ctx: commands.Context, user: disnake.Member, amount: int, *, item: str
     ) -> None:
-        """Share an item with another user
+        """Share an item with another user"""
         giver = await self.create_or_fetch_player(ctx.author.id)
         reciver = await self.create_or_fetch_player(user.id)
 
@@ -325,7 +325,7 @@ class Economy(commands.Cog):
 
 def setup(bot: Stealthybot):
     """ sets up the cog to the bot
-    Args:
+        Args:
         bot (_type_): _description_
     """
     bot.add_cog(Economy(bot))
