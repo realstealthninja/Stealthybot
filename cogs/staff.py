@@ -6,6 +6,7 @@ import traceback
 import contextlib
 
 from disnake.ext import commands
+from stealthybot.bot import Stealthybot
 from utils.dutils import Paginator
 
 
@@ -21,7 +22,7 @@ def clean_code(content: str) -> str:
 
 class Staff(commands.Cog):
     def __init__(self, bot):
-        self.bot = bot
+        self.bot: Stealthybot = bot
 
     @commands.command(hidden=True, description="pulls the repo")
     async def pull(self, ctx):
@@ -31,8 +32,10 @@ class Staff(commands.Cog):
             ctx ctx: ctx that dpy provides
 
         Returns:
-            null: it doesnt return shit?
+            null
         """
+        if self.bot.user.id == 921678243935961118:
+            return
         embed = disnake.Embed(title="Git pull.", description="")
         git_commands = [["git", "stash"], ["git", "pull", "--ff-only"]]
         for git_command in git_commands:
@@ -165,7 +168,7 @@ class Staff(commands.Cog):
             if result.replace("\n", "").endswith("None") and result != "None":
                 result = result[:-5]
 
-            if len(result) < 2000:
+            if len(result) < 1991:
                 return await ctx.send(f"```py\nOut[0]: {result}\n```")
 
             pager = Paginator(

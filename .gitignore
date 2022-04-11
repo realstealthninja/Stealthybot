@@ -118,3 +118,6 @@ venv.bak/
 
 # Data base
 *.db-journal
+
+# linting stuff
+*.stats

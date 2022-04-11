@@ -1,6 +1,12 @@
+"""stealthy bot module"""
+
+
+import os
+import coc
+import dotenv
+import disnake
+
 import aiosqlite
-from random import choice
-import disnake, os, coc, dotenv
 from disnake.ext import commands
 
 
@@ -8,6 +14,7 @@ dotenv.load_dotenv("secrets.env")
 
 
 class Stealthybot(commands.Bot):
+    """Stealthy bot class"""
     coc_client = coc.login(
         email=os.getenv("cocemail"),
         password=os.getenv("cocpass"),
@@ -17,14 +24,14 @@ class Stealthybot(commands.Bot):
 
     def __init__(self):
         super().__init__(
-            command_prefix="sbtest?",
+            command_prefix="sb?",
             description="worst bot ever lol",
             intents=disnake.Intents.all(),
             case_insensitive=True,
             owner_ids=[521226389559443461],
         )
-        self.ecoBase = None
-        self.loop.create_task(self.connect_ecobase())
+        self.eco_base = None
+        self.loop.create_task(self.connect_eco_base())
 
         for filename in os.listdir("./cogs/"):
             if filename.endswith(".py"):
@@ -35,8 +42,8 @@ class Stealthybot(commands.Bot):
                 self.load_extension(f"cogs.{filename}")
 
     # connecting the db
-    async def connect_ecobase(self):
-        self.ecoBase = await aiosqlite.connect("database\economy.db")
+    async def connect_eco_base(self):
+        self.eco_base = await aiosqlite.connect("database/economy.db")
 
     async def on_ready(self):
         print(f"We have logged in as {self.user}")

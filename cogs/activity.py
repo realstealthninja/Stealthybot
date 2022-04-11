@@ -39,8 +39,7 @@ class Activity(commands.Cog):
             title="🎉 Activty point reset 🎉",
             description="""
             Your activty points have been `reset` it has been `24 hours`
-            Congrats to the people who have reached the goal of `100 points` 🥳
-            
+            Congrats to the people who have reached the goal of `100 points` 🥳\n            
             Thank you for being active!
              - Server Owner
             """,
