@@ -31,7 +31,9 @@ class Stealthybot(commands.Bot):
             owner_ids=[521226389559443461],
         )
         self.eco_base = None
-        self.loop.create_task(self.connect_eco_base())
+        self.config = None
+        self.act_database = None
+        self.loop.create_task(self.connect_databases())
 
         for filename in os.listdir("./cogs/"):
             if filename.endswith(".py"):
@@ -42,8 +44,10 @@ class Stealthybot(commands.Bot):
                 self.load_extension(f"cogs.{filename}")
 
     # connecting the db
-    async def connect_eco_base(self):
+    async def connect_databases(self):
         self.eco_base = await aiosqlite.connect("database/economy.db")
+        self.config = await aiosqlite.connect("database/config.db")
+        self.act_database = await aiosqlite.connect("database/config.db")
 
     async def on_ready(self):
         print(f"We have logged in as {self.user}")
