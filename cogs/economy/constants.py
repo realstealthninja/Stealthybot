@@ -1,9 +1,9 @@
-storageServerId = 940920575872868423
-mapStorageChannelId = 940920831121428540
-loggingChannelId = 940926310530809886
+STORAGE_SERVER_ID = 940920575872868423
+MAP_STORAGE_CHANNEL_ID = 940920831121428540
+LOGGING_CHANNEL_ID = 940926310530809886
 
 
-prosperity = {
+PROSPERITY = {
     "dire": {
         "message": """
             The land is either almost bank rupt or the vault doesnt exist 
@@ -39,7 +39,7 @@ prosperity = {
         """
     },
 }
-landlevelindex = {
+LAND_LEVEL_INDEX = {
     0: {
         "message": """
             The land has nothing on it the land is just that land. trees and great vines dominate this plain

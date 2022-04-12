@@ -24,18 +24,13 @@ class Staff(commands.Cog):
     def __init__(self, bot):
         self.bot: Stealthybot = bot
 
+    async def cog_check(self, ctx: commands.Context) -> bool:
+        return await self.bot.is_owner(ctx.author)
+
     @commands.command(hidden=True, description="pulls the repo")
-    async def pull(self, ctx):
-        """this command will pull the code from the current repo
+    async def pull(self, ctx: commands.Context):
+        """Pulls the current code from the repo"""
 
-        Args:
-            ctx ctx: ctx that dpy provides
-
-        Returns:
-            null
-        """
-        if self.bot.user.id == 921678243935961118:
-            return
         embed = disnake.Embed(title="Git pull.", description="")
         git_commands = [["git", "stash"], ["git", "pull", "--ff-only"]]
         for git_command in git_commands:
@@ -54,7 +49,7 @@ class Staff(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command(hidden=True)
-    async def load(self, ctx, extension):
+    async def load(self, ctx: commands.Context, extension):
         embed = disnake.Embed()
         self.bot.load_extension(f"cogs.{extension}")
         embed.add_field(
@@ -63,7 +58,7 @@ class Staff(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command(hidden=True)
-    async def unload(self, ctx, extension):
+    async def unload(self, ctx: commands.Context, extension):
         self.bot.unload_extension(f"cogs.{extension}")
         embed = disnake.Embed()
         embed.add_field(
@@ -74,16 +69,14 @@ class Staff(commands.Cog):
     # reload
 
     @commands.command(aliases=["r"], hidden=True)
-    async def reload(self, ctx, extension=""):
+    async def reload(self, ctx: commands.Context, extension=""):
         if not extension:
 
             for cog in tuple(self.bot.extensions):
 
                 self.bot.reload_extension(cog)
             embed = disnake.Embed()
-            embed.add_field(
-                name="Reload Extension", value=f"Reloaded cogs successfully"
-            )
+            embed.add_field(name="Reload Extension", value=f"Reloaded cogs successfully")
             await ctx.send(embed=embed)
         else:
 
@@ -96,7 +89,7 @@ class Staff(commands.Cog):
             await ctx.send(embed=embed)
 
     @commands.command(aliases=["e"], hidden=True)
-    async def eval(self, ctx, *, code: str = None) -> None:
+    async def eval(self, ctx: commands.Context, *, code: str = None) -> None:
         if not code:
             return await ctx.send("...")
 
@@ -115,7 +108,7 @@ class Staff(commands.Cog):
         code = clean_code(code)
         stdout = io.StringIO()
 
-        pref = await ctx.bot.get_prefix(ctx.message)
+        pref = await self.bot.get_prefix(ctx.message)
         message = clean_code(ctx.message.content[len(pref) - 1 :])
 
         try:
@@ -148,15 +141,15 @@ class Staff(commands.Cog):
         await pager.start(ctx)
 
     @commands.Cog.listener()
-    async def on_command_error(self, ctx, error):
-        if isinstance(error, commands.CheckFailure):
-            return await ctx.send(
+    async def on_command_error(self, ctx: commands.Context, error):
+        if isinstance(error, commands.CommandNotFound):
+            return
+        elif isinstance(error, commands.CheckFailure):
+            await ctx.send(
                 "It looks like you tried to run a command that you dont have enough permissions/access to run!"
             )
-        elif isinstance(error, commands.CommandNotFound):
-            return
         elif isinstance(error, commands.errors.MissingRequiredArgument):
-            return await ctx.send(f"missing argument `{error.param.name}`")
+            await ctx.send(f"missing argument `{error.param.name}`")
         else:
             await ctx.send(error)
 

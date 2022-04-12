@@ -8,7 +8,7 @@ class Fun(commands.Cog):
         self.bot = bot
 
     @commands.command()
-    async def truthordare(self, ctx, type="t"):
+    async def truthordare(self, ctx: commands.Context, type="t"):
         if type == "t":
             with open("assets/datasets/truth.csv") as f:
                 ereader = csv.reader(f, delimiter=";")

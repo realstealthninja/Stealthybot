@@ -146,14 +146,14 @@ class Session:
 
         self._session_task = ctx.bot.loop.create_task(self._session(ctx))
 
-    async def _session(self, ctx):
+    async def _session(self, ctx: commands.Context):
         self.buttons = self.sort_buttons()
 
         ctx.bot.loop.create_task(self._add_reactions(self.buttons.keys()))
 
         await self._session_loop(ctx)
 
-    async def _session_loop(self, ctx):
+    async def _session_loop(self, ctx: commands.Context):
         while True:
             _add = asyncio.ensure_future(
                 ctx.bot.wait_for("raw_reaction_add", check=lambda _: self.check(_)(ctx))
@@ -244,7 +244,7 @@ class Session:
         """Check which takes in a raw_reaction payload. This may be overwritten."""
         emoji = self.get_emoji_as_string(payload.emoji)
 
-        def inner(ctx):
+        def inner(ctx: commands.Context):
             if (
                 emoji not in self.buttons.keys()
                 or payload.user_id == ctx.bot.user.id
@@ -408,7 +408,7 @@ class Paginator(Session):
 
         self._session_task = ctx.bot.loop.create_task(self._session(ctx))
 
-    async def _session(self, ctx):
+    async def _session(self, ctx: commands.Context):
         if self.use_defaults:
             if len(self._pages) == 1:
                 self._buttons = {**self._default_stop, **self._buttons}

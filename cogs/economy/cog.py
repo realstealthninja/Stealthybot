@@ -8,70 +8,82 @@ from stealthybot.bot import Stealthybot
 from . import ProfileDropdownView
 
 from .objects import Item, Player, Server
-from .constants import prosperity
+from .constants import PROSPERITY
 
 
 class Economy(commands.Cog):
     """
     economy cog contains the economy commands
     """
+
     def __init__(self, bot):
         self.bot: Stealthybot = bot
 
-    async def create_or_fetch_player(self, userid: int) -> Player:
-        """Creates or fetches player from the database
-
-        Args:
-            userid (int): the id of the user
-
-        Returns:
-            Player: the player object
+    async def create_or_fetch_player(self, user_id: int) -> Player:
         """
+        Creates or fetches player from
+        the database.
+
+        Parameters
+        ----------
+        user_id: :class:`int`
+            The user id.
+
+        Returns
+        -------
+        :class:`Player`
+        """
+
         cur = await self.bot.eco_base.cursor()
-        query = await cur.execute("SELECT * FROM profiles WHERE id = ?", (userid,))
+        query = await cur.execute("SELECT * FROM profiles WHERE id = ?", (user_id,))
         query = await query.fetchone()
 
         if not query:
             await cur.execute(
-                "INSERT INTO profiles VALUES(?, 0, 0, 100, 0, 0)", (userid,)
+                "INSERT INTO profiles VALUES(?, 0, 0, 100, 0, 0)", (user_id,)
             )
             await self.bot.eco_base.commit()
-            query = (userid, 0, "None", 100, 100, "None", 0)
-        return Player(
-            userid, query[1], query[2], query[3], query[4], query[5], self.bot
-        )
+            query = (user_id, 0, "None", 100, 100, "None", 0)
+        return Player(user_id, query[1], query[2], query[3], query[4], query[5], self.bot)
 
-    async def create_or_fetch_server(self, serverid: int) -> Server:
-        """Creates or Fetchs the server from the data base
+    async def create_or_fetch_server(self, guild_id: int) -> Server:
+        """
+        Creates or Fetchs the server from the data base.
 
-        Args:
-            serverid (int): The server id that must be passed
+        Parameters
+        ----------
+        guild_id: :class:`int`
+            The server id.
 
-        Returns:
-            Server: Returns a server object
+        Returns
+        -------
+        :class:`Server`
         """
         cur = await self.bot.eco_base.cursor()
-        result = await cur.execute("SELECT * FROM servers WHERE id = ?", (serverid,))
+        result = await cur.execute("SELECT * FROM servers WHERE id = ?", (guild_id,))
         result = await result.fetchone()
         if not result:
-            await cur.execute("INSERT INTO servers VALUES(?, 0, 0, 0)", (serverid,))
+            await cur.execute("INSERT INTO servers VALUES(?, 0, 0, 0)", (guild_id,))
             await self.bot.eco_base.commit()
-            result = (serverid, 0, 0, 0)
-            returnserver = Server(serverid, result[1], result[2], result[3], self.bot)
+            result = (guild_id, 0, 0, 0)
+            returnserver = Server(guild_id, result[1], result[2], result[3], self.bot)
             mapid = await returnserver.gen_chunk()
             await returnserver.gen_lootpool(("I-NVWkULk8fzBx2UqjgJLdYp",), (20,))
-            result = (serverid, 0, 0, await returnserver.fetch_lootpool(), mapid)
+            result = (guild_id, 0, 0, await returnserver.fetch_lootpool(), mapid)
             print(result[3])
-        return Server(serverid, result[1], result[2], result[3], self.bot)
+        return Server(guild_id, result[1], result[2], result[3], self.bot)
 
     async def fetch_item(self, id: str) -> Item:
         """Fetches an item based on its id
 
-        Args:
-            id (string): id of the item required
+        Parameters
+        ----------
+        id: :class:`int`
+            The id of the item required.
 
-        Returns:
-            Item: returns an item
+        Returns
+        -------
+        :class:`Item`
         """
         cur = await self.bot.eco_base.cursor()
         result = await cur.execute("SELECT * FROM items WHERE id = ?", (id,))
@@ -79,7 +91,7 @@ class Economy(commands.Cog):
         return Item(result[0], result[1], result[2], result[3], result[4])
 
     @commands.command()
-    async def landinfo(self, ctx) -> None:
+    async def landinfo(self, ctx: commands.Context) -> None:
         """Shows the details about the server"""
         server = await self.create_or_fetch_server(ctx.guild.id)
         embed = disnake.Embed(
@@ -91,18 +103,18 @@ class Economy(commands.Cog):
         """,
         )
         if server.bank <= 100:
-            prosperitymessage = prosperity["dire"]["message"]
+            message = PROSPERITY["dire"]["message"]
         elif server.bank <= 200:
-            prosperitymessage = prosperity["poor"]["message"]
+            message = PROSPERITY["poor"]["message"]
         elif server.bank <= 500:
-            prosperitymessage = prosperity["average"]["message"]
+            message = PROSPERITY["average"]["message"]
         elif server.bank <= 1000:
-            prosperitymessage = prosperity["good"]["message"]
+            message = PROSPERITY["good"]["message"]
         elif server.bank >= 1000:
-            prosperitymessage = prosperity["great"]["message"]
+            message = PROSPERITY["great"]["message"]
         embed.add_field(
-            name="Prosperity",
-            value=f"{prosperitymessage} \n the vault contains `{server.bank}`",
+            name="PROSPERITY",
+            value=f"{message} \n the vault contains `{server.bank}`",
         )
         embed.add_field(
             name="The state of the region",
@@ -111,9 +123,9 @@ class Economy(commands.Cog):
         await ctx.send(embed=embed)
 
     # ? here is a fun concept use the items from the players inventory to level up the settlement as the server progress the whole server must give up items to improve the server
-    
+
     @commands.command()
-    async def scavenge(self, ctx) -> None:
+    async def scavenge(self, ctx: commands.Context) -> None:
         """Scavenges for items in the area"""
         server = await self.create_or_fetch_server(ctx.guild.id)
         player = await self.create_or_fetch_player(ctx.author.id)
@@ -146,24 +158,24 @@ class Economy(commands.Cog):
     @commands.command(hidden=True)
     async def genlootpool(
         self,
-        ctx,
+        ctx: commands.Context,
         *,
-        items: list() = ("I-NVWkULk8fzBx2UqjgJLdYp",),
-        number: list() = (20,),
+        items: list = ("I-NVWkULk8fzBx2UqjgJLdYp",),
+        number: list = (20,),
     ) -> None:
-        """ generates loot pool for the server """
+        """generates loot pool for the server"""
         server = await self.create_or_fetch_server(ctx.guild.id)
         await server.gen_lootpool(items, number)
         await ctx.send("loot pool generated")
 
     @commands.command(hidden=True)
-    async def dirlootpool(self, ctx) -> None:
-        """ Displays the loot pool of the server"""
+    async def dirlootpool(self, ctx: commands.Context) -> None:
+        """Displays the loot pool of the server"""
         server = await self.create_or_fetch_server(ctx.guild.id)
         await ctx.send(await server.fetch_lootpool())
 
     async def dirinv(self, player: Player) -> None:
-        """ Generate display of the inventory"""
+        """Generate display of the inventory"""
         items: list = await player.fetch_inv()
         embed = disnake.Embed(
             title="Bag",
@@ -188,14 +200,14 @@ class Economy(commands.Cog):
 
     @commands.command(aliases=["inv", "bag"])
     async def inventory(self, ctx: commands.Context) -> None:
-        """ Shows your current inventory """
+        """Shows your current inventory"""
         player = await self.create_or_fetch_player(ctx.author.id)
         embed = await self.dirinv(player)
         await ctx.send(embed=embed)
 
     @commands.command()
     async def shop(self, ctx: commands.Context, *, itemfilter: str = None):
-        """ Displays the shop menu """
+        """Displays the shop menu"""
         server = await self.create_or_fetch_server(ctx.guild.id)
 
         shop = await server.fetch_shop_item_wise()
@@ -231,10 +243,9 @@ class Economy(commands.Cog):
         main.add_field(name="Items currently on the market", value=main_body)
         await ctx.send(embed=main)
 
-    
     @commands.command()
     async def sell(self, ctx: commands.Context, amount: int, cost: int, *, item: str):
-        """ Sell an item on the server market """
+        """Sell an item on the server market"""
         server = await self.create_or_fetch_server(ctx.guild.id)
         player = await self.create_or_fetch_player(ctx.author.id)
 
@@ -258,9 +269,7 @@ class Economy(commands.Cog):
         )
 
     @commands.command()
-    async def profile(
-        self, ctx: commands.Context, member: disnake.Member = None
-    ) -> None:
+    async def profile(self, ctx: commands.Context, member: disnake.Member = None) -> None:
         """Displays the profile of you or the person mentioned"""
         if not member:
             member = ctx.author
@@ -300,7 +309,7 @@ class Economy(commands.Cog):
     async def share(
         self, ctx: commands.Context, user: disnake.Member, amount: int, *, item: str
     ) -> None:
-        """Share an item with another user
+        """Share an item with another user"""
         giver = await self.create_or_fetch_player(ctx.author.id)
         reciver = await self.create_or_fetch_player(user.id)
 
@@ -324,8 +333,13 @@ class Economy(commands.Cog):
 
 
 def setup(bot: Stealthybot):
-    """ sets up the cog to the bot
-    Args:
-        bot (_type_): _description_
+    """
+    Sets up the economy cog.
+
+    Parameters
+    ----------
+    bot: :class:`Stealthybot`
+        The bot instance to add the
+        cog to.
     """
     bot.add_cog(Economy(bot))

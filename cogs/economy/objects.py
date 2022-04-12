@@ -7,18 +7,24 @@ import random
 import aiosqlite
 from stealthybot.bot import Stealthybot
 
-from .constants import mapStorageChannelId, storageServerId
+from .constants import MAP_STORAGE_CHANNEL_ID, STORAGE_SERVER_ID
 
 
 def genbasicmap(width: int, height: int) -> list:
     """Makes a map for the current server
 
-    Args:
-        width (int): the width of the map
-        height (int): the height of the map
+    Parameters
+    ----------
+    width: :class:`int`
+        The width of the map.
+    height: :class:`int`
+        The height of the map
 
-    Returns:
-        builtmap(str): the map
+    Returns
+    -------
+    builtmap: :class:`str`
+        The map.
+    """
     builtmap = [[r for r in range(width)] for i in range(height)]
 
     for i in range(0, height):
@@ -30,14 +36,9 @@ def genbasicmap(width: int, height: int) -> list:
 
 class Item(object):
     """Item object"""
+
     def __init__(
-        self,
-        id: str,
-        name: str,
-        easyid: str,
-        cost: int,
-        value: int,
-        emoji: int
+        self, id: str, name: str, easyid: str, cost: int, value: int, emoji: int
     ) -> None:
         self.id = id
         self.name = name
@@ -49,6 +50,7 @@ class Item(object):
 
 class Server(object):
     """server object for easier developer experiance"""
+
     def __init__(
         self, id: int, level: int, bank: int, mapdata: int, bot: Stealthybot
     ) -> None:
@@ -71,12 +73,12 @@ class Server(object):
         string = "```"
         for i in noise:
             string += "\n"
-            for o in i:
+            for _ in i:
                 string += "-"
         string += "\n```"
         message = (
-            await self.bot.get_guild(storageServerId)
-            .get_channel(mapStorageChannelId)
+            await self.bot.get_guild(STORAGE_SERVER_ID)
+            .get_channel(MAP_STORAGE_CHANNEL_ID)
             .send(string)
         )
 
@@ -93,7 +95,7 @@ class Server(object):
         return message.id
 
     async def gen_enemypool(self, leveldist: list, enemypool: list = None):
-        """ generates the enemy pool"""
+        """generates the enemy pool"""
         cur: aiosqlite.Cursor = await self.bot.eco_base.cursor()
         if enemypool:
             for enemy in enemypool:
@@ -241,9 +243,7 @@ class Server(object):
             "SELECT * FROM servershop WHERE serverid = ?", (self.id,)
         ) as cursor:
             async for row in cursor:
-                shop.append(
-                    {row[2]: {"user": row[1], "amount": row[3], "cost": row[4]}}
-                )
+                shop.append({row[2]: {"user": row[1], "amount": row[3], "cost": row[4]}})
         return shop
 
     async def fetch_shop_user_wise(self) -> list:
@@ -252,9 +252,7 @@ class Server(object):
             "SELECT * FROM servershop WHERE serverid = ?", (self.id,)
         ) as cursor:
             async for row in cursor:
-                shop.append(
-                    {row[1]: {"item": row[2], "amount": row[3], "cost": row[4]}}
-                )
+                shop.append({row[1]: {"item": row[2], "amount": row[3], "cost": row[4]}})
         return shop
 
 
