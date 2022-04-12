@@ -37,7 +37,7 @@ class Gaming(commands.Cog):
     )
     async def apexprofile(
         self,
-        ctx,
+        ctx: commands.Context,
         platform="pc",
         *,
         username,
@@ -88,8 +88,8 @@ class Gaming(commands.Cog):
     @commands.command(description="gets the clan detailed about the specified clan")
     async def clanprofile(
         self,
-        ctx,
-        clan_tag,
+        ctx: commands.Context,
+        clan_tag: str,
     ):
         await ctx.trigger_typing()
         if not utils.is_valid_tag(clan_tag):

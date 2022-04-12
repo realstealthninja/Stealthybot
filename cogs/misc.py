@@ -10,7 +10,7 @@ class Misc(commands.Cog):
     @commands.command(
         aliases=["ewh"], description="shows 10 ways to help stop world hunger"
     )
-    async def endworldhunger(self, ctx):
+    async def endworldhunger(self, ctx: commands.Context):
         embed = disnake.Embed(
             title="How to end world hunger",
             description="What are the ways to stop world hunger? Work tirelessly for an international organization? [Donate](https://borgenproject.org/donate/) old clothes and toys to our local Salvation Army? Or is it even possible? There are hundreds of theories on how we can end world hunger and activists debate many of them. Some have been effective and others not. One thing is certain, and that is that we must do something. Discussed below are 10 effective world hunger solutions.",
@@ -86,7 +86,7 @@ class Misc(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command(description=" sends the ping of the bot")
-    async def ping(self, ctx):
+    async def ping(self, ctx: commands.Context):
         embed = disnake.Embed(title="Pong!", timestamp=ctx.message.created_at)
         embed.add_field(
             name="⮚ current ping", value=f"> ` {round(self.bot.latency*1000,1)} `"
@@ -94,9 +94,7 @@ class Misc(commands.Cog):
         y = 0
         for m in self.bot.guilds:
             y += len(m.members)
-        embed.set_footer(
-            text=f"Servers in: {len(self.bot.guilds)} │ Overall users: {y}"
-        )
+        embed.set_footer(text=f"Servers in: {len(self.bot.guilds)} │ Overall users: {y}")
         await ctx.send(embed=embed)
 
 
