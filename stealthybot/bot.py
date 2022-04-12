@@ -2,7 +2,6 @@
 
 
 import os
-import coc
 import dotenv
 import disnake
 
@@ -16,12 +15,7 @@ dotenv.load_dotenv("secrets.env")
 class Stealthybot(commands.Bot):
     """Stealthy bot class"""
 
-    coc_client = coc.login(
-        email=os.getenv("cocemail"),
-        password=os.getenv("cocpass"),
-        key_names="test",
-        client=coc.EventsClient,
-    )
+
 
     def __init__(self):
         super().__init__(
