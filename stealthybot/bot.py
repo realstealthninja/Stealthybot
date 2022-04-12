@@ -15,6 +15,7 @@ dotenv.load_dotenv("secrets.env")
 
 class Stealthybot(commands.Bot):
     """Stealthy bot class"""
+
     coc_client = coc.login(
         email=os.getenv("cocemail"),
         password=os.getenv("cocpass"),
@@ -28,7 +29,7 @@ class Stealthybot(commands.Bot):
             description="worst bot ever lol",
             intents=disnake.Intents.all(),
             case_insensitive=True,
-            owner_ids=[521226389559443461],
+            owner_ids=[521226389559443461, 298043305927639041],
         )
         self.eco_base = None
         self.config = None
@@ -50,18 +51,14 @@ class Stealthybot(commands.Bot):
         self.act_database = await aiosqlite.connect("database/config.db")
 
     async def on_ready(self):
-        print(f"We have logged in as {self.user}")
-
         await self.change_presence(
             activity=disnake.Activity(
                 type=disnake.ActivityType.watching,
                 name=f"{self.command_prefix}help on {len(self.guilds)} servers",
             )
         )
-        print(disnake.__version__)
 
     async def on_guild_join(self, guild):
-
         embed = disnake.Embed(
             title="Thank you for using stealthy bot",
             description="""

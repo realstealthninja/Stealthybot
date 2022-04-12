@@ -13,15 +13,15 @@ class Activity(commands.Cog):
         self.bot = bot
         self.db = None
         self.conf = None
-        self.bot.loop.create_task(self.connecttodb())
-        self.periodicsacrifice.start()
+        self.bot.loop.create_task(self.connect_db())
+        # self.periodic_sacrifice.start()
 
-    async def connecttodb(self):
+    async def connect_db(self):
         self.db = await aiosqlite.connect("./database/activity.db")
         self.conf = await aiosqlite.connect("./database/config.db")
 
     @tasks.loop(seconds=86400.0)
-    async def periodicsacrifice(self):
+    async def periodic_sacrifice(self):
         cursor = await self.db.cursor()
         await cursor.execute("UPDATE activity SET activitypoints = 0")
         await cursor.execute("UPDATE activity SET cando = 1")
@@ -55,7 +55,7 @@ class Activity(commands.Cog):
                     except AttributeError:
                         continue
 
-    @periodicsacrifice.before_loop
+    @periodic_sacrifice.before_loop
     async def beforesacrifice(self):
         await self.bot.wait_until_ready()
         if self.db != None and await self.db.cursor() != None:
@@ -63,19 +63,19 @@ class Activity(commands.Cog):
         else:
             await asyncio.sleep(1)
 
-    async def timeoutuser(self, userid, guildid):
+    async def timeoutuser(self, user_id, guild_id):
         await asyncio.sleep(120)
         cursor = await self.db.cursor()
         await cursor.execute(
-            "UPDATE activity SET cando=? WHERE userid=? AND guildid=?",
-            (1, userid, guildid),
+            "UPDATE activity SET cando=? WHERE user_id=? AND guild_id=?",
+            (1, user_id, guild_id),
         )
         await self.db.commit()
 
     async def findorinsert(self, member: disnake.member):
         cursor = await self.db.cursor()
         await cursor.execute(
-            "SELECT * FROM activity WHERE userid = ? AND guildid =?",
+            "SELECT * FROM activity WHERE user_id = ? AND guild_id =?",
             (member.id, member.guild.id),
         )
         result = await cursor.fetchone()
@@ -117,9 +117,9 @@ class Activity(commands.Cog):
         result = await cur.fetchone()
 
         try:
-            channelid = channel.id
+            channel_id = channel.id
         except AttributeError:
-            channelid = 0
+            channel_id = 0
 
         if not role:
             roleid = 0
@@ -127,7 +127,7 @@ class Activity(commands.Cog):
             roleid = role.id
 
         if not result:
-            result = (ctx.guild.id, "s?", roleid, message, channelid)
+            result = (ctx.guild.id, "s?", roleid, message, channel_id)
             await cur.execute("INSERT INTO servers values(?,?,?,?,?)", result)
             await self.conf.commit()
         else:
@@ -137,15 +137,13 @@ class Activity(commands.Cog):
             )
             await self.conf.commit()
 
-    async def actdone(self, guildid, message) -> None:
+    async def actdone(self, guild_id, message) -> None:
         cur = await self.conf.cursor()
         await cur.execute(
-            "SELECT message, roleid, channelid FROM servers WHERE id = ?", (guildid,)
+            "SELECT message, roleid, channel_id FROM servers WHERE id = ?", (guild_id,)
         )
         result = await cur.fetchone()
-        mes = (
-            f"{message.author.mention} reached 100 points! thank you for being active!"
-        )
+        mes = f"{message.author.mention} reached 100 points! thank you for being active!"
         if result:
             mes = result[0]
             try:
@@ -166,16 +164,14 @@ class Activity(commands.Cog):
                 )
         await message.channel.send(mes)
 
-    async def removeactrole(self, member: disnake.Member, guildid: int):
+    async def removeactrole(self, member: disnake.Member, guild_id: int):
         cur = await self.conf.cursor()
-        await cur.execute(
-            "SELECT message, roleid FROM servers WHERE id = ?", (guildid,)
-        )
+        await cur.execute("SELECT message, roleid FROM servers WHERE id = ?", (guild_id,))
         result = await cur.fetchone()
 
         if result and member.get_role(result[1]):
             try:
-                role = self.bot.get_guild(guildid).get_role(result[1])
+                role = self.bot.get_guild(guild_id).get_role(result[1])
                 await member.remove_roles(role, reason="activity reset")
             except AttributeError:
                 pass
@@ -185,7 +181,7 @@ class Activity(commands.Cog):
         if message.author.bot is True or message.guild is None:
             return
         result = await self.findorinsert(message.author)
-        userid, activitypoints, guildid, maximum, cando, total = result
+        user_id, activitypoints, guild_id, maximum, cando, total = result
         cursor = await self.db.cursor()
 
         if cando == 1 and activitypoints != 100:
@@ -197,21 +193,21 @@ class Activity(commands.Cog):
                 await self.actdone(message.guild.id, message)
 
             await cursor.execute(
-                "UPDATE activity SET activitypoints=?, cando=?, total = ?  WHERE userid=? and guildid=?",
-                (activitypoints, cando, total, userid, guildid),
+                "UPDATE activity SET activitypoints=?, cando=?, total = ?  WHERE user_id=? and guild_id=?",
+                (activitypoints, cando, total, user_id, guild_id),
             )
             await self.db.commit()
-            await self.timeoutuser(userid, guildid)
+            await self.timeoutuser(user_id, guild_id)
 
     @commands.command()
-    async def leaderboard(self, ctx):
+    async def leaderboard(self, ctx: commands.Context):
         emeby = disnake.Embed()
         emeby.set_author(
             name="the most active people of the day", icon_url=ctx.author.avatar
         )
         cursor = await self.db.cursor()
         await cursor.execute(
-            "SELECT userid, activitypoints FROM activity WHERE guildid = ? ORDER BY activitypoints ASC",
+            "SELECT user_id, activitypoints FROM activity WHERE guild_id = ? ORDER BY activitypoints ASC",
             (ctx.guild.id,),
         )
         result = await cursor.fetchall()
@@ -219,7 +215,7 @@ class Activity(commands.Cog):
         for k, people in enumerate(result[::-1], start=1):
             if self.bot.get_user(people[0]) == None:
                 await cursor.execute(
-                    "DELETE FROM activity WHERE userid=? AND guildid=?",
+                    "DELETE FROM activity WHERE user_id=? AND guild_id=?",
                     (people[0], ctx.guild.id),
                 )
                 await self.db.commit()
@@ -231,14 +227,14 @@ class Activity(commands.Cog):
         await ctx.send(embed=emeby)
 
     @commands.command()
-    async def activity(self, ctx, member: disnake.Member = None):
+    async def activity(self, ctx: commands.Context, member: disnake.Member = None):
         if member is not None and member.bot:
             return await ctx.send("hey a bot's activity is not counted!")
         if member is None:
             member = ctx.author
         cursor = await self.db.cursor()
         await cursor.execute(
-            "SELECT * FROM activity WHERE guildid = ? AND userid = ?",
+            "SELECT * FROM activity WHERE guild_id = ? AND user_id = ?",
             (member.guild.id, member.id),
         )
         result = await cursor.fetchone()
@@ -281,9 +277,7 @@ class Activity(commands.Cog):
 
         # drawing rectangle
         draw.rectangle([248, 148, 652, 182], outline="white")
-        draw.rectangle(
-            [250, 150, 250 + (400 * activitypoints / 100), 180], fill="white"
-        )
+        draw.rectangle([250, 150, 250 + (400 * activitypoints / 100), 180], fill="white")
 
         # Drawing total
         bytese = io.BytesIO()

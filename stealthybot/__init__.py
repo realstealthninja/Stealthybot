@@ -1,2 +1,2 @@
 from .bot import Stealthybot
-from .twitchBot import TwitchBot
+from .twitch_bot import TwitchBot
