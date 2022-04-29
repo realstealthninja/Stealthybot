@@ -1,11 +1,9 @@
 """ Views file contains all the buttons views and more"""
-from ctypes import Union
 import re
-from typing import Optional
-import black
 
-from disnake import Emoji, MessageInteraction, Embed, ButtonStyle, PartialEmoji
-from disnake.ui import View, button, Button
+from disnake import ButtonStyle, Embed, MessageInteraction
+from disnake.ui import Button, View, button
+
 from .activityhelpers import ActivityHelper
 
 
