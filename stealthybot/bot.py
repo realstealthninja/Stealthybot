@@ -15,8 +15,6 @@ dotenv.load_dotenv("secrets.env")
 class Stealthybot(commands.Bot):
     """Stealthy bot class"""
 
-
-
     def __init__(self):
         super().__init__(
             command_prefix="sb?",
@@ -40,11 +38,19 @@ class Stealthybot(commands.Bot):
 
     # connecting the db
     async def connect_databases(self):
+        """
+        Made to reuse a connection rather than make a new connection
+        each time.
+        """
         self.eco_base = await aiosqlite.connect("database/economy.db")
         self.config = await aiosqlite.connect("database/config.db")
-        self.act_database = await aiosqlite.connect("database/config.db")
+        self.act_database = await aiosqlite.connect("database/activity.db")
 
     async def on_ready(self):
+        """
+        Bot's on ready function,
+        when the bot is ready this function is called.
+        """
         await self.change_presence(
             activity=disnake.Activity(
                 type=disnake.ActivityType.watching,
@@ -53,6 +59,9 @@ class Stealthybot(commands.Bot):
         )
 
     async def on_guild_join(self, guild):
+        """
+        To help new users understand how the bot works.
+        """
         embed = disnake.Embed(
             title="Thank you for using stealthy bot",
             description="""
