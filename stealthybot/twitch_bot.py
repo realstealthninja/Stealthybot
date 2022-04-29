@@ -11,9 +11,6 @@ class TwitchBot(commands.Bot):
             token=os.getenv("TwitchToken"), prefix="?", initial_channels=["asgytreal"]
         )
 
-    async def event_ready(self):
-        print(f"Logged in as | {self.nick}")
-
     async def event_message(self, message):
         if message.echo:
             return

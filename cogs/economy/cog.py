@@ -88,7 +88,7 @@ class Economy(commands.Cog):
         cur = await self.bot.eco_base.cursor()
         result = await cur.execute("SELECT * FROM items WHERE id = ?", (id,))
         result = await result.fetchone()
-        return Item(result[0], result[1], result[2], result[3], result[4])
+        return Item(result[0], result[1], result[2], result[3], result[4], result[5])
 
     @commands.command()
     async def landinfo(self, ctx: commands.Context) -> None:

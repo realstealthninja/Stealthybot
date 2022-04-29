@@ -3,8 +3,6 @@ import apexpy
 import coc
 import logging
 import disnake
-
-from coc import utils
 from apexpy import ApexApi
 from dotenv import load_dotenv
 from disnake.ext import commands
@@ -85,67 +83,7 @@ class Gaming(commands.Cog):
 
     logging.basicConfig(level=logging.ERROR)
 
-    @commands.command(description="gets the clan detailed about the specified clan")
-    async def clanprofile(
-        self,
-        ctx: commands.Context,
-        clan_tag: str,
-    ):
-        await ctx.trigger_typing()
-        if not utils.is_valid_tag(clan_tag):
-            await ctx.send("You didn't give me a proper tag!")
-            return
-
-        try:
-            clan = await self.bot.coc_client.get_clan(clan_tag)
-        except coc.NotFound:
-            await ctx.send("This clan doesn't exist!")
-            return
-
-        e = disnake.Embed(title="Clan details")
-
-        e.set_thumbnail(url=clan.badge.url)
-
-        coleaders = clan.get_member_by(role=coc.Role.co_leader)
-        labels = "\n".join(f"> {label.name}" for label in clan.labels)
-
-        e.add_field(
-            name=f"**{clan.name} {clan.tag}**   | {clan.type}",
-            value=f"""
-               `{clan.description}`
-            > **location**: {clan.location}
-            
-            > **Total players**: **`{clan.member_count}/50`**
-            
-            > **Join requirement**: `{clan.required_trophies} <:Trophy:896983724686737439>`
-            > **Trophies**: `{clan.points} <:Trophy:896983724686737439>`
-            > **Verses Trophies**: `{clan.points} <:Trophy:896983724686737439>`
-            
-            > **Leader**: `{clan.get_member_by(role=coc.Role.leader)}`
-            > **Co-Leader(s)**:
-            > `{coleaders}`
-
-            **labels**: 
-            {labels}
-            
-            > **Win Streak**: `{clan.war_win_streak}`
-            > **League war rank**: `{clan.war_league}` 
-            """,
-        )
-        e.add_field(
-            name="Clan Record",
-            value=f"> Wins - `{clan.war_wins}`\n> Losses - `{clan.war_losses}`\n> Draws - `{clan.war_ties}`",
-            inline=False,
-        )
-
-        e.add_field(
-            name="Members",
-            value="\n".join(
-                f"> {player.name}" async for player in clan.get_detailed_members()
-            ),
-        )
-        await ctx.send(embed=e)
-
+   
 
 def setup(bot):
     bot.add_cog(Gaming(bot))
