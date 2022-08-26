@@ -55,9 +55,10 @@ class SetupActivity(View):
         await interaction.edit_original_message(embed=Embed(
             title="What should be the Time limit?",
             description="""
-            Recommened: 24 hours \n please make sure the input is as `h.message`
-            eg: 24.0
-                0.5
+            Recommened: 24 hours \n please make sure the input is as `h.decimal`
+            eg: 24.0 = 1 hour
+                1.5 = 1 hour 30 minutes
+                1.1 = 1 hour 6 minutes
             """
         ))
 
@@ -67,8 +68,26 @@ class SetupActivity(View):
             "message",
             check=digit_check)
 
-        self.add_item(EmbedBtn(label="Embed", emoji="⚗️", style=ButtonStyle.blurple))
-        self.add_item(MessageBtn(label="Message", emoji="💬", style=ButtonStyle.gray))
+        await interaction.edit_original_message(embed=Embed(
+            title="What should be the background image be?",
+            description="Must be a link!"
+        ))
+
+        def image_check(message):
+            return message.author == interaction.author and re.match(
+                r"^https?:\/\/[^\s]+(?=.(jpe?g|png|gif)).\1$",
+                message.content
+            )
+
+        image_link = await interaction.bot.wait_for(
+            "message",
+            check=image_check
+        )
+
+        self.add_item(EmbedBtn(label="Embed", emoji="⚗️",
+                      style=ButtonStyle.blurple))
+        self.add_item(MessageBtn(label="Message",
+                      emoji="💬", style=ButtonStyle.gray))
         await interaction.edit_original_message(view=self)
 
         old_goal = await self.act_helper.select_one(
@@ -81,8 +100,9 @@ class SetupActivity(View):
         if old_goal:
             await self.act_helper.update_set(
                 "activity",
-                column=["MsgGoal", "TimeLimit"],
-                values=(int(msg_goal.content), float(time_limit.content)),
+                column=["MsgGoal", "TimeLimit", "BgImage"],
+                values=(int(msg_goal.content), float(
+                    time_limit.content), image_link.content),
                 filter_columns=["ServerID", ],
                 filter_values=(interaction.guild.id,)
             )
@@ -92,6 +112,8 @@ class SetupActivity(View):
                 values=(interaction.guild.id, int(
                     msg_goal.content), float(time_limit.content))
             )
+
+        await self.act_helper.set_time(interaction.guild.id)
 
         await interaction.edit_original_message(embed=Embed(
             title="Part one done!",
@@ -140,6 +162,7 @@ class EmbedBtn(Button):
         await interaction.edit_original_message(embed=Embed(
             title="What should be the Embed title?"
         ))
+
         def check(message):
             return message.author == interaction.author
         title = await interaction.bot.wait_for(
@@ -173,12 +196,12 @@ class EmbedBtn(Button):
             filter_columns=["ServerID", ],
             filter_values=(interaction.guild.id,)
         )
-
         if old_embed:
             await self.view.act_helper.update_set(
                 "Embeds",
                 column=["Title", "Des", "Image", "Thumbnail"],
-                values=(title.content, description.content, image.content, thumbnail.content),
+                values=(title.content, description.content,
+                        image.content, thumbnail.content),
                 filter_columns=["ServerID", ],
                 filter_values=(interaction.guild.id,)
             )
@@ -201,8 +224,7 @@ class EmbedBtn(Button):
         ))
         embed = await self.view.act_helper.fetch_embed(interaction.guild.id)
         await interaction.send(embed=embed)
-        for child in self.view.children:
-            self.view.remove_item(child)
+        self.view.clear_items()
         self.view.stop()
 
 
@@ -220,9 +242,64 @@ class MessageBtn(Button):
                  url=None,
                  emoji=None,
                  row=None
-                ):
+                 ):
         super().__init__(style=style, label=label, disabled=disabled,
                          custom_id=custom_id, url=url, emoji=emoji, row=row)
 
     async def callback(self, interaction: MessageInteraction):
-        print("hello!")
+        await interaction.response.defer()
+        await interaction.edit_original_message(embed=Embed(
+            title="Welcome to the message editor!",
+            description="We have alot of customizability \
+                So have fun!"
+        ).add_field(
+            name="MENTION_USER",
+            value="use this to ping the user"
+        ).add_field(
+            name="MSG_COUNT",
+            value="The amount of messages they have sent under the time limit"
+        ).add_field(
+            name="TOTAL_MSG_COUNT",
+            value="The total amount of messages they have sent."
+        ).add_field(
+            name="MSG_GOAL",
+            value="The message goal."
+        ).add_field(
+            name="USERNAME",
+            value="The username of the user who has just passed the goal"
+        ))
+
+        def check(message):
+            return message.author == interaction.author
+
+        msg = await interaction.bot.wait_for("message", check=check)
+
+        old_embed = await self.view.act_helper.select_one(
+            "Messages",
+            filter_columns=["ServerID", ],
+            filter_values=(interaction.guild.id,)
+        )
+
+        if old_embed:
+            await self.view.act_helper.update_set(
+                "Messages",
+                column=["Message", ],
+                values=(msg.content,),
+                filter_columns=["ServerID", ],
+                filter_values=(interaction.guild.id,)
+            )
+        else:
+            await self.view.act_helper.insert_into(
+                "Messages",
+                values=(
+                    interaction.guild.id,
+                    msg.content
+                )
+            )
+
+        await interaction.edit_original_message(embed=Embed(
+            title="done!",
+            description="Thank you for using stealthy bot ❤️"
+        ))
+        self.view.clear_items()
+        self.view.stop()
