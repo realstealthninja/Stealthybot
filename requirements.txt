@@ -1,8 +1,6 @@
-disnake[voice]
-requests
+disnake
 twitchio
 python-dotenv
-coc.py
 numpy
 Pillow
 asyncio
