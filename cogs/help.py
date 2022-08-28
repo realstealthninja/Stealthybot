@@ -36,7 +36,7 @@ class MyHelp(commands.HelpCommand):
 
     # ?help <command>
     async def send_command_help(self, command):
-        command: commands.Command = self.bot.get_command(c)
+        command: commands.Command = self.bot.get_command(command)
         if not command.description:
             command.descritpion = "``"
         embed = disnake.Embed().set_author(
