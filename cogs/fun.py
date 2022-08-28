@@ -13,6 +13,9 @@ class Fun(commands.Cog, name="fun"):
 
     @commands.command()
     async def truthordare(self, ctx: commands.Context, type="t"):
+        """
+        Truth or dare game
+        """
         if type == "t":
             with open("assets/datasets/truth.csv") as f:
                 ereader = csv.reader(f, delimiter=";")
