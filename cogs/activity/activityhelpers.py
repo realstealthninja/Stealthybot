@@ -11,7 +11,6 @@ import aiosqlite
 import disnake
 from PIL import Image, ImageDraw, ImageFont
 
-
 class ActivityHelper():
     """
     Activity Helper class has functions that help with the activity feature.

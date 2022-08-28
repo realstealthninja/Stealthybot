@@ -40,6 +40,10 @@ class Activity(commands.Cog, name="activity"):
         )
         self.reset.start()
 
+    
+    async def server_check(self, ctx: commands.Context):
+        return await self.act_helper.fetch_server(ctx.guild.id)
+
     @tasks.loop(seconds=1.0)
     async def reset(self):
         """
@@ -85,13 +89,15 @@ class Activity(commands.Cog, name="activity"):
                         ))
 
     @commands.command()
+    @commands.check(server_check)
     async def activity(self, ctx: commands.Context, member: disnake.Member = None):
         """
         Activity rank command
         """
         if not member:
             member = ctx.guild.get_member(ctx.author.id)
-
+        
+        self.act_helper.create_or_fetch_user(member.id, ctx.guild.id)
         image = await self.act_helper.create_act_image(member)
 
         await ctx.send(file=disnake.File(

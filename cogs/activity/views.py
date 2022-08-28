@@ -56,7 +56,7 @@ class SetupActivity(View):
             title="What should be the Time limit?",
             description="""
             Recommened: 24 hours \n please make sure the input is as `h.decimal`
-            eg: 24.0 = 1 hour
+            eg: 24.0 = 24 hour
                 1.5 = 1 hour 30 minutes
                 1.1 = 1 hour 6 minutes
             """
@@ -101,16 +101,21 @@ class SetupActivity(View):
             await self.act_helper.update_set(
                 "activity",
                 column=["MsgGoal", "TimeLimit", "BgImage"],
-                values=(int(msg_goal.content), float(
-                    time_limit.content), image_link.content),
+                values=(
+                    int(msg_goal.content),
+                    float(time_limit.content),
+                    image_link.content),
                 filter_columns=["ServerID", ],
                 filter_values=(interaction.guild.id,)
             )
         else:
             await self.act_helper.insert_into(
                 "activity",
-                values=(interaction.guild.id, int(
-                    msg_goal.content), float(time_limit.content))
+                values=(
+                    interaction.guild.id,
+                    int(msg_goal.content),
+                    float(time_limit.content),
+                    image_link.content)
             )
 
         await self.act_helper.set_time(interaction.guild.id)
@@ -213,7 +218,7 @@ class EmbedBtn(Button):
                     title.content,
                     description.content,
                     image.content,
-                    thumbnail
+                    thumbnail.content
                 )
             )
         await interaction.edit_original_message(embed=Embed(
