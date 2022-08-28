@@ -3,7 +3,11 @@ import csv
 from disnake.ext import commands
 
 
-class Fun(commands.Cog):
+class Fun(commands.Cog, name="fun"):
+    """
+    Fun,
+    Has commands which is fun to use
+    """
     def __init__(self, bot):
         self.bot = bot
 

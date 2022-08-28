@@ -25,7 +25,11 @@ async def looper(stats):
     return totalstring
 
 
-class Gaming(commands.Cog):
+class Gaming(commands.Cog, name="gaming"):
+    """
+    Gaming,
+    contains commands related to gaming
+    """
     def __init__(self, bot):
         self.bot = bot
         self.player = ApexApi(key=apitoken)

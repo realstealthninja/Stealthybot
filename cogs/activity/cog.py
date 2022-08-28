@@ -26,7 +26,7 @@ NAMES = [
 ]
 
 
-class Activity(commands.Cog):
+class Activity(commands.Cog, name="activity"):
     """ Main cog for all the activity commands and detection"""
 
     def __init__(self, bot):

@@ -11,7 +11,7 @@ from .objects import Item, Player, Server
 from .constants import PROSPERITY
 
 
-class Economy(commands.Cog):
+class Economy(commands.Cog, name="economy"):
     """
     economy cog contains the economy commands
     """
