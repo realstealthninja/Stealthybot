@@ -177,7 +177,6 @@ class Activity(commands.Cog, name="activity"):
             msg = await self.act_helper.fetch_message(server[0])
             embed = await self.act_helper.fetch_embed(server[0])
             msg = msg[0]
-            embed = embed[0]
             if msg:
                 await message.channel.send(
                     msg.replace(
@@ -198,6 +197,38 @@ class Activity(commands.Cog, name="activity"):
                     )
                 )
             if embed:
+                embed.title.replace(
+                    "MENTION_USER",
+                    f"{message.author.mention}"
+                ).replace(
+                    "MSG_COUNT",
+                    f"{user[3]}"
+                ).replace(
+                    "TOTAL_MSG_COUNT",
+                    f"{user[4]}"
+                ).replace(
+                    "MSG_GOAL",
+                    f"{server[1]}"
+                ).replace(
+                    "USERNAME",
+                    f"{message.author.display_name}"
+                )
+                embed.description.replace(
+                    "MENTION_USER",
+                    f"{message.author.mention}"
+                ).replace(
+                    "MSG_COUNT",
+                    f"{user[3]}"
+                ).replace(
+                    "TOTAL_MSG_COUNT",
+                    f"{user[4]}"
+                ).replace(
+                    "MSG_GOAL",
+                    f"{server[1]}"
+                ).replace(
+                    "USERNAME",
+                    f"{message.author.display_name}"
+                )
                 await message.channel.send(embed=embed)
 
     @commands.command(name="setup")

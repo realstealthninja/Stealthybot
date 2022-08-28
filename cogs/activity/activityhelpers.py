@@ -232,6 +232,7 @@ class ActivityHelper():
             title=embed_raw[1],
             description=embed_raw[2]
         )
+        
         if embed_raw[3] != "NONE":
             embed.set_image(url=embed_raw[3])
         if embed_raw[4] != "NONE":

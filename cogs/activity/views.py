@@ -229,6 +229,12 @@ class EmbedBtn(Button):
         ))
         embed = await self.view.act_helper.fetch_embed(interaction.guild.id)
         await interaction.send(embed=embed)
+        await interaction.send(
+            """
+            Don't worry if the USERNAME and things like that dont show up.
+            It doesnt have random values yet.
+            So please ignore this inconvience ❤️
+            """)
         self.view.clear_items()
         self.view.stop()
 
