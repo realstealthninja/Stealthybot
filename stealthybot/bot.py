@@ -1,21 +1,19 @@
-"""stealthy bot module"""
-
-
+"""stealthy bot module."""
 import os
-import dotenv
-import disnake
 
 import aiosqlite
+import disnake
+import dotenv
 from disnake.ext import commands
-
 
 dotenv.load_dotenv("secrets.env")
 
 
 class Stealthybot(commands.Bot):
-    """Stealthy bot class"""
+    """Stealthy bot class."""
 
     def __init__(self):
+        """Bot file's Init function."""
         super().__init__(
             command_prefix="sb?",
             description="worst bot ever lol",
@@ -26,6 +24,7 @@ class Stealthybot(commands.Bot):
         self.eco_base = None
         self.config = None
         self.act_database = None
+        self.fundb = None
         self.loop.create_task(self.connect_databases())
 
         for filename in os.listdir("./cogs/"):
@@ -38,30 +37,28 @@ class Stealthybot(commands.Bot):
 
     # connecting the db
     async def connect_databases(self):
-        """
-        Made to reuse a connection rather than make a new connection
-        each time.
-        """
+        """Made to reuse a connection rather than make a new connection."""
         self.eco_base = await aiosqlite.connect("database/economy.db")
         self.config = await aiosqlite.connect("database/config.db")
         self.act_database = await aiosqlite.connect("database/activity.db")
+        self.fundb = await aiosqlite.connect("database/fun.db")
 
     async def on_ready(self):
         """
-        Bot's on ready function,
+        Bot's on ready function.
+
         when the bot is ready this function is called.
         """
         await self.change_presence(
             activity=disnake.Activity(
                 type=disnake.ActivityType.watching,
-                name=f"{self.command_prefix}help on {len(self.guilds)} servers",
+                name=f"{self.command_prefix}help on {len(self.guilds)}\
+                servers",
             )
         )
 
     async def on_guild_join(self, guild):
-        """
-        To help new users understand how the bot works.
-        """
+        """To help new users understand how the bot works."""
         embed = disnake.Embed(
             title="Thank you for using stealthy bot",
             description="""
@@ -69,10 +66,12 @@ class Stealthybot(commands.Bot):
             it keeps me motivated to work on it more.
 
             **`s?help`** for the help menu
-            **`s?help setupact`** to read up on how to setup activity for your server.
+            **`s?help setupact`** to read up on how to setup activity for \
+            your server.
 
             hope you enjoy using stealthy bot! 🤗
-            join the [offical support server](https://discord.gg/HAbStFeVAj) for any questions or help 🙂
+            join the [offical support server](https://discord.gg/HAbStFeVAj) \
+            for any questions or help 🙂
             """,
         )
         names = [
