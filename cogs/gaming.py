@@ -1,20 +1,20 @@
+"""Gaming cog contains commands and functions related to gaming."""
 import os
-import apexpy
-import coc
-import logging
+
 import disnake
 from apexpy import ApexApi
-from dotenv import load_dotenv
+from apexpy.exceptions import PlayerNotFoundError
 from disnake.ext import commands
+from dotenv import load_dotenv
 
 from utils.dutils import paginate
-from apexpy.exceptions import PlayerNotFoundError
 
 load_dotenv("secrets.env")
 apitoken = os.getenv("apextoken")
 
 
 async def looper(stats):
+    """Loops through the json and removes the values."""
     totalstring = ""
     avoidable = ["specific", "Specific1", "Specific2", "specific3", "rank"]
     for stat in stats:
@@ -26,16 +26,16 @@ async def looper(stats):
 
 
 class Gaming(commands.Cog, name="gaming"):
-    """
-    Gaming,
-    contains commands related to gaming
-    """
+    """Gaming contains commands related to gaming."""
+
     def __init__(self, bot):
+        """Define the api key for the bot for easy acess."""
         self.bot = bot
-        self.player = ApexApi(key=apitoken)
+        self.player = ApexApi(key=apitoken)  # type: ignore
 
     @commands.command(
-        description="gets info about a player using their username accepted platforms are: psn, xbl, pc"
+        description="gets info about a player using their\
+             username accepted platforms are: psn, xbl, pc"
     )
     async def apexprofile(
         self,
@@ -44,12 +44,14 @@ class Gaming(commands.Cog, name="gaming"):
         *,
         username,
     ) -> None:
+        """Get the apex legends profile of a user."""
         await ctx.trigger_typing()
         try:
             await self.player.search(username, platform)
         except PlayerNotFoundError:
             await ctx.send(
-                f"player `{username}` not found in database. check the spelling and try again"
+                f"player `{username}` not found in database.\
+                     check the spelling and try again"
             )
             return
 
@@ -58,7 +60,7 @@ class Gaming(commands.Cog, name="gaming"):
             description="remember its about skills not about kills",
         )
 
-        legend_names = "\n".join(f"> {legend.name}" for legend in self.player.legends)
+        legend_names = "\n".join(f"> {i.name}" for i in self.player.legends)
         totalstatsstring = await looper(self.player.stats)
 
         main_embed.add_field(
@@ -85,9 +87,7 @@ class Gaming(commands.Cog, name="gaming"):
             embedlist.append(emby)
         await paginate(ctx, embedlist)
 
-    logging.basicConfig(level=logging.ERROR)
-
-   
 
 def setup(bot):
+    """Add cog to bot."""
     bot.add_cog(Gaming(bot))
