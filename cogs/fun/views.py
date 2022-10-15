@@ -11,7 +11,7 @@ class Truthordare(View):
     def __init__(self, ctx, bot, timeout: float = 180):
         """Init of the view."""
         self.ctx: commands.Context = ctx
-        self.bot: commands.bot = bot
+        self.bot = bot
         super().__init__(timeout=timeout)
 
     async def on_timeout(self) -> None:
