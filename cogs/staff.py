@@ -41,8 +41,7 @@ class Staff(commands.Cog):
                 stderr=asyncio.subprocess.PIPE,
             )
             output, error = await process.communicate()
-            embed.description += f'[{" ".join(git_command)!r} exited with return code\
-            {process.returncode}\n'
+            embed.description += f'[{" ".join(git_command)!r} exited with return code {process.returncode}\n'
             if output:
                 embed.description += f"**[stdout]**\n{output.decode()}\n"
             if error:
