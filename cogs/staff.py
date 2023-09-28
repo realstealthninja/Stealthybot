@@ -41,7 +41,8 @@ class Staff(commands.Cog):
                 stderr=asyncio.subprocess.PIPE,
             )
             output, error = await process.communicate()
-            embed.description += f'[{" ".join(git_command)!r} exited with return code {process.returncode}\n'
+            embed.description += f'[{" ".join(git_command)!r} exited with return code\
+            {process.returncode}\n'
             if output:
                 embed.description += f"**[stdout]**\n{output.decode()}\n"
             if error:
@@ -71,15 +72,12 @@ class Staff(commands.Cog):
     @commands.command(aliases=["r"], hidden=True)
     async def reload(self, ctx: commands.Context, extension=""):
         if not extension:
-
             for cog in tuple(self.bot.extensions):
-
                 self.bot.reload_extension(cog)
             embed = disnake.Embed()
-            embed.add_field(name="Reload Extension", value=f"Reloaded cogs successfully")
+            embed.add_field(name="Reload Extension", value="Reloaded cogs successfully")
             await ctx.send(embed=embed)
         else:
-
             self.bot.reload_extension(f"cogs.{extension}")
             embed = disnake.Embed()
             embed.add_field(
@@ -146,7 +144,8 @@ class Staff(commands.Cog):
             return
         elif isinstance(error, commands.CheckFailure):
             await ctx.send(
-                "It looks like you tried to run a command that you dont have enough permissions/access to run!"
+                "It looks like you tried to run a command that you don't have enough \
+                permissions/access to run!"
             )
         elif isinstance(error, commands.errors.MissingRequiredArgument):
             await ctx.send(f"missing argument `{error.param.name}`")

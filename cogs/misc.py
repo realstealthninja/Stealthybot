@@ -7,6 +7,7 @@ class Misc(commands.Cog, name="misc"):
     miscellanous,
     Contains commands that dont fit other groups
     """
+
     def __init__(self, bot):
         self.bot = bot
 
@@ -19,7 +20,9 @@ class Misc(commands.Cog, name="misc"):
         y = 0
         for m in self.bot.guilds:
             y += len(m.members)
-        embed.set_footer(text=f"Servers in: {len(self.bot.guilds)} │ Overall users: {y}")
+        embed.set_footer(
+            text=f"Servers in: {len(self.bot.guilds)} │ Overall users: {y}"
+        )
         await ctx.send(embed=embed)
 
 

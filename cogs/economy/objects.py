@@ -37,12 +37,9 @@ def genbasicmap(width: int, height: int) -> list:
 class Item(object):
     """Item object"""
 
-    def __init__(
-        self, id: str, name: str, easyid: str, cost: int, value: int, emoji: int
-    ) -> None:
+    def __init__(self, id: str, name: str, cost: int, value: int, emoji: int) -> None:
         self.id = id
         self.name = name
-        self.easyid = easyid
         self.cost = cost
         self.value = value
         self.emoji = emoji
@@ -117,7 +114,7 @@ class Server(object):
         cur: aiosqlite.Cursor = await self.bot.eco_base.cursor()
         if len(lootpool) != len(numofitems):
             raise ValueError
-        for (item, number) in zip(lootpool, numofitems):
+        for item, number in zip(lootpool, numofitems):
             await cur.execute(
                 "INSERT INTO lootpool VALUES(?,?,?)", (self.id, item, number)
             )
@@ -152,7 +149,7 @@ class Server(object):
         cur: aiosqlite.Cursor = await self.bot.eco_base.cursor()
         result = await cur.execute("SELECT * FROM items WHERE id = ?", (id,))
         result = await result.fetchone()
-        return Item(result[0], result[1], result[2], result[3], result[4], result[5])
+        return Item(result[0], result[1], result[2], result[3], result[4])
 
     async def fetch_lootpool(self) -> list():
         items: list() = []
@@ -182,7 +179,7 @@ class Server(object):
         if not result:
             return None
 
-        return Item(result[0], result[1], result[2], result[3], result[4], result[5])
+        return Item(result[0], result[1], result[2], result[3], result[4])
 
     async def imp_map(self):
         pass  # TODO:
@@ -191,7 +188,8 @@ class Server(object):
         cur: aiosqlite.Cursor = await self.bot.eco_base.cursor()
 
         result = await cur.execute(
-            "SELECT amount FROM servershop WHERE userid = ? AND itemid = ? AND serverid = ?",
+            "SELECT amount FROM servershop WHERE userid = ? AND itemid = ? AND \
+            serverid = ?",
             (userid, itemid, self.id, cost),
         )
         result = await result.fetchone()
@@ -205,7 +203,8 @@ class Server(object):
             return
 
         await cur.execute(
-            "UPDATE servershop SET amount = ? WHERE userid = ? AND itemid = ? AND serverid = ? AND cost = ?",
+            "UPDATE servershop SET amount = ? WHERE userid = ? AND itemid = ? AND \
+            serverid = ? AND cost = ?",
             (amount + result[0], userid, itemid, self.id, cost),
         )
         await self.bot.eco_base.commit()
@@ -213,7 +212,8 @@ class Server(object):
     async def buy_item(self, userid: int, itemid: str, amount: int):
         cur: aiosqlite.Cursor() = await self.bot.eco_base.cursor()
         result = await cur.execute(
-            "SELECT amount FROM servershop WHERE userid = ? AND itemid = ? AND serverid = ? ",
+            "SELECT amount FROM servershop WHERE userid = ? AND itemid = ? AND \
+            serverid = ? ",
             (userid, itemid, self.id),
         )
         result = await result.fetchone()
@@ -221,7 +221,8 @@ class Server(object):
         if not result:
             return
         await cur.execute(
-            "UPDATE servershop SET amount = ? WHERE userid = ? AND itemid = ? AND serverid = ?",
+            "UPDATE servershop SET amount = ? WHERE userid = ? AND itemid = ? AND \
+            serverid = ?",
             (result[0] - amount, userid, itemid, self.id),
         )
         await self.bot.eco_base.commit()
@@ -243,7 +244,9 @@ class Server(object):
             "SELECT * FROM servershop WHERE serverid = ?", (self.id,)
         ) as cursor:
             async for row in cursor:
-                shop.append({row[2]: {"user": row[1], "amount": row[3], "cost": row[4]}})
+                shop.append(
+                    {row[2]: {"user": row[1], "amount": row[3], "cost": row[4]}}
+                )
         return shop
 
     async def fetch_shop_user_wise(self) -> list:
@@ -252,7 +255,9 @@ class Server(object):
             "SELECT * FROM servershop WHERE serverid = ?", (self.id,)
         ) as cursor:
             async for row in cursor:
-                shop.append({row[1]: {"item": row[2], "amount": row[3], "cost": row[4]}})
+                shop.append(
+                    {row[1]: {"item": row[2], "amount": row[3], "cost": row[4]}}
+                )
         return shop
 
 
@@ -366,7 +371,7 @@ class Player(object):
         cur: aiosqlite.Cursor = await self.bot.eco_base.cursor()
         result = await cur.execute("SELECT * FROM items WHERE id = ?", (id,))
         result = await result.fetchone()
-        return Item(result[0], result[1], result[2], result[3], result[4], result[5])
+        return Item(result[0], result[1], result[2], result[3], result[4])
 
     async def fetch_raw_inv(self):
         raw_items = []
@@ -378,13 +383,13 @@ class Player(object):
     async def fetch_item_by_name(self, name: str) -> Item | None:
         cur: aiosqlite.Cursor = await self.bot.eco_base.cursor()
         result = await cur.execute(
-            "SELECT * FROM items WHERE easyid = ? OR name = ?", (name, name)
+            "SELECT * FROM items WHERE id = ? OR name = ?", (name, name)
         )
         result = await result.fetchone()
         if not result:
             return None
 
-        return Item(result[0], result[1], result[2], result[3], result[4], result[5])
+        return Item(result[0], result[1], result[2], result[3], result[4])
 
     async def add_item(self, itemid, amount: int) -> None:
         cur: aiosqlite.Cursor = await self.bot.eco_base.cursor()
@@ -432,10 +437,9 @@ class Player(object):
 
 class enemy(object):
     def __init__(
-        self, easyid, health, basedmg, weapon, description, drops, level, bot
+        self, _id, health, basedmg, weapon, description, drops, level, bot
     ) -> None:
-        self.id = id
-        self.easyid = easyid
+        self.id = _id
         self.level = level
         self.health = health
         self.basedmg = basedmg

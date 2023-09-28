@@ -44,7 +44,9 @@ class Economy(commands.Cog, name="economy"):
             )
             await self.bot.eco_base.commit()
             query = (user_id, 0, "None", 100, 100, "None", 0)
-        return Player(user_id, query[1], query[2], query[3], query[4], query[5], self.bot)
+        return Player(
+            user_id, query[1], query[2], query[3], query[4], query[5], self.bot
+        )
 
     async def create_or_fetch_server(self, guild_id: int) -> Server:
         """
@@ -122,7 +124,9 @@ class Economy(commands.Cog, name="economy"):
         )
         await ctx.send(embed=embed)
 
-    # ? here is a fun concept use the items from the players inventory to level up the settlement as the server progress the whole server must give up items to improve the server
+    # ? here is a fun concept use the items from the players inventory to level up
+    # the settlement as the server progress the whole server must give up items to
+    # improve the server
 
     @commands.command()
     async def scavenge(self, ctx: commands.Context) -> None:
@@ -130,7 +134,7 @@ class Economy(commands.Cog, name="economy"):
         server = await self.create_or_fetch_server(ctx.guild.id)
         player = await self.create_or_fetch_player(ctx.author.id)
         await server.fetch_lootpool()
-        if server.lootpool == None or len(server.lootpool) == 0:
+        if server.lootpool is None or len(server.lootpool) == 0:
             return await ctx.send("The land is barren try again later")
         item = random.choice(server.lootpool)
         rawpool = await server.fetch_raw_lootpool()
@@ -179,7 +183,8 @@ class Economy(commands.Cog, name="economy"):
         items: list = await player.fetch_inv()
         embed = disnake.Embed(
             title="Bag",
-            description="This is your inventory. your items are stored here.\n good luck traveller",
+            description="This is your inventory. your items are stored here.\n good \
+            luck traveller",
         )
         itemval = ""
         rawpool = await player.fetch_raw_inv()
@@ -214,18 +219,20 @@ class Economy(commands.Cog, name="economy"):
 
         main = disnake.Embed(
             title="Shop Menu",
-            description="Welcome to the baazar of the land! \n here the people sell and buy supplies",
+            description="Welcome to the baazar of the land! \n here the people sell \
+            and buy supplies",
         )
         main_body = "\n"
         if not itemfilter:
             for count, items in enumerate(shop):
-
                 key = list(items.keys())[0]
 
                 item = await server.fetch_item(key)
                 itemname = item.name + item.emoji
                 user = ctx.guild.get_member(items[key]["user"])
-                main_body += f"{count}) |**{itemname} | {items[key]['amount']} | {items[key]['cost']} <:stealthycoin:897331306013286440> |** {user.mention} \n"
+                main_body += f"{count}) |**{itemname} | {items[key]['amount']} | \
+                    {items[key]['cost']} <:stealthycoin:897331306013286440> |** \
+                    {user.mention} \n"
         else:
             item = await server.fetch_item_by_name(itemfilter)
             item = item.id
@@ -238,7 +245,9 @@ class Economy(commands.Cog, name="economy"):
                 item = await server.fetch_item(key)
                 itemname = item.name + item.emoji
                 user = ctx.guild.get_member(items[key]["user"])
-                main_body += f"{count}) |**{itemname} | {items[key]['amount']} | {items[key]['cost']} <:stealthycoin:897331306013286440> |** {user.mention} \n"
+                main_body += f"{count}) |**{itemname} | {items[key]['amount']} | \
+                {items[key]['cost']} <:stealthycoin:897331306013286440> |\
+                ** {user.mention} \n"
 
         main.add_field(name="Items currently on the market", value=main_body)
         await ctx.send(embed=main)
@@ -265,11 +274,14 @@ class Economy(commands.Cog, name="economy"):
         await player.remove_item(item.id, amount)
         await server.set_item_for_sale(player.id, item.id, amount, cost)
         await ctx.send(
-            f"You set {amount} of {item.name} {item.emoji} for {cost} its now in the market! wait for someone to buy it"
+            f"You set {amount} of {item.name} {item.emoji} for {cost} its now in the \
+            market! wait for someone to buy it"
         )
 
     @commands.command()
-    async def profile(self, ctx: commands.Context, member: disnake.Member = None) -> None:
+    async def profile(
+        self, ctx: commands.Context, member: disnake.Member = None
+    ) -> None:
         """Displays the profile of you or the person mentioned"""
         if not member:
             member = ctx.author

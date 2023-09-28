@@ -13,12 +13,14 @@ PROSPERITY = {
     "poor": {
         "message": """
             The land is almost bankrupt the vault is in dire need of change
-            The people are at the point of starving the nobles are either unhelpful or in the same condition
+            The people are at the point of starving the nobles are either unhelpful\
+            or in the same condition
         """
     },
     "average": {
         "message": """
-            The land has a normal amount of currency the people seem happy the nobles seem helpful 
+            The land has a normal amount of currency the people seem happy the nobles\
+             seem helpful 
             they surely have seen worser conditions
         """
     },
