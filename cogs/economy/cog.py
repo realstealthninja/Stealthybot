@@ -164,7 +164,7 @@ class Economy(commands.Cog, name="economy"):
         self,
         ctx: commands.Context,
         *,
-        items: list = ("I-NVWkULk8fzBx2UqjgJLdYp",),
+        items: list = ("oak",),
         number: list = (20,),
     ) -> None:
         """generates loot pool for the server"""
