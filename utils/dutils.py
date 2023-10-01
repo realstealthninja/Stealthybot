@@ -9,7 +9,6 @@ def jsonwriter(file1, data1):
 
 
 async def paginate(ctx, embeds: list):
-
     current = 0
     msg = await ctx.send(embed=embeds[0])
     await msg.add_reaction("<:left:898911001158750229>")
@@ -299,8 +298,8 @@ class Paginator(Session):
         prefix: str = "",
         suffix: str = "",
         format: str = "",
-        colour: Union[int, disnake.Colour] = disnake.Embed.Empty,
-        color: Union[int, disnake.Colour] = disnake.Embed.Empty,
+        colour: Union[int, disnake.Colour] = None,
+        color: Union[int, disnake.Colour] = None,
         use_defaults: bool = True,
         embed: bool = True,
         joiner: str = "\n",
