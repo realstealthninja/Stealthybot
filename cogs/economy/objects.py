@@ -46,7 +46,7 @@ class Item(object):
 
 
 class Server(object):
-    """server object for easier developer experiance"""
+    """server object for easier developer experience"""
 
     def __init__(
         self, id: int, level: int, bank: int, mapdata: int, bot: Stealthybot
@@ -110,7 +110,7 @@ class Server(object):
             )
         await self.bot.eco_base.commit()
 
-    async def gen_lootpool(self, lootpool: list(), numofitems: list()) -> None:
+    async def gen_lootpool(self, lootpool: list, numofitems: list) -> None:
         cur: aiosqlite.Cursor = await self.bot.eco_base.cursor()
         if len(lootpool) != len(numofitems):
             raise ValueError
@@ -157,7 +157,7 @@ class Server(object):
             "SELECT * FROM lootpool WHERE serverid = ?", (self.id,)
         ) as cur:
             async for row in cur:
-                for amount in range(row[2]):
+                for _ in range(row[2]):
                     items.append(await self.fetch_item(row[1]))
 
         self.lootpool = items
@@ -272,6 +272,13 @@ class Player(object):
         self.bot: Stealthybot = bot
         self.items: list() = None
 
+    async def update_value(self, column: str, value: any):
+        cur: aiosqlite.Cursor = await self.bot.eco_base.cursor()
+        await cur.execute(
+            f"UPDATE profiles SET {column} = ? WHERE id = ?", (value, self.id)
+        )
+        await self.bot.eco_base.commit()
+
     async def add_money(self, money: int, place):
         cur: aiosqlite.Cursor = await self.bot.eco_base.cursor()
         if place == "wallet":
@@ -295,50 +302,24 @@ class Player(object):
         await self.bot.eco_base.commit()
 
     async def remove_money(self, money: int, place):
-        cur: aiosqlite.Cursor = await self.bot.eco_base.cursor()
         if place == "wallet":
             self.wallet -= money
-            await cur.execute(
-                f"UPDATE profiles SET {place} = ? WHERE id = ?",
-                (
-                    self.wallet,
-                    self.id,
-                ),
-            )
+            await self.update_value(place, self.wallet)
         if place == "bank":
             self.bank -= money
-            await cur.execute(
-                f"UPDATE profiles SET {place} = ? WHERE id = ?",
-                (
-                    self.bank,
-                    self.id,
-                ),
-            )
-        await self.bot.eco_base.commit()
+            await self.update_value(place, self.bank)
 
     async def add_citzen(self, serverid: int):
-        cur: aiosqlite.Cursor = await self.bot.eco_base.cursor()
         self.serverid = serverid
-        await cur.execute(
-            "UPDATE profiles SET serverid = ? WHERE id = ?", (self.serverid, self.id)
-        )
-        await self.bot.eco_base.commit()
+        await self.update_value("serverid", self.serverid)
 
     async def remove_citzen(self):
-        cur: aiosqlite.Cursor = await self.bot.eco_base.cursor()
         self.serverid = 0
-        await cur.execute(
-            "UPDATE profiles SET serverid = ? WHERE id = ?", (self.serverid, self.id)
-        )
-        await self.bot.eco_base.commit()
+        await self.update_value("serverid", self.serverid)
 
     async def add_health(self, value: int):
-        cur: aiosqlite.Cursor = await self.bot.eco_base.cursor()
         self.health += value
-        await cur.execute(
-            "UPDATE profiles SET health = ? WHERE id = ? ", (self.health, self.id)
-        )
-        await self.bot.eco_base.commit()
+        await self.update_value("health", self.health)
 
     async def check_for_item(self, id) -> bool:
         await self.fetch_inv()
@@ -349,12 +330,8 @@ class Player(object):
                 return False
 
     async def decrease_health(self, value: int):
-        cur: aiosqlite.Cursor = await self.bot.eco_base.cursor()
         self.health -= value
-        await cur.execute(
-            "UPDATE profiles SET health = ? WHERE id = ? ", (self.health, self.id)
-        )
-        await self.bot.eco_base.commit()
+        await self.update_value("health", self.health)
 
     async def fetch_inv(self) -> list():
         items: list() = []
@@ -362,7 +339,7 @@ class Player(object):
             "SELECT * FROM inventory WHERE playerid = ?", (self.id,)
         ) as cur:
             async for row in cur:
-                for amount in range(row[2]):
+                for _ in range(row[2]):
                     items.append(await self.fetch_item(row[1]))
         self.items = items
         return items
