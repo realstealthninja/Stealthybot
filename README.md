@@ -1,6 +1,6 @@
 ![discord](https://img.shields.io/discord/793102507156701184?style=plastic)
 ![Language](https://img.shields.io/badge/lang-Python%203.9-green)
-![disnake Version](https://img.shields.io/badge/lib-disnake%201.7.0-blue)
+![disnake Version](https://img.shields.io/badge/lib-disnake%202.9.0-blue)
 
 
 
