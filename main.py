@@ -9,10 +9,11 @@ token = os.getenv("Token")
 
 
 twitchbot = TwitchBot()
-stelbot = Stealthybot()
+stealthybot = Stealthybot()
 
-loop = asyncio.get_event_loop_policy().get_event_loop()
-loop.create_task(twitchbot.connect())
+# removing twtich support until further notice
+# loop = asyncio.get_event_loop_policy().get_event_loop()
+# loop.create_task(twitchbot.connect())
 
 
 @stelbot.check
@@ -23,4 +24,4 @@ async def precheck(ctx):
 
 
 if __name__ == "__main__":
-    stelbot.run(token)
+    stealthybot.run(token)
