@@ -16,9 +16,9 @@ stealthybot = Stealthybot()
 # loop.create_task(twitchbot.connect())
 
 
-@stelbot.check
+@stealthybot.check
 async def precheck(ctx):
-    if ctx.command.hidden and not await stelbot.is_owner(ctx.author):
+    if ctx.command.hidden and not await stealthybot.is_owner(ctx.author):
         return False
     return True
 
