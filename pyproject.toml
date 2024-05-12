@@ -20,7 +20,7 @@ apexlegendspy = "^0.0.2"
 isort = "^5.12.0"
 
 [tool.poetry.group.dev.dependencies]
-black = "^23.9.1"
+black = "^24.3.0"
 ruff = "^0.0.291"
 pre-commit = "^3.4.0"
 
