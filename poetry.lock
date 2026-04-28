@@ -202,6 +202,22 @@ files = [
 aiohttp = "*"
 
 [[package]]
+name = "astunparse"
+version = "1.6.3"
+description = "An AST unparser for Python"
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "astunparse-1.6.3-py2.py3-none-any.whl", hash = "sha256:c2652417f2c8b5bb325c885ae329bdf3f86424075c4fd1a128674bc6fba4b8e8"},
+    {file = "astunparse-1.6.3.tar.gz", hash = "sha256:5ad93a8456f0d084c3456d059fd9a92cce667963232cbf763eac3bc5b7940872"},
+]
+
+[package.dependencies]
+six = ">=1.6.1,<2.0"
+wheel = ">=0.23.0,<1.0"
+
+[[package]]
 name = "asyncio"
 version = "3.4.3"
 description = "reference implementation of PEP 3156"
@@ -273,6 +289,18 @@ jupyter = ["ipython (>=7.8.0)", "tokenize-rt (>=3.2.0)"]
 uvloop = ["uvloop (>=0.15.2)"]
 
 [[package]]
+name = "braceexpand"
+version = "0.1.7"
+description = "Bash-style brace expansion for Python"
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "braceexpand-0.1.7-py2.py3-none-any.whl", hash = "sha256:91332d53de7828103dcae5773fb43bc34950b0c8160e35e0f44c4427a3b85014"},
+    {file = "braceexpand-0.1.7.tar.gz", hash = "sha256:e6e539bd20eaea53547472ff94f4fb5c3d3bf9d0a89388c4b56663aba765f705"},
+]
+
+[[package]]
 name = "cfgv"
 version = "3.5.0"
 description = "Validate configuration and produce human readable error messages."
@@ -290,7 +318,7 @@ version = "8.3.3"
 description = "Composable command line interface toolkit"
 optional = false
 python-versions = ">=3.10"
-groups = ["dev"]
+groups = ["main", "dev"]
 files = [
     {file = "click-8.3.3-py3-none-any.whl", hash = "sha256:a2bf429bb3033c89fa4936ffb35d5cb471e3719e1f3c8a7c3fff0b8314305613"},
     {file = "click-8.3.3.tar.gz", hash = "sha256:398329ad4837b2ff7cbe1dd166a4c0f8900c3ca3a218de04466f38f6497f18a2"},
@@ -305,7 +333,7 @@ version = "0.4.6"
 description = "Cross-platform colored terminal text."
 optional = false
 python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,!=3.6.*,>=2.7"
-groups = ["dev"]
+groups = ["main", "dev"]
 markers = "platform_system == \"Windows\""
 files = [
     {file = "colorama-0.4.6-py2.py3-none-any.whl", hash = "sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6"},
@@ -440,6 +468,30 @@ yarl = ">=1.0"
 [package.extras]
 speed = ["aiohttp[speedups]", "orjson (>=3.6,<4.0)"]
 voice = ["audioop-lts (>=0.2.1) ; python_version >= \"3.13\"", "dave-py (>=0.1.1,<0.2.0)", "pynacl (>=1.5.0,<1.7)"]
+
+[[package]]
+name = "disnake-jishaku"
+version = "2.6.5"
+description = "A disnake extension including useful tools for bot development and debugging."
+optional = false
+python-versions = ">=3.8.0"
+groups = ["main"]
+files = [
+    {file = "disnake-jishaku-2.6.5.tar.gz", hash = "sha256:8845d5be9a4c918b457bec11c5aa45627d21bd7d6c5e03ea48e0106774715ae6"},
+]
+
+[package.dependencies]
+braceexpand = ">=0.1.7"
+click = ">=8.0.1"
+disnake = ">=2.1.5"
+import_expression = ">=1.0.0,<2.0.0"
+
+[package.extras]
+docs = ["sphinx (>=3.5.4)", "sphinxcontrib-asyncio"]
+procinfo = ["psutil"]
+publish = ["Jinja2"]
+test = ["click", "coverage", "flake8", "isort", "pytest", "pytest-cov", "pytest-mock"]
+voice = ["disnake[voice] (>=2.1.5)", "youtube-dl"]
 
 [[package]]
 name = "distlib"
@@ -707,6 +759,24 @@ files = [
 
 [package.extras]
 all = ["mypy (>=1.11.2)", "pytest (>=8.3.2)", "ruff (>=0.6.2)"]
+
+[[package]]
+name = "import-expression"
+version = "1.1.5"
+description = "Parses a superset of Python allowing for inline module import expressions"
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "import_expression-1.1.5-py3-none-any.whl", hash = "sha256:f60c3765dbf2f41928b9c6ef79d632209b6705fc8f30e281ed1a492ed026b10f"},
+    {file = "import_expression-1.1.5.tar.gz", hash = "sha256:9959588fcfc8dcb144a0725176cfef6c28c7db1fc2d683625025e687516d40c1"},
+]
+
+[package.dependencies]
+astunparse = ">=1.6.3,<2.0.0"
+
+[package.extras]
+test = ["pytest", "pytest-cov"]
 
 [[package]]
 name = "iso8601"
@@ -1707,6 +1777,21 @@ platformdirs = ">=3.9.1,<5"
 python-discovery = ">=1.2.2"
 
 [[package]]
+name = "wheel"
+version = "0.47.0"
+description = "Command line tool for manipulating wheel files"
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "wheel-0.47.0-py3-none-any.whl", hash = "sha256:212281cab4dff978f6cedd499cd893e1f620791ca6ff7107cf270781e587eced"},
+    {file = "wheel-0.47.0.tar.gz", hash = "sha256:cc72bd1009ba0cf63922e28f94d9d83b920aa2bb28f798a31d0691b02fa3c9b3"},
+]
+
+[package.dependencies]
+packaging = ">=24.0"
+
+[[package]]
 name = "yarl"
 version = "1.23.0"
 description = "Yet another URL library"
@@ -1852,4 +1937,4 @@ propcache = ">=0.2.1"
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.11,<3.15"
-content-hash = "36bb589c21211dc1eb22f4e56735c52a89558d2b9caf0795ec92fcf7d0eba778"
+content-hash = "0daaa7e28f3d389282fd4966da65072540299f79073bf5003231d732675c17c0"
