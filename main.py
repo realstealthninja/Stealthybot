@@ -3,17 +3,20 @@ import os
 from dotenv import load_dotenv
 from stealthybot import TwitchBot
 from stealthybot import Stealthybot
+import logging
+
+logging.basicConfig(level=logging.INFO)
 
 load_dotenv("secrets.env")
 token = os.getenv("Token")
 
+loop = asyncio.new_event_loop()
+asyncio.set_event_loop(loop)
 
 twitchbot = TwitchBot()
 stealthybot = Stealthybot()
 
-# removing twtich support until further notice
-# loop = asyncio.get_event_loop_policy().get_event_loop()
-# loop.create_task(twitchbot.connect())
+_ = loop.create_task(twitchbot.connect())
 
 
 @stealthybot.check
