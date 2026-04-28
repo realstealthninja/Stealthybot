@@ -1,7 +1,9 @@
 """stealthy bot module."""
 
+import asyncio
 import logging
 import os
+import aiohttp
 from aiosqlite import Connection
 
 import aiosqlite
@@ -15,6 +17,9 @@ if not dotenv.load_dotenv("secrets.env"):
     )
     exit(-1)
 
+command_sync_flags = commands.CommandSyncFlags.default()
+command_sync_flags.sync_commands_debug = True
+
 
 class Stealthybot(commands.Bot):
     """Stealthy bot class."""
@@ -27,6 +32,10 @@ class Stealthybot(commands.Bot):
             intents=disnake.Intents.all(),
             case_insensitive=True,
             owner_ids={521226389559443461, 298043305927639041},
+            command_sync_flags=command_sync_flags,
+        )
+        self.client: aiohttp.ClientSession = aiohttp.ClientSession(
+            loop=asyncio.get_event_loop()
         )
         self.eco_base: Connection | None = None
         self.config: Connection | None = None

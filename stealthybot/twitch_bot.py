@@ -12,6 +12,7 @@ class TwitchBot(commands.Bot):
             token=os.getenv("TwitchToken"),
             prefix="?",
             initial_channels=["asgytreal"],  # pyright: ignore[reportArgumentType]
+            loop=asyncio.new_event_loop(),
         )
 
     async def event_message(self, message):
