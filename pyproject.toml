@@ -22,7 +22,7 @@ disnake-jishaku = "^2.6.5"
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.3.0"
-ruff = "^0.0.291"
+ruff = "^0.15.12"
 pre-commit = "^3.4.0"
 
 [build-system]
