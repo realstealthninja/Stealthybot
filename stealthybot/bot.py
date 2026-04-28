@@ -1,12 +1,19 @@
 """stealthy bot module."""
+
+import logging
 import os
+from aiosqlite import Connection
 
 import aiosqlite
 import disnake
 import dotenv
 from disnake.ext import commands
 
-dotenv.load_dotenv("secrets.env")
+if not dotenv.load_dotenv("secrets.env"):
+    logging.getLogger("disnake").critical(
+        "Enviornment variables not set, Have you created secrets.env?"
+    )
+    exit(-1)
 
 
 class Stealthybot(commands.Bot):
@@ -19,13 +26,13 @@ class Stealthybot(commands.Bot):
             description="worst bot ever lol",
             intents=disnake.Intents.all(),
             case_insensitive=True,
-            owner_ids=[521226389559443461, 298043305927639041],
+            owner_ids={521226389559443461, 298043305927639041},
         )
-        self.eco_base = None
-        self.config = None
-        self.act_database = None
-        self.fundb = None
-        self.loop.create_task(self.connect_databases())
+        self.eco_base: Connection | None = None
+        self.config: Connection | None = None
+        self.act_database: Connection | None = None
+        self.fundb: Connection | None = None
+        _ = self.loop.create_task(self.connect_databases())
 
         for filename in os.listdir("./cogs/"):
             if filename.endswith(".py"):
