@@ -1,3 +1,4 @@
+import asyncio
 import json, os
 from twitchio.ext import commands as commands
 
@@ -8,7 +9,9 @@ from twitchio.ext import commands as commands
 class TwitchBot(commands.Bot):
     def __init__(self):
         super().__init__(
-            token=os.getenv("TwitchToken"), prefix="?", initial_channels=["asgytreal"]
+            token=os.getenv("TwitchToken"),
+            prefix="?",
+            initial_channels=["asgytreal"],  # pyright: ignore[reportArgumentType]
         )
 
     async def event_message(self, message):
