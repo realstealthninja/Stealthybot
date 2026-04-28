@@ -1,9 +1,11 @@
 import disnake
 from disnake.ext import commands
 
+from stealthybot.bot import Stealthybot
+
 
 class ProfileDropdown(disnake.ui.Select):
-    def __init__(self, ctx: commands.Context, embeds):
+    def __init__(self, ctx: commands.Context[Stealthybot], embeds):
         self.ctx = ctx
         self.embeds = embeds
         options = [
@@ -21,7 +23,7 @@ class ProfileDropdown(disnake.ui.Select):
             options=options,
         )
 
-    async def callback(self, interaction: disnake.MessageInteraction):
+    async def callback(self, interaction: disnake.MessageInteraction[disnake.Client]):
         label = interaction.values[0]
 
         match label:
