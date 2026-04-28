@@ -24,11 +24,11 @@ class Staff(commands.Cog):
     def __init__(self, bot):
         self.bot: Stealthybot = bot
 
-    async def cog_check(self, ctx: commands.Context) -> bool:
+    async def cog_check(self, ctx: commands.Context[Stealthybot]) -> bool:
         return await self.bot.is_owner(ctx.author)
 
     @commands.command(hidden=True, description="pulls the repo")
-    async def pull(self, ctx: commands.Context):
+    async def pull(self, ctx: commands.Context[Stealthybot]):
         """Pulls the current code from the repo"""
 
         embed = disnake.Embed(title="Git pull.", description="")
@@ -41,7 +41,7 @@ class Staff(commands.Cog):
                 stderr=asyncio.subprocess.PIPE,
             )
             output, error = await process.communicate()
-            embed.description += f'[{" ".join(git_command)!r} exited with return code {process.returncode}\n'
+            embed.description += f"[{' '.join(git_command)!r} exited with return code {process.returncode}\n"
             if output:
                 embed.description += f"**[stdout]**\n{output.decode()}\n"
             if error:
@@ -49,7 +49,7 @@ class Staff(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command(hidden=True)
-    async def load(self, ctx: commands.Context, extension):
+    async def load(self, ctx: commands.Context[Stealthybot], extension):
         embed = disnake.Embed()
         self.bot.load_extension(f"cogs.{extension}")
         embed.add_field(
@@ -58,7 +58,7 @@ class Staff(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command(hidden=True)
-    async def unload(self, ctx: commands.Context, extension):
+    async def unload(self, ctx: commands.Context[Stealthybot], extension):
         self.bot.unload_extension(f"cogs.{extension}")
         embed = disnake.Embed()
         embed.add_field(
@@ -69,7 +69,7 @@ class Staff(commands.Cog):
     # reload
 
     @commands.command(aliases=["r"], hidden=True)
-    async def reload(self, ctx: commands.Context, extension=""):
+    async def reload(self, ctx: commands.Context[Stealthybot], extension=""):
         if not extension:
             for cog in tuple(self.bot.extensions):
                 self.bot.reload_extension(cog)
@@ -86,9 +86,12 @@ class Staff(commands.Cog):
             await ctx.send(embed=embed)
 
     @commands.command(aliases=["e"], hidden=True)
-    async def eval(self, ctx: commands.Context, *, code: str = None) -> None:
+    async def eval(
+        self, ctx: commands.Context[Stealthybot], *, code: str | None = None
+    ) -> None:
         if not code:
-            return await ctx.send("...")
+            _ = await ctx.send("...")
+            return
 
         local_variables = {
             "disnake": disnake,
@@ -126,7 +129,8 @@ class Staff(commands.Cog):
             result = result[:-5]
 
         if len(result) < 2000:
-            return await ctx.send(f"```py\nIn[0]: {message}\nOut[0]: {result}\n```")
+            _ = await ctx.send(f"```py\nIn[0]: {message}\nOut[0]: {result}\n```")
+            return
 
         pager = Paginator(
             timeout=100,
@@ -138,18 +142,18 @@ class Staff(commands.Cog):
         await pager.start(ctx)
 
     @commands.Cog.listener()
-    async def on_command_error(self, ctx: commands.Context, error):
+    async def on_command_error(self, ctx: commands.Context[Stealthybot], error):
         if isinstance(error, commands.CommandNotFound):
             return
         elif isinstance(error, commands.CheckFailure):
-            await ctx.send(
+            _ = await ctx.send(
                 "It looks like you tried to run a command that you don't have enough \
                 permissions/access to run!"
             )
         elif isinstance(error, commands.errors.MissingRequiredArgument):
-            await ctx.send(f"missing argument `{error.param.name}`")
+            _ = await ctx.send(f"missing argument `{error.param.name}`")
         else:
-            await ctx.send(error)
+            _ = await ctx.send(error)
 
             result = "".join(
                 traceback.format_exception(error, error, error.__traceback__)
@@ -169,7 +173,7 @@ class Staff(commands.Cog):
                 prefix="```py\n",
                 suffix="```",
             )
-            await pager.start(ctx)
+            await pager.start(ctx)  # pyright: ignore[reportUnknownMemberType]
 
 
 def setup(bot):
