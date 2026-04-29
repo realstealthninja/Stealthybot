@@ -3,9 +3,6 @@ import json, os
 from twitchio.ext import commands as commands
 
 
-# making the channels accessable
-
-
 class TwitchBot(commands.Bot):
     def __init__(self):
         super().__init__(

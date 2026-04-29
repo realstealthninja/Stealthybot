@@ -3,6 +3,7 @@
 import asyncio
 import logging
 import os
+from typing import override
 import aiohttp
 from aiosqlite import Connection
 
@@ -34,9 +35,7 @@ class Stealthybot(commands.Bot):
             owner_ids={521226389559443461, 298043305927639041},
             command_sync_flags=command_sync_flags,
         )
-        self.client: aiohttp.ClientSession = aiohttp.ClientSession(
-            loop=asyncio.get_event_loop()
-        )
+        self.client: aiohttp.ClientSession = aiohttp.ClientSession(loop=self.loop)
         self.eco_base: Connection | None = None
         self.config: Connection | None = None
         self.act_database: Connection | None = None
@@ -59,6 +58,16 @@ class Stealthybot(commands.Bot):
         self.act_database = await aiosqlite.connect("database/activity.db")
         self.fundb = await aiosqlite.connect("database/fun.db")
 
+    async def disconnect_databases(self) -> None:
+        if self.eco_base:
+            await self.eco_base.close()
+        if self.config:
+            await self.config.close()
+        if self.act_database:
+            await self.act_database.close()
+        if self.fundb:
+            await self.fundb.close()
+
     async def on_ready(self):
         """
         Bot's on ready function.
@@ -72,6 +81,12 @@ class Stealthybot(commands.Bot):
                 servers",
             )
         )
+
+    @override
+    async def close(self) -> None:
+        await self.disconnect_databases()
+        await self.client.close()
+        return await super().close()
 
     async def on_guild_join(self, guild):
         """To help new users understand how the bot works."""
